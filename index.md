@@ -1,6 +1,0 @@
----
-title: Dromedary and a half
-subtitle: Code, games, design, etc.
-author: Raphaël Proust
-...
-
