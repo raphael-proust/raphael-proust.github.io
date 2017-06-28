@@ -1,8 +1,9 @@
 
-SOURCES=$(wildcard *.md)
+SOURCES=$(wildcard *.md) $(wildcard games/*.md)
 TARGETS=$(patsubst %.md,%.html,$(SOURCES))
 
-PANDOCOPTS=--css=style.css --include-before-body=navbar.html --standalone --template=template.html
+PANDOCOPTS=--include-before-body=meta/navbar.html --standalone --template=meta/template.html
+PANDOCMETADATA=--title-prefix="Dromedary and a half" --metadata=author:"Raphaël Proust" --metadata=lang:en
 
 .PHONY: all clean
 all: $(TARGETS)
@@ -10,5 +11,5 @@ all: $(TARGETS)
 clean:
 	rm -f $(TARGETS)
 
-%.html: %.md metadata navbar.html template.html
-	pandoc $(PANDOCOPTS) -f markdown -t html metadata $< -o $@
+%.html: %.md meta/navbar.html meta/template.html
+	pandoc $(PANDOCOPTS) $(PANDOCMETADATA) -f markdown -t html $< -o $@

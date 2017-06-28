@@ -1,3 +1,6 @@
-# Miscellanées
+---
+title: Miscellanées
+...
+
 
 Unsorted thoughts, articles, posts.

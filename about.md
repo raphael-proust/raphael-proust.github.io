@@ -1,4 +1,8 @@
-# Personal
+---
+title: About
+...
+
+I am Raphaël Proust.
 
 I speak French and English.
 I started learning Chinese and Toki Pona although I am not proficient in either.
@@ -6,7 +10,7 @@ I started learning Chinese and Toki Pona although I am not proficient in either.
 In my free time, I occasionally play (both as player and game master)  Dungeons and Dragons or other role playing games.
 I also enjoy the Pokémon franchise, the Zelda series, anything made by Introversion Software, and a few other games.
 
-After babbling BASIC on my CASIO graph 65, I learned OCaml.
+After babbling BASIC on my CASIO graph 65, I learned [OCaml](https://ocaml.org/).
 I consider it my main programming language.
 I have also been in contact with Javascript, Python, Scheme, Haskell and C.
 Most of my public software contributions are on [Github](http://github.com/raphael-proust/).

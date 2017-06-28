@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta http-equiv="Content-Style-Type" content="text/css" />
-  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
   <meta name="generator" content="pandoc" />
 $for(author-meta)$
   <meta name="author" content="$author-meta$" />
@@ -12,9 +12,7 @@ $if(date-meta)$
   <meta name="date" content="$date-meta$" />
 $endif$
   <title>$if(title-prefix)$$title-prefix$ - $endif$$pagetitle$</title>
-$for(css)$
-  <link rel="stylesheet" href="$css$" $if(html5)$$else$type="text/css" $endif$/>
-$endfor$
+  <link rel="stylesheet" href="/assets/style.css" $if(html5)$$else$type="text/css" $endif$/>
 $if(math)$
   $math$
 $endif$
