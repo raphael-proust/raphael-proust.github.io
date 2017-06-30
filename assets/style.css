@@ -14,7 +14,7 @@ h2 { font-size:1.3em; }
 h1, h2 { text-transform:uppercase; letter-spacing:1px; font-weight:bold; font-family:sans-serif; }
 div#header h1, div#header h2 { text-align:center; }
 div#header h2 { font-size:0.7em; }
-h1, h2, p, ul, ol { margin-bottom:0.7em; }
+h1, h2, p, ul, ol, div { margin-bottom:0.7em; }
 a{ color:black; text-decoration:inherit; }
 a:hover{ color:#00C; }
 nav a { text-decoration:none; }
