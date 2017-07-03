@@ -7,8 +7,8 @@ I am Raphaël Proust.
 I speak French and English.
 I started learning Chinese and Toki Pona although I am not proficient in either.
 
-In my free time, I occasionally play (both as player and game master)  Dungeons and Dragons or other role playing games.
-I also enjoy the Pokémon franchise, the Zelda series, anything made by Introversion Software, and a few other games.
+In my free time, I occasionally play (both as player and game master) [Dungeons and Dragons](http://dnd.wizards.com/) or other role playing games.
+I also enjoy the [Pokémon](http://www.pokemon.com/us/) franchise, the Zelda series, anything made by [Introversion Software](http://introversion.co.uk/introversion/), and a few other games.
 
 After babbling BASIC on my CASIO graph 65, I learned [OCaml](https://ocaml.org/).
 I consider it my main programming language.
@@ -29,7 +29,7 @@ I write software to write, review, edit, publish, and deliver courses; I write, 
 ## Past
 
 I was a Ph.D. student at the [Computer Laboratory](http://www.cl.cam.ac.uk/) of the [University of Cambridge](http://www.cam.ac.uk/) under supervision of [Alan Mycroft](http://www.cl.cam.ac.uk/~am21/).
-My thesis explored the use of compile-time memory management in the context of system programming: replacing garbage collectors by a compilation pass in order to be friendly to system programmers.
+[My thesis](http://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-908.html) explored the use of compile-time memory management in the context of system programming: replacing garbage collectors by a compilation pass in order to be friendly to system programmers.
 
 I was a student of [Magdalene college](http://www.magd.cam.ac.uk/) and was involved in the MCR committee (first as Social officer, then as Secretary, then as President and finally as Consultant).
 
