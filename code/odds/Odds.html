@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="next" href="Odds_parser.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Odds" rel="Chapter" href="Odds.html">
+<link title="Odds_parser" rel="Chapter" href="Odds_parser.html"><title>Odds</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Odds_parser.html" title="Odds_parser">Next</a>
+</div>
+<h1>Module <a href="type_Odds.html">Odds</a></h1>
+
+<pre><span class="keyword">module</span> Odds: <code class="code"><span class="keyword">sig</span></code> <a href="Odds.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+Odds (Ocaml Dice Dice Something) is a library for rolling dice. It embeds the
+dice algebra into OCaml by providing dice rolling functions and lifting
+integer operations.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type">'a</code> t</span> </pre>
+<div class="info ">
+The type of dice expressions.<br>
+</div>
+
+
+<pre><span id="VALdie"><span class="keyword">val</span> die</span> : <code class="type">int -> int <a href="Odds.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">die&nbsp;s</code> is an expression for rolling one die of <code class="code">s</code> sides: `1d<code class="code">s</code>`.
+<p>
+
+    Raises <code class="code"><span class="constructor">Invalid_argument</span></code> if <code class="code">s</code> is negative.<br>
+</div>
+
+<pre><span id="VALdice"><span class="keyword">val</span> dice</span> : <code class="type">int -> int -> int <a href="Odds.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">dice&nbsp;n&nbsp;s</code> is an expression for rolling <code class="code">n</code> dice of <code class="code">s</code> sides: `<code class="code">n</code>d<code class="code">s</code>`.
+<p>
+
+    Raises <code class="code"><span class="constructor">Invalid_argument</span></code> if <code class="code">s</code> is negative or if <code class="code">n</code> is negative.<br>
+</div>
+
+<pre><span id="VALinject"><span class="keyword">val</span> inject</span> : <code class="type">'a -> 'a <a href="Odds.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">inject&nbsp;x</code> is the trivial expression that always rolls to <code class="code">x</code>.<br>
+</div>
+
+<pre><span id="VALroll"><span class="keyword">val</span> roll</span> : <code class="type">?state:Random.State.t -> 'a <a href="Odds.html#TYPEt">t</a> -> 'a</code></pre><div class="info ">
+<code class="code">roll&nbsp;?state&nbsp;t</code> is the result of the expression <code class="code">t</code>. If the <code class="code">state</code> is
+    given, it is used as a seed to roll all the dice in order. Otherwise, a
+    state is created for the formula.
+<p>
+
+    May raise <code class="code"><span class="constructor">Invalid_argument</span></code> if any subexpression does.<br>
+</div>
+
+<pre><span id="VALroll_fold"><span class="keyword">val</span> roll_fold</span> : <code class="type">?state:Random.State.t -><br>       folder:('acc -> int -> int -> 'acc) -> init:'acc -> 'a <a href="Odds.html#TYPEt">t</a> -> 'a * 'acc</code></pre><div class="info ">
+<code class="code">roll_fold&nbsp;?state&nbsp;~folder&nbsp;~init&nbsp;t</code> is similar to <code class="code">roll&nbsp;?state&nbsp;t</code> except
+    that: the function <code class="code">folder</code> is called on each dice roll. Specifically,
+    <code class="code">folder&nbsp;acc&nbsp;s&nbsp;r</code> is called where <code class="code">acc</code> is the latest accumulator, <code class="code">s</code> is
+    the number of sides of the rolled dice, and <code class="code">r</code> is the result.
+<p>
+
+    May raise <code class="code"><span class="constructor">Invalid_argument</span></code> if any subexpression does.<br>
+</div>
+
+<pre><span id="VALlift1"><span class="keyword">val</span> lift1</span> : <code class="type">('a -> 'b) -> 'a <a href="Odds.html#TYPEt">t</a> -> 'b <a href="Odds.html#TYPEt">t</a></code></pre>
+<pre><span id="VALlift2"><span class="keyword">val</span> lift2</span> : <code class="type">('a -> 'b -> 'c) -> 'a <a href="Odds.html#TYPEt">t</a> -> 'b <a href="Odds.html#TYPEt">t</a> -> 'c <a href="Odds.html#TYPEt">t</a></code></pre>
+<pre><span class="keyword">module</span> <a href="Odds.Monad.html">Monad</a>: <code class="code"><span class="keyword">sig</span></code> <a href="Odds.Monad.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+The <code class="code"><span class="constructor">Monad</span></code> module provides a monad to express dice formulas.
+</div>
+
+<pre><span class="keyword">module</span> <a href="Odds.Algebra.html">Algebra</a>: <code class="code"><span class="keyword">sig</span></code> <a href="Odds.Algebra.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+The <code class="code"><span class="constructor">Algebra</span></code> module lifts most of the integer-related functions of the
+    <code class="code"><span class="constructor">Pervasives</span></code> module to apply to dice expressions.
+</div>
+
+<pre><span class="keyword">module</span> <a href="Odds.Comparisons.html">Comparisons</a>: <code class="code"><span class="keyword">sig</span></code> <a href="Odds.Comparisons.html">..</a> <code class="code"><span class="keyword">end</span></code></pre></body></html>
