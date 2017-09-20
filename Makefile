@@ -1,5 +1,5 @@
 
-SOURCES=$(wildcard *.md) $(wildcard games/*.md) $(wildcard code/*.md)
+SOURCES=$(wildcard *.md) $(wildcard misc/*.md) $(wildcard games/*.md) $(wildcard code/*.md)
 TARGETS=$(patsubst %.md,%.html,$(SOURCES))
 
 PANDOCOPTS=--include-before-body=meta/navbar.html --standalone --template=meta/template.html
