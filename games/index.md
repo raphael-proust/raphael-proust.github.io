@@ -11,3 +11,5 @@ Thoughts, articles, posts about games, game design, etc.
 [(2017-06-29) Dice, choices and outcomes](/games/dice-choice.html)
 
 [(2017-06-30) It's all in the cards](/games/rpg-in-cards.html)
+
+[(2017-09-29) Zelda's puzzles](/games/zelda-s-puzzles.html)
