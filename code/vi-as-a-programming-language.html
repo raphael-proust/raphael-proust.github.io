@@ -22,11 +22,11 @@
 <div id="header">
 <h1 class="title">Vi as a programming language</h1>
 </div>
-<p>Disclaimer: this is not a vi-vs-emacs post. The comments of this post may apply to emacs as well – let me know if the do or don't. It just so happens that I use vi, and thus can comment on it, but have only been exposed to emacs for a few hours, and thus cannot make any serious comment on it.</p>
+<p>Disclaimer: this is not a vi-vs-emacs post. The comments of this post may apply to emacs as well – let me know if they do or don't. It just so happens that I use vi, and thus can comment on it, but have only been exposed to emacs for a few hours, and thus cannot make any serious comment on it.</p>
 <p>Disclaimer: this post does not claim that vi (and other editors which are programming languages) are better than editors which are not programming languages.</p>
 <p>Disclaimer: “vi” here stands for the whole family of editors: vi, vim, neovim, elvis, nvi, vis, etc. Although some specific examples are from one clone or another, the core ideas of the post are about the whole family of clones.</p>
 <h1 id="vi-has-and-is-a-programming-language">Vi has <em>and is</em> a programming language</h1>
-<p>Most vi clones embed one or more scripting languages. This lets the user customise what their own instance of their favourite clone of vi is capable of: managing Git repositories, manipulating dates and timestamps, handle pairs of quotes, parentheses and other directional typographic markers, tamper with constructs from one programming language or another.</p>
+<p>Most vi clones embed one or more scripting languages. This lets the user customise what their own instance of their favourite clone of vi is capable of: managing Git repositories, manipulating dates and timestamps, handling pairs of quotes, parentheses and other directional typographic markers, tampering with constructs from one programming language or another.</p>
 <p>But, more importantly, vi is a programming language.</p>
 <h2 id="state-and-actions-hand-wavy-semantics">State and actions: hand-wavy semantics</h2>
 <p>The state handled by vi programs is primarily composed of the text and the cursor position. (Other elements such as modes and registers are discussed later.) A finer semantics can also take into account pending operators, but it is beyond the scope of this post.</p>
@@ -34,7 +34,7 @@
 <p>First, programs can modify the character position. This is achieved with movement operators: <code>h</code>, <code>j</code>, <code>k</code>, <code>l</code>, <code>w</code>, <code>e</code>, <code>{</code>, <code>}</code>, etc. There are also movement functions. These take an argument which control what the movement: <code>f</code>, <code>t</code>, etc..</p>
 <p>Second, programs can modify the text in different ways. Some modifications are immediate: <code>x</code>, <code>~</code>, <code>D</code>, <code>J</code>. Other modifications take an argument: <code>r</code>.</p>
 <p>More importantly, the two concepts (movement and text modifications) are often mixed. Many modification operators are defined in relation with movement operators. These modify all the text between the current position and the position after the movement. E.g., <code>d</code>, <code>c</code>.</p>
-<p>Third, almost all operator (be it for movement or text modification), can be executed multiple time, like a for loop. This is done by prefixing operators with numbers.</p>
+<p>Third, almost all operators (be it for movement or text modification), can be executed multiple time, like a for loop. This is done by prefixing operators with numbers.</p>
 <h2 id="hand-wavy-grammar">Hand-wavy grammar</h2>
 <p>The operations described above combine in ways described by the following grammar.</p>
 <pre><code>SimpleModifier ::= ZeroaryModifier

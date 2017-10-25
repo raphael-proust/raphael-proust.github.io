@@ -3,7 +3,7 @@ title: Vi as a programming language
 ...
 
 Disclaimer: this is not a vi-vs-emacs post.
-The comments of this post may apply to emacs as well – let me know if the do or don't.
+The comments of this post may apply to emacs as well – let me know if they do or don't.
 It just so happens that I use vi, and thus can comment on it, but have only been exposed to emacs for a few hours, and thus cannot make any serious comment on it.
 
 Disclaimer: this post does not claim that vi (and other editors which are programming languages) are better than editors which are not programming languages.
@@ -16,7 +16,7 @@ Although some specific examples are from one clone or another, the core ideas of
 # Vi has *and is* a programming language
 
 Most vi clones embed one or more scripting languages.
-This lets the user customise what their own instance of their favourite clone of vi is capable of: managing Git repositories, manipulating dates and timestamps, handle pairs of quotes, parentheses and other directional typographic markers, tamper with constructs from one programming language or another.
+This lets the user customise what their own instance of their favourite clone of vi is capable of: managing Git repositories, manipulating dates and timestamps, handling pairs of quotes, parentheses and other directional typographic markers, tampering with constructs from one programming language or another.
 
 But, more importantly, vi is a programming language.
 
@@ -43,7 +43,7 @@ Many modification operators are defined in relation with movement operators.
 These modify all the text between the current position and the position after the movement.
 E.g., `d`, `c`.
 
-Third, almost all operator (be it for movement or text modification), can be executed multiple time, like a for loop.
+Third, almost all operators (be it for movement or text modification), can be executed multiple time, like a for loop.
 This is done by prefixing operators with numbers.
 
 
