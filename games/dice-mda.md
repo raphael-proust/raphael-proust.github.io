@@ -8,13 +8,12 @@ This post studies the different roles that dice take for both players and dungeo
 
 # Ubiquity and pervasiveness
 
-Dice are used in uncountable RPG systems.
 Four sided dice are used in the Game of Ur;
 six sided dice have been used in non-RPG for a long time;
 variously sided dice became widespread in the 1960s in the wargaming community; and from there
 they became ubiquitous in the RPG community.
 
-The use of dice is so pervasive that several rule systems are named after dice ([D6](https://en.wikipedia.org/wiki/D6_System)), [D20](https://en.wikipedia.org/wiki/D20_System)), shops sell dice sets, many apps, programs and website are dedicated to rolling dice and that [a standard notation](https://en.wikipedia.org/wiki/Dice_notation) has been developed.
+The use of dice is so pervasive that several rule systems are named after dice ([D6](https://en.wikipedia.org/wiki/D6_System), [D20](https://en.wikipedia.org/wiki/D20_System)), shops sell dice sets, many apps, programs and website are dedicated to rolling dice and [a standard notation](https://en.wikipedia.org/wiki/Dice_notation) has been developed.
 
 Dice and RPG rules are so intertwined that “diceless” has become [synonymous with “randomless”](https://en.wikipedia.org/wiki/Diceless_role-playing_game):
 
@@ -56,7 +55,7 @@ In RPGs, common types of æsthetics include fantasy (pretending other things are
 Experience points (XP), the means by which to earn them (solving puzzles, killing monsters, negotiating agreements, etc.), the ways to spend them (levelling up, buying skill points, etc.) are common mechanics of RPG.
 
 In most games, the experience points have a diminishing return: for an entry-level character, each experience point is significantly more valuable than for a high-level character.
-E.g., in SRD the characters gain their second level with 300XP, they gain their third level with 600XP more (or 900XP total), then 1800XP more (2700XP total), and so on.
+E.g., in SRD/D&D the characters gain their second level with 300XP, they gain their third level with 600XP more (or 900XP total), then 1800XP more (2700XP total), and so on.
 
 This diminishing return of experience points forms a negative feedback loop: the more experience you have the less you get from new experience.
 This is a dynamic through which lower level players receive more benefits from the same reward as higher level players.
@@ -69,7 +68,7 @@ This makes it more likely that a player can rejoin a group: it encourages the gr
 Additionally, players are encouraged to take on new challenges.
 Specifically, beating the same monsters and solving similar problems yield a constant, flat reward.
 This flat reward is worth less and less to characters as they progress.
-Thus, for the characters to progress, the players must take on new challenges.
+Thus, for the characters to progress, the players must take on new, more difficult challenges.
 
 
 ## The example of the dice roll
@@ -77,7 +76,7 @@ Thus, for the characters to progress, the players must take on new challenges.
 
 The dice roll is a mechanic of most RPGs.
 In each RPG, the mechanic is combined in different ways to create different dynamics that, in turn, create different æsthetics.
-E.g., in games with a critical success/failure system, dice rolls can change the course of an adventure in dramatic proportions and thus contribute to a heightened sense of suspense.
+E.g., in games with a critical success/failure system such as SRD/D&D, dice rolls can change the course of an adventure in dramatic proportions and thus contribute to a heightened sense of suspense.
 
 
 
@@ -94,19 +93,19 @@ Players and game masters use dice for multiple reasons.
 
 - To determine a **quantity** such as the amount of damage done, the distance travelled, the number of coins in a chest, etc.
 - To select amongst **multiple choice** such as the type of traps in a randomly generated dungeon, the personality traits of a character, the kind of damage dealt by an elemental spell, etc.
-- To decide **success/failure** of an action such as dodging, casting, climbing, attacking, etc. This is sometimes referred to as a skillcheck.
+- To decide **success/failure** of an action such as dodging, casting, climbing, attacking, etc. This is sometimes referred to as a skill check.
 
 
 ### Quantity
 
 Dice are used to determine quantities on different occasions; often for damage or healing.
 In most cases, the quantity is determined by adding the result of one or several dice rolls and possibly a constant number.
-For example, to determine damage in SRD/DnD, the number and sidedness of the dice is influenced by the weapon, and the static constant by the character's statistics; some character features may also grant additional damage dice of possibly different sidedness.
+For example, to determine damage in SRD/D&D, the number and sidedness of the dice is influenced by the weapon wielded, and the static constant by the wielder's statistics; some character features may also grant additional damage dice of possibly different sidedness.
 
 ### Multiple choice
 
 Many rule books contain tables of random events, loot, characteristics, etc.
-For example, SRD offers tables to suggest personality traits associated to various backgrounds.
+For example, SRD/D&D offers tables to suggest personality traits associated to various backgrounds.
 In this case, the resolution is simple: choose the row designated by the roll of a dice.
 
 Tables can have non-uniform indexing: a specific row may be associated to a single number whilst another row may be associated to several.
@@ -119,14 +118,14 @@ One such variation is when a certain result calls for more rolls—e.g., a high 
 
 Different systems implement the success/failure test in different ways.
 A simple implementation is to roll a single dice, add appropriate bonuses and compare the total with a threshold.
-This is the way skillchecks and attack rolls work in SRD/DnD: the dice is a d20, the bonuses are computed based on the character's statistics, the threshold is set by the game master (for a skillcheck) or by the opponent's statistics (e.g., the AC for an attack roll).
+This is the way skill checks and attack rolls work in SRD/D&D: the dice is a d20, the bonuses are computed based on the character's statistics, the threshold is set by the game master (for a skill check) or by the opponent's statistics (e.g., the AC for an attack roll).
 
 Another implementation of the success/failure test is to roll a single dice which sidedness is determined by the character's statistics and compare it to a threshold.
 
 In both of those implementations, the test boils down to the simple formula $x\mathrm{d}y+z ≥ t$ where $x$, $y$, $z$, and $t$ depend on either the character's statistics, other characters' statistics or the game master choice.
 
 Another way the success/failure test is implemented is by rolling multiple dice and counting the number of them that have a specific value.
-This is how skillchecks are implemented in Shadowrun: you roll a number of six sided dice determined by your character's statistics, count the dices that are 5 or 6 and compare this count to a threshold set by the game master.
+This is how skill checks are implemented in Shadowrun: you roll a number of six sided dice determined by your character's statistics, count the dices that are 5 or 6 and compare this count to a threshold set by the game master.
 
 In this implementation as well, the test boils down to a simple formula which depends on in-game statistics or the game master choice.
 
@@ -137,7 +136,7 @@ This is discussed later.
 
 ### Critical success and failure
 
-In multiple systems, some results of the dice are considered automatic success or failures – e.g., rolling 20 or 1 on an attack roll in SRD.
+In multiple systems, some results of the dice are considered automatic success or failures – e.g., rolling 20 or 1 on an attack roll in SRD/D&D.
 These bypass the normal checking mechanism, the standard comparison with a threshold.
 Instead, these specific rolls have immediate effects.
 
@@ -192,6 +191,6 @@ This somewhat realistic modelling of the characters' universe maintains a sense 
 
 ---------------------------------------------------------
 
-A following post discusses the common style of play “choose and action then roll to resolve it.”
+A following post discusses the common style of play “choose an action then roll to resolve it.”
 Another following post discusses an alternative style of play inspired by trading or collectible card games (TCG/CCG).
 
