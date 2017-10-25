@@ -84,8 +84,8 @@ An opportunity given by cards mechanics is to give flavour to the mechanics: to 
 This can be done to a greater extent than with dice.
 Indeed, rolling dice for damage when you play a Barbarian or a Thief feels the same (the main difference is the sidedness of the dice) even though the characters would attack very differently.
 
-On the other hand, playing differently coloured decks in MTG feels very differently.
-The card arts, names and descriptions contribute to this difference, but the mechanics also contribute to this difference.
+On the other hand, playing differently coloured decks in MTG feels very different.
+The card arts, names and descriptions contribute to this difference, but the mechanics contribute as well.
 In an MTG deck, black magic cards often resurrect creatures from the graveyard – or, in mechanics term, make cards flow from the discard onto the mat.
 This mechanic has flavour: as a player you raise the dead by pulling cards out of your discard.
 
@@ -205,7 +205,7 @@ A sneaky character, be it an assassin, a thief, or a scout, stays hidden as much
 
 Hidden is a very different condition to maintain than berserk: it requires control, not loss thereof.
 To match that difference, the player can be required to provide additional Hide cards every turn they want to stay hidden.
-Thus, like their character, the player is active; like their character, the player is managing risk (How likely I am to draw enough “Hide” cards to reach that thicker forest?).
+Thus, like their character, the player is active; like their character, the player is managing risk (How likely I am to draw enough “Hide” cards to reach that thicker part of the forest?).
 
 <div style="border: solid #aaa 1px;">
 
@@ -273,7 +273,7 @@ All the different mechanics are based on different physical actions, each taking
 Whilst rolling dice and adding numbers is relatively quick, searching through a deck and shuffling are not.
 This is a more serious issue because it can break the fantasy – i.e., it can negatively affect one of the core æsthetic of the game.
 
-What is the point on making each player's turn more engaging by introducing flavours in the mechanics, if they end up spending long spans of time waiting for others to finish their turn?
+What is the point of making each player's turn more engaging by introducing flavours in the mechanics, if they end up spending long spans of time waiting for others to finish their turn?
 
 This can be partly mitigated by software.
 Specifically, if, instead of physical cards, the players use an electronic play table (such as Tabletop Simulator), some operations can be much faster:
@@ -316,7 +316,7 @@ With card mechanics, how can this be replicated?
 There are solutions to this issue.
 
 Finally, an interesting issue to tackle is the rate limit on some abilities.
-In SRD/DnD, some abilities can be used only once between two periods of rest.
+In SRD/D&D, some abilities can be used only once between two periods of rest.
 This is easily done with cards: use multiple discards.
 More interestingly, this gives an opportunity for an interesting mechanic: when their deck is empty, the players shuffle their discard to form a new deck; but before they do so, they must move five random card from their discard into their once-a-day discard.
 This mimics the character getting tired, their energy depleted.
