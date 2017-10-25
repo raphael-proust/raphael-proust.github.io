@@ -56,10 +56,10 @@ More interestingly, it offers two points of view on games:
 - the players enjoy the æsthetics – which arise because of a combination of dynamics, themselves the result of mechanics;
 - the game designers create, modify, fine-tune the game mechanics – to give rise to dynamics and eventually æsthetics.
 
-Combining this with the prior observation about dice (a core mechanic with little contribution to the core æsthetics), leads to the conclusion that alternatives to dice are probably possible.
+Combining this with the prior observation about dice (a core mechanic with little contribution to the core æsthetics) leads to the conclusion that alternatives to dice are probably possible.
 Specifically, it should be possible to develop alternative mechanics which also simulate the universe of play, in addition to supporting the core æsthetics more.
 
 
-A follow-up post discusses a possible alternatives: card games mechanics such as deck building and hand management.
+A follow-up post discusses a possible alternative: card games mechanics such as deck building and hand management.
 This next post focuses on how these mechanics can be flavourful: how they can match the universe of play more fully.
 
