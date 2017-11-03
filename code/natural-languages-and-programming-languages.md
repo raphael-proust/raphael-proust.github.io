@@ -2,7 +2,7 @@
 title: Natural languages in programming languages
 ...
 
-Programming languages are constructed languages: they are designed for humans to communicate ideas, protocols, algorithms, etc. to computers.
+Programming languages are constructed languages: they are *designed* for humans to communicate ideas, protocols, algorithms, etc. to computers.
 However, most programming languages include, in specific places, elements of natural languages.
 Comments are parts of a program that are ignored by a computer and used by programmers to explain their code to other programmers; they are reserved places for arbitrary content, often natural language, to be included.
 Keywords are elements of a programming language that use words from natural languages: “function”, “while”, “private”, “class”, “module”, etc.
@@ -14,18 +14,18 @@ This makes the code self-documenting in that it attaches meaning to elements of 
 
 # Cases and position
 
-Some languages writes different grammatical cases differently.
-German, Russian and many other languages have this feature.
+Some natural languages write different grammatical cases differently.
+German, Russian, Latin and many other languages have this feature.
 English on the other hand relies mostly on position to distinguish between the role of different words.
 There are only a few cases left – e.g., the difference between “I”, “me”, and “my”.
 
-Additionally, English verbs and nouns are often identical: “fish”, “search”, “return”, “ride”, “plant”, “drive”, “act”, tie”, etc.
-On top of which, English verbs nouns and vice versa.
+Additionally, English verbs and nouns are often identical: “fish”, “search”, “return”, “ride”, “plant”, “drive”, “act”, tie”, etc. and can only be differentiated by context.
+On top of which, English verbs nouns and nouns verbs.
 
 
 # Confusing identifiers
 
-Cases and the ability to differentiate verbs from nouns is useful for identifier in programs.
+Cases and the ability to differentiate verbs from nouns is useful when using natural language words as identifiers in programs.
 Consider Python's `sort` and `sorted`:
 
 - `sort` is an action, it is an active form that acts upon its argument and modifies it. It has side-effect: it *sorts* its argument.
