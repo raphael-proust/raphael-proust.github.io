@@ -19,7 +19,7 @@ German, Russian, Latin and many other languages have this feature.
 English on the other hand relies mostly on position to distinguish between the role of different words.
 There are only a few cases left – e.g., the difference between “I”, “me”, and “my”.
 
-Additionally, English verbs and nouns are often identical: “fish”, “search”, “return”, “ride”, “plant”, “drive”, “act”, tie”, etc. and can only be differentiated by context.
+Additionally, English verbs and nouns are often identical: “fish”, “search”, “return”, “ride”, “plant”, “drive”, “act”, “tie”, etc. and can only be differentiated by context.
 On top of which, English verbs nouns and nouns verbs.
 
 
