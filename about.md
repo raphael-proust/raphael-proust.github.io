@@ -17,11 +17,12 @@ Most of my public software contributions are on [Github](http://github.com/rapha
 
 ------------------------------------------------------------------------
 
-# Work and studies
+# Occupation
 
 ## Present
 
 I am working as a freelance software developer and technical writer.
+[My CV](/cv.html) has more information.
 
 
 ## Past
