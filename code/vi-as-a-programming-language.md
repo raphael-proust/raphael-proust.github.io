@@ -25,11 +25,11 @@ But, more importantly, vi is a programming language.
 
 The state handled by vi programs is primarily composed of the text and the cursor position.
 (Other elements such as modes and registers are discussed later.)
-A finer semantics can also take into account pending operators, but it is beyond the scope of this post.
+A smaller-step semantics can also take into account pending operators, but it is beyond the scope of this post.
 
 Vi programs modify that state in different ways.
 
-First, programs can modify the character position.
+First, programs can modify the cursor position.
 This is achieved with movement operators: `h`, `j`, `k`, `l`, `w`, `e`, `{`, `}`, etc.
 There are also movement functions.
 These take an argument which control what the movement: `f`, `t`, etc..
@@ -40,10 +40,10 @@ Other modifications take an argument: `r`.
 
 More importantly, the two concepts (movement and text modifications) are often mixed.
 Many modification operators are defined in relation with movement operators.
-These modify all the text between the current position and the position after the movement.
+These modify all the text between the current cursor position and the cursor position after the movement.
 E.g., `d`, `c`.
 
-Third, almost all operators (be it for movement or text modification), can be executed multiple time, like a for loop.
+Third, almost all operators (be it for movement or text modification), can be executed multiple time – like the body of a for-loop.
 This is done by prefixing operators with numbers.
 
 
@@ -52,13 +52,13 @@ This is done by prefixing operators with numbers.
 The operations described above combine in ways described by the following grammar.
 
 ```
-SimpleModifier ::= ZeroaryModifier
-                 | UnaryModifier Character
-                 | CompositeModifier Mover
+SimpleModifier ::= ZeroaryModifier            // e.g., x
+                 | UnaryModifier Character    // e.g., r
+                 | CompositeModifier Mover    // e.g., d
 Modifier       ::= SimpleModifier
                  | Number SimpleModifier
-SimpleMover    ::= ZeroaryMover
-                 | UnaryMover Character
+SimpleMover    ::= ZeroaryMover               // e.g., j
+                 | UnaryMover Character       // e.g., f
 Mover          ::= SimpleMover
                  | Number SimpleMover
 ```
