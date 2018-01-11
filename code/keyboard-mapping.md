@@ -28,31 +28,31 @@ One last tweak was to swap the shift behaviour of semicolon.
 So in fact: h becomes colon and shift+h becomes semicolon.
 This is only worth it because I generally use a programming language with few semicolons: [Ocaml](http://ocaml.org/).
 
-To implement this, I have a modified `xkb` file with the following lines:
+To implement this, I have a modified `xkb` file to include the following lines:
 
 ```
-    key <AC05> {
-        type= "ALPHABETIC",
-        symbols[Group1]= [               g,               G ]
-    };
-    key <AC06> {         [           colon,       semicolon ] };
-    key <AC07> {
-        type= "ALPHABETIC",
-        symbols[Group1]= [               h,               H ]
-    };
-    key <AC08> {
-        type= "ALPHABETIC",
-        symbols[Group1]= [               j,               J ]
-    };
-    key <AC09> {
-        type= "ALPHABETIC",
-        symbols[Group1]= [               k,               K ]
-    };
-    key <AC10> {
-        type= "ALPHABETIC",
-        symbols[Group1]= [               l,               L ]
-    };
-    key <AC11> {         [      apostrophe,        quotedbl ] };
+key <AC05> {
+    type= "ALPHABETIC",
+    symbols[Group1]= [          g,         G ]
+};
+key <AC06> {         [      colon, semicolon ] };
+key <AC07> {
+    type= "ALPHABETIC",
+    symbols[Group1]= [          h,         H ]
+};
+key <AC08> {
+    type= "ALPHABETIC",
+    symbols[Group1]= [          j,         J ]
+};
+key <AC09> {
+    type= "ALPHABETIC",
+    symbols[Group1]= [          k,         K ]
+};
+key <AC10> {
+    type= "ALPHABETIC",
+    symbols[Group1]= [          l,         L ]
+};
+key <AC11> {         [ apostrophe,  quotedbl ] };
 ```
 
 and my `.xinitrc` executes `xkbcomp $HOME/.xkb.hjkl $DISPLAY`.

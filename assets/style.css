@@ -20,7 +20,7 @@ a:hover{ color:#00C; }
 nav a { text-decoration:none; }
 ul { list-style:circle; }
 abbr { text-transform:uppercase; font-size:0.9em; line-height:100%; }
-tt, code, pre { font-family:monospace; }
+tt, code, pre { font-family:monospace; font-size:15px; }
 header { padding-top:1.4em; padding-bottom:0.5em; border-bottom:solid; border-width:1px; border-color:#444; margin-bottom:0.7em; }
 header nav { display:inline-block; }
 p { text-align:justify; }
