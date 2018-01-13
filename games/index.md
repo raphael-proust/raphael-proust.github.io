@@ -16,3 +16,5 @@ Thoughts, articles, posts about games, game design, etc.
 
 [(2017-10-24) Inclusive design in Fantasy settings](/games/inclusive-design-in-fantasy-settings.html)
 
+[(2018-01-13) Monastic Traditions](/games/monastic-traditions.html)
+
