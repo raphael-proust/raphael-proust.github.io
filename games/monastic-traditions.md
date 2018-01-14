@@ -27,10 +27,6 @@ Instead, Ink Artists magically enchant their bodies to gain martial benefits.
 
 -------------------------------------------------------------------------------
 
-You can get [*Monastic Traditions* from the Dungeon Masters Guild](http://www.dmsguild.com/product/231175/Monastic-Traditions-Monk-Subclasses) – it is available on a “pay what you want” basis.
+You can get [*Monastic Traditions* from the Dungeon Masters Guild](http://www.dmsguild.com/product/231175/Monastic-Traditions-Monk-Subclasses) – it is available on a “pay what you want” basis – or [download a sample](/games/monastic-traditions/monk-subclasses-sample.pdf).
 Don't hesitate to leave comments and reviews, and you can also send me feedback to <code@bnwr.net>.
-
-
-
-
 
