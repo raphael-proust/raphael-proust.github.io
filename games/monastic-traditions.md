@@ -4,7 +4,7 @@ subtitle: Monk subclasses for 5th Edition Dungeons & Dragons
 ...
 
 I just published [*Monastic Traditions*](http://www.dmsguild.com/product/231175/Monastic-Traditions-Monk-Subclasses), a set of subclasses for Monks in 5th Edition Dungeons & Dragons, on the [Dungeon Masters Guild](http://www.dmsguild.com/).
-It offers three options for characters playing Monks:
+It offers three options for Monk characters:
 
 - the Way of the Animals,
 - the Way of the Fengshui, and
