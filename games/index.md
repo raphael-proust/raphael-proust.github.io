@@ -18,3 +18,5 @@ Thoughts, articles, posts about games, game design, etc.
 
 [(2018-01-13) Monastic Traditions](/games/monastic-traditions.html)
 
+[(2018-02-03) Bard Colleges and Druid Circles](/games/bard-colleges-and-druid-circles.html)
+
