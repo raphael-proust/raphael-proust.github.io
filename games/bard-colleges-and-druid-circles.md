@@ -15,16 +15,16 @@ Mechanically, these options try to fill gaps in character creation possibilities
 The College of Dance gives the Bard more martial abilities whilst avoiding to depend on Strength.
 To that end, it takes inspiration from Monk abilities – e.g., Charisma based Unarmored Defense.
 
-Bards from the College of the Circus gives a varied skillset.
+Bards from the College of the Circus gives a varied skill set.
 As they gain more levels, these bards gain abilities that work in larger groups of adventurers and as part of a tightly-knit group.
 
 Druids from the Circle of Bark and Leaves lets druids shapeshift into plants.
 These druids also become more plant-like.
 
-There is some htematic overlap between the Circle of Bark and Leaves and the recent [Unearthed Arcana's Circle of Spore](http://dnd.wizards.com/articles/unearthed-arcana/three-subclasses).
+There is some thematic overlap between the Circle of Bark and Leaves and the recent [Unearthed Arcana's Circle of Spore](http://dnd.wizards.com/articles/unearthed-arcana/three-subclasses).
 That overlap is small.
 
-And finally, the Circle of Holism makes well balanced Druids that carry tiny beasts and let moss grow on their armor.
+And finally, the Circle of Holism makes well balanced Druids that carry tiny beasts and let moss grow on their armour.
 
 
 -------------------------------------------------------------------------------
