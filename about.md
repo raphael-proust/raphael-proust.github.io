@@ -2,17 +2,17 @@
 title: Raphaël Proust
 ...
 
-I speak French and English.
-I started learning Chinese and Toki Pona although I am not proficient in either.
-
 In my free time, I occasionally play (both as player and game master) [Dungeons and Dragons](http://dnd.wizards.com/), [Adventures in Middle-earth](http://cubicle7.co.uk/our-games/adventures-in-middle-earth/) or other role playing games.
-I also enjoy the [Pokémon](http://www.pokemon.com/us/) franchise, the Zelda series, most things made by [Introversion Software](http://introversion.co.uk/introversion/), and some other games.
+I also enjoy the [Pokémon](http://www.pokemon.com/us/) franchise, the Zelda series, most things made by [Introversion Software](http://introversion.co.uk/introversion/), [Smash Up](https://www.alderacsite.com/smash-up-home/), and some other games.
 
 After babbling BASIC on my CASIO graph 65, I learned [OCaml](https://ocaml.org/).
 I consider it my main programming language.
 I am also proficient in Python, Javascript, and Scala.
 I have also been in contact with Scheme, Haskell and C.
 Most of my public software contributions are on [Github](http://github.com/raphael-proust/).
+
+I speak French and English.
+I started learning Chinese and Toki Pona although I am not proficient in either.
 
 
 ------------------------------------------------------------------------
