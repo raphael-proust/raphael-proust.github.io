@@ -22,3 +22,5 @@ Thoughts, articles, posts about games, game design, etc.
 
 [(2018-02-21) A theory of fun for game design](/games/a-theory-of-fun-for-game-design.html)
 
+[(2018-03-24) Story in mechanics in Romeo and/or Juliet](/games/story-in-mechanics-in-romeo-and-or-juliet.html)
+
