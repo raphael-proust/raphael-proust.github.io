@@ -4,7 +4,8 @@ title: Curriculum Vitæ
 
 Raphaël Proust  
 <code@bnwr.net> — [PGP key](/pgp--code-at-bnwr-dot-net)  
-[Github profile](https://github.com/raphael-proust)
+[Github profile](https://github.com/raphael-proust)  
+[Gitlab profile](https://gitlab.com/raphael-proust)  
 
 
 I am a software developer and a technical writer.
