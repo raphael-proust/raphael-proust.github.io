@@ -24,3 +24,5 @@ Thoughts, articles, posts about games, game design, etc.
 
 [(2018-03-24) Story in mechanics in Romeo and/or Juliet](/games/story-in-mechanics-in-romeo-and-or-juliet.html)
 
+[(2018-07-08) Games and blockchains](/games/games-and-blockchains.html)
+
