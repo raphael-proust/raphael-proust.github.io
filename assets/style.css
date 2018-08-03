@@ -28,4 +28,4 @@ hr { border-bottom: #444 solid 1px; width: 80%; margin-left: auto; margin-right:
 blockquote { margin-left: 1.5em; margin-top:1.5em; }
 blockquote:before { color: #aaa; content: open-quote; font-size: 3.5em; line-height: 0.1em; margin-right: 0.15; vertical-align: -0.3em; }
 blockquote p { display: inline; }
-
+sup { font-size:80%; vertical-align:3px; line-height: 14px; }
