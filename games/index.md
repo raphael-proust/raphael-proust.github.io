@@ -26,3 +26,5 @@ Thoughts, articles, posts about games, game design, etc.
 
 [(2018-07-08) Games and blockchains](/games/games-and-blockchains.html)
 
+[(2018-08-03) Character death in Dungeons and Dragons](/games/character-death-in-dnd.html)
+
