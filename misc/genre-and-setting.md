@@ -21,7 +21,7 @@ However, different books in the series adopt different genres – including a Ja
 Another place where genre and setting are at odds is in unusual, one-shot role-playing games.
 In these stories, unlike the epic, you do not get to save the world, free an entire population from a tyrant, cast out the darkness.
 As noted below, these scenarii often require some alterations to the rules.
-(This hints at the fact that the rule systems of role-playing games is linked to both genre and setting.)
+(These necessary alterations hint at the fact that the rule systems of role-playing games are linked to both genre and setting.)
 
 - A heist: the heroes must use magic spells (or technological gadgets for Science-Fiction settings) to stealthily infiltrate a high security bank/hold/equivalent thereof, obtain a specific item, exfiltrate the premises without being noticed.
 

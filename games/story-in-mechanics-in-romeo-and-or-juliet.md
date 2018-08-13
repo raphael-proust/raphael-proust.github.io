@@ -2,8 +2,8 @@
 title: Story in mechanics in Romeo and/or Juliet
 ...
 
-Different media have different ways to tell a story – at least the media that tell a story.
-A story unfolds differently if it is told in opera or book or play or movie or tv series or book or comic book or etc.
+Different media have different ways to tell stories – at least the media that tell stories.
+A story unfolds differently if it is told in opera or book or play or movie or tv series or comic book or etc.
 
 In games, the story can be conveyed by the setting: the images on a game board or in a rule book, the names of characters and places, the cutscenes in a video game, etc.
 But stories can also be conveyed by the game system itself, the mechanics of play.

@@ -34,7 +34,7 @@ Thus, defeating an enemy consist mostly of finding the right combination of weap
 In the case where a specific condition is required, this becomes a two step puzzle: find the combination that triggers the required condition and the combination that works after that.
 
 
-## Problem solving and puzzle solving
+## Solving problems and solving puzzles
 
 Solving puzzles is fun: there is one solution to the puzzle and you get to solve it by understanding what the designer was thinking when they created it.
 Plus you get a few hints so you're not just hitting switches at random until it works.
@@ -48,7 +48,7 @@ You sometimes have to think outside the box – i.e., think of possible solutio
 And amongst different solutions, you can chose one that you prefer.
 
 
-## Problem solving video games
+## Solving problems in video games
 
 In some video games you solve problems (rather than puzzles).
 
@@ -69,7 +69,7 @@ How you use the tools/weapons, environment, AIs, and physics to accomplish your 
 You can even ignore the environment altogether and rush in all guns blazing!
 
 
-## Problem solving games
+## Solving problems in games
 
 Video games have limitations: their simulation of physics is a crude approximation, the enemy AIs follow specific rules, etc.
 Whilst these limitations are pushed, they are still noticeable.
