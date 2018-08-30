@@ -3,7 +3,7 @@ title: Raphaël Proust
 ...
 
 In my free time, I occasionally play (both as player and game master) [Dungeons and Dragons](http://dnd.wizards.com/), [Adventures in Middle-earth](http://cubicle7.co.uk/our-games/adventures-in-middle-earth/) or other role playing games.
-I also enjoy the [Pokémon](http://www.pokemon.com/us/) franchise, the Zelda series, most things made by [Introversion Software](http://introversion.co.uk/introversion/), [Smash Up](https://www.alderacsite.com/smash-up-home/), and some other games.
+I also enjoy the [Pokémon](http://www.pokemon.com/us/) franchise, the Zelda series, most things made by [Introversion Software](http://introversion.co.uk/introversion/), [Smash Up](https://www.alderacsite.com/smash-up-home/), [Minecraft](http://minecraft.net/), and some other games.
 
 After babbling BASIC on my CASIO graph 65, I learned [OCaml](https://ocaml.org/).
 I consider it my main programming language.
@@ -21,11 +21,13 @@ I started learning Chinese and Toki Pona although I am not proficient in either.
 
 ## Present
 
-I am working as a freelance software developer and technical writer.
+I work on the [Tezos](https://gitlab.com/tezos/tezos) project.
 Checkout [my CV](/cv.html) for more information.
 
 
 ## Past
+
+I worked as a freelance software developer and technical writer.
 
 I was working for [Cambridge Spark](https://cambridgespark.com) and [Cambridge Coding Academy](http://cambridgecoding.com) as a software developer and a course developer.
 I wrote software to write, review, edit, publish, and deliver courses; I wrote, reviewed, edited, published, and delivered courses about software.
@@ -42,4 +44,4 @@ I was a student of [Magdalene College](http://www.magd.cam.ac.uk/) and was invol
 I use [Archlinux](https://www.archlinux.org), [suckless tools](http://suckless.org), [vim](http://vim.org), [acme](http://acme.cat-v.org), and other things.
 
 I have [a Github account](http://github.com/raphael-proust/), [a Gitlab account](https://gitlab.com/raphael-proust), and [a page on the website of the Computer Laboratory of the University of Cambridge](http://www.cl.cam.ac.uk/~rp452/).
-I have homonyms – but no accounts – on Twitter, Facebook or Linkedin.
+I have homonyms – but no accounts – on Twitter, Facebook, and Linkedin.

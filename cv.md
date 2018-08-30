@@ -12,14 +12,16 @@ I am a software developer and a technical writer.
 
 I work in a variety of programming languages —including OCaml, Python, Scala, Javascript— on various types of software —such as web servers, document processing, games, libraries.
 
-I write, edit and review courses, tutorials, manuals and rulebooks in French
-and English.
+I write, edit and review courses, tutorials, manuals and rulebooks in French and English.
 
 
 ## Chronology
 
 ----------------------- ------------------------------------------------------
-Aug 2017–Present        Freelance, remote software developer and technical
+Mar 2018–Present        Software developer on the
+                        [Tezos project](https://gitlab.com/tezos/tezos)
+
+Aug 2017–Mar 2018       Freelance, remote software developer and technical
                         writer
 
 Sep 2016–Aug 2017       Software developer and technical writer at
