@@ -41,3 +41,76 @@ Specifically, the foreground colours of the text do not contrast
 Vacme, because it does not colour the text, does not interfere with the diff colouring.
 
 ![](/assets/vacme-2-diff.png)
+
+
+## Colours
+
+The terminal colours set for this theme to work are as follows:
+
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Normal colours</th>
+<th style="text-align: left;">Bright colours</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="background-color: #424242">                                        </td>
+<td style="background-color: #b7b19c">                                        </td>
+</tr>
+<tr>
+<td style="background-color: #b85c57">                                        </td>
+<td style="background-color: #f2acaa">                                        </td>
+</tr>
+<tr>
+<td style="background-color: #57864e">                                        </td>
+<td style="background-color: #98ce8f">                                        </td>
+</tr>
+<tr>
+<td style="background-color: #8f7634">                                        </td>
+<td style="background-color: #eeeea7">                                        </td>
+</tr>
+<tr>
+<td style="background-color: #2a8dc5">                                        </td>
+<td style="background-color: #a6dcf8">                                        </td>
+</tr>
+<tr>
+<td style="background-color: #8888c7">                                        </td>
+<td style="background-color: #d0d0f7">                                        </td>
+</tr>
+<tr>
+<td style="background-color: #6aa7a8">                                        </td>
+<td style="background-color: #b0eced">                                        </td>
+</tr>
+<tr>
+<td style="background-color: #999957">                                        </td>
+<td style="background-color: #ffffec">                                        </td>
+</tr>
+</tbody>
+</table>
+
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Additional colours</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="background-color: #eaebdb">                                        </td>
+</tr>
+<tr>
+<td style="background-color: #effeec">                                        </td>
+</tr>
+<tr>
+<td style="background-color: #eefeff">                                        </td>
+</tr>
+<tr>
+<td style="background-color: #e2f1f8">                                        </td>
+</tr>
+<tr>
+<td style="background-color: #424242">                                        </td>
+</tr>
+</tbody>
+</table>
