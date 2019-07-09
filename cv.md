@@ -17,59 +17,59 @@ I write, edit and review courses, tutorials, manuals and rulebooks in French and
 
 ## Chronology
 
------------------------ ------------------------------------------------------
-Mar 2018–Present        Software developer on the
-                        [Tezos project](https://gitlab.com/tezos/tezos)
+------------------------ ------------------------------------------------------
+ Mar 2018–Present        Software developer on the
+                         [Tezos project](https://gitlab.com/tezos/tezos)
 
-Aug 2017–Mar 2018       Freelance, remote software developer and technical
-                        writer
+ Aug 2017–Mar 2018       Freelance, remote software developer and technical
+                         writer
 
-Sep 2016–Aug 2017       Software developer and technical writer at
-                        [Cambridge Coding Academy](https://cambridgecoding.com/)
-                        and [Cambridge Spark](https://cambridgespark.com/).
+ Sep 2016–Aug 2017       Software developer and technical writer at
+                         [Cambridge Coding Academy](https://cambridgecoding.com/)
+                         and [Cambridge Spark](https://cambridgespark.com/).
 
-Sep 2012–July 2016      PhD student at the
-                        [University of Cambridge](http://www.cam.ac.uk/)
-                        [Computer Laboratory](http://www.cl.cam.ac.uk/)
+ Sep 2012–Jul 2016       PhD student at the
+                         [University of Cambridge](http://www.cam.ac.uk/)
+                         [Computer Laboratory](http://www.cl.cam.ac.uk/)
 
-Apr 2012–Aug 2012       Intern at
-                        [INRIA's Gallium team](http://gallium.inria.fr/)
-                        on “functional intermediate representations”
+ Apr 2012–Aug 2012       Intern at
+                         [INRIA's Gallium team](http://gallium.inria.fr/)
+                         on “functional intermediate representations”
 
-Aug 2011–Feb 2012       Intern at the
-                        [University of Cambridge](http://www.cam.ac.uk/)
-                        [Computer Laboratory](http://www.cl.cam.ac.uk/)
-                        on “programming language support for the
-                        Mirage operating system”
+ Aug 2011–Feb 2012       Intern at the
+                         [University of Cambridge](http://www.cam.ac.uk/)
+                         [Computer Laboratory](http://www.cl.cam.ac.uk/)
+                         on “programming language support for the
+                         Mirage operating system”
 
-Sep 2010–July 2011      Masters degree in Computer Science at
-                        [ÉNS Cachan, antenne de Bretagne](http://www.ens-cachan.fr/),
-                        including internship at
-                        [IRISA](https://www.irisa.fr/en)'s
-                        [MYRIADS](https://team.inria.fr/myriads/)
-                        research team on “distributed implementation of a
-                        chemical abstract machine”
+ Sep 2010–Jul 2011       Masters degree in Computer Science at
+                         [ÉNS Cachan, antenne de Bretagne](http://www.ens-cachan.fr/),
+                         including internship at
+                         [IRISA](https://www.irisa.fr/en)'s
+                         [MYRIADS](https://team.inria.fr/myriads/)
+                         research team on “distributed implementation of a
+                         chemical abstract machine”
 
-Summer 2010             Research engineer in CNRS's
-                        [Ocsigen Team](http://ocsigen.org/)
+ Summer 2010             Research engineer in CNRS's
+                         [Ocsigen Team](http://ocsigen.org/)
 
-Sep 2009–July 2010      Masters (1^st^ year) in Computer Science at
-                        [Université Paris 7 Denis Diderot](https://www.univ-paris-diderot.fr/)
+ Sep 2009–Jul 2010       Masters (1^st^ year) in Computer Science at
+                         [Université Paris 7 Denis Diderot](https://www.univ-paris-diderot.fr/)
 
-Summer 2009             Research engineer in CNRS's
-                        [Ocsigen Team](http://ocsigen.org/)
+ Summer 2009             Research engineer in CNRS's
+                         [Ocsigen Team](http://ocsigen.org/)
 
-Sep 2008–July 2009      ‘Licence’ (Bachelor) in Computer Science and Masters
-                        (1^st^ year) in Mathematics, both at Université Paris
-                        7 Denis Diderot
+ Sep 2008–Jul 2009       ‘Licence’ (Bachelor) in Computer Science and Masters
+                         (1^st^ year) in Mathematics, both at Université Paris
+                         7 Denis Diderot
 
-Sep 2007–July 2008      ‘Licence’ in Mathematics at Université Paris 7 Denis
-                        Diderot
+ Sep 2007–Jul 2008       ‘Licence’ in Mathematics at Université Paris 7 Denis
+                         Diderot
 
-Sep 2005–July 2007      ‘Classes préparatoires’ (pre-engineering school)
+ Sep 2005–Jul 2007       ‘Classes préparatoires’ (pre-engineering school)
 
-2005                    ‘Baccalauréat’ of Science
------------------------ -------------------------------------------------------
+ 2005                    ‘Baccalauréat’ of Science
+------------------------ -------------------------------------------------------
 
 
 ## Projects at Cambridge Coding Academy and Cambridge Spark

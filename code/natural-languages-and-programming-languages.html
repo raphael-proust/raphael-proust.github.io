@@ -7,7 +7,7 @@
   <meta name="generator" content="pandoc" />
   <meta name="author" content="Raphaël Proust" />
   <title>Dromedary and a half - Natural languages in programming languages</title>
-  <link rel="stylesheet" href="/assets/style.css" type="text/css" />
+  <link rel="stylesheet" href="/assets/style.css" />
 </head>
 <body>
 <header>
@@ -28,7 +28,7 @@
 <p>Some natural languages write different grammatical cases differently. German, Russian, Latin and many other languages have this feature. English on the other hand relies mostly on position to distinguish between the role of different words. There are only a few cases left – e.g., the difference between “I”, “me”, and “my”.</p>
 <p>Additionally, English verbs and nouns are often identical: “fish”, “search”, “return”, “ride”, “plant”, “drive”, “act”, “tie”, etc. and can only be differentiated by context. On top of which, English verbs nouns and nouns verbs.</p>
 <h1 id="confusing-identifiers">Confusing identifiers</h1>
-<p>Cases and the ability to differentiate verbs from nouns is useful when using natural language words as identifiers in programs. Consider Python's <code>sort</code> and <code>sorted</code>:</p>
+<p>Cases and the ability to differentiate verbs from nouns is useful when using natural language words as identifiers in programs. Consider Python’s <code>sort</code> and <code>sorted</code>:</p>
 <ul>
 <li><code>sort</code> is an action, it is an active form that acts upon its argument and modifies it. It has side-effect: it <em>sorts</em> its argument.</li>
 <li><code>sorted</code> is a state, it is the result of a process. It returns a fresh collection with the same elements but <em>sorted</em>.</li>
@@ -36,7 +36,7 @@
 <p>However, some other built-in functions have nouns as identifier: “bool”, “tuple”. For these, it is unclear whether they mutate their argument or not – does this function tuple (tuple-ise?) its argument or does it give back a tuple version of its argument?</p>
 <h1 id="programming-paradigms">Programming paradigms</h1>
 <p>In Object Oriented Programming, objects have methods (usually identified by verbs) and fields (usually identified by nouns). One of the way Java programmers make sure these are differentiated is to use explicit getters and setters for the fields. This way, the object only exposes methods/verbs. Additionally, they prefix getter and setter identifiers with <code>get</code> and <code>set</code> to make it unambiguous.</p>
-<p>In Functional programming, functions are values which blurs the line between what constitute a verb and what a noun. I don't know of any guidelines to avoid confusion; I don't know to what extent such guidelines would be effective.</p>
+<p>In Functional programming, functions are values which blurs the line between what constitute a verb and what a noun. I don’t know of any guidelines to avoid confusion; I don’t know to what extent such guidelines would be effective.</p>
 </div>
 </body>
 </html>

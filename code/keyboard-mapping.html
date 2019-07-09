@@ -7,7 +7,7 @@
   <meta name="generator" content="pandoc" />
   <meta name="author" content="Raphaël Proust" />
   <title>Dromedary and a half - Keyboard mapping</title>
-  <link rel="stylesheet" href="/assets/style.css" type="text/css" />
+  <link rel="stylesheet" href="/assets/style.css" />
 </head>
 <body>
 <header>
@@ -58,7 +58,7 @@ key &lt;AC10&gt; {
 };
 key &lt;AC11&gt; {         [ apostrophe,  quotedbl ] };</code></pre>
 <p>and my <code>.xinitrc</code> executes <code>xkbcomp $HOME/.xkb.hjkl $DISPLAY</code>.</p>
-<p>In addition, to make it work outside of X11, I have a <code>/etc/vconsole.conf</code> which contains the line <code>KEYMAP=&quot;hjklus&quot;</code>. This points to the file <code>/usr/share/kbd/keymaps/i386/qwerty/hjklus.map.gz</code> which is a modified version of <code>/usr/share/kbd/keymaps/i386/qwerty/us.map.gz</code>.</p>
+<p>In addition, to make it work outside of X11, I have a <code>/etc/vconsole.conf</code> which contains the line <code>KEYMAP="hjklus"</code>. This points to the file <code>/usr/share/kbd/keymaps/i386/qwerty/hjklus.map.gz</code> which is a modified version of <code>/usr/share/kbd/keymaps/i386/qwerty/us.map.gz</code>.</p>
 <p>You can find all the files in my <a href="https://github.com/raphael-proust/rcs">configuration repository</a>.</p>
 </div>
 </body>

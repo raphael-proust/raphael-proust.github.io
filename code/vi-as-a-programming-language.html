@@ -7,7 +7,7 @@
   <meta name="generator" content="pandoc" />
   <meta name="author" content="Raphaël Proust" />
   <title>Dromedary and a half - Vi as a programming language</title>
-  <link rel="stylesheet" href="/assets/style.css" type="text/css" />
+  <link rel="stylesheet" href="/assets/style.css" />
 </head>
 <body>
 <header>
@@ -22,7 +22,7 @@
 <div id="header">
 <h1 class="title">Vi as a programming language</h1>
 </div>
-<p>Disclaimer: this is not a vi-vs-emacs post. The comments of this post may apply to emacs as well – let me know if they do or don't. It just so happens that I use vi, and thus can comment on it, but have only been exposed to emacs for a few hours, and thus cannot make any serious comment on it.</p>
+<p>Disclaimer: this is not a vi-vs-emacs post. The comments of this post may apply to emacs as well – let me know if they do or don’t. It just so happens that I use vi, and thus can comment on it, but have only been exposed to emacs for a few hours, and thus cannot make any serious comment on it.</p>
 <p>Disclaimer: this post does not claim that vi (and other editors which are programming languages) are better than editors which are not programming languages.</p>
 <p>Disclaimer: “vi” here stands for the whole family of editors: vi, vim, neovim, elvis, nvi, vis, etc. Although some specific examples are from one clone or another, the core ideas of the post are about the whole family of clones.</p>
 <h1 id="vi-has-and-is-a-programming-language">Vi has <em>and is</em> a programming language</h1>
@@ -55,11 +55,11 @@ Mover          ::= SimpleMover
 <h2 id="meta-programming-for-everyone">Meta-programming for everyone</h2>
 <p>Interestingly, vi is used to edit source code. In other words, vi is a programming language used to generate source code which is in turn compiled into programs. To some extent, vi can be seen as a metalanguage that supports a range of object languages: you write vi commands which produce OCaml/C/Python code that executes.</p>
 <h1 id="criticisms">Criticisms</h1>
-<p>There is a case to be made that vi is not a programming language. That vi's UI merely borrows some ideas from programming languages.</p>
+<p>There is a case to be made that vi is not a programming language. That vi’s UI merely borrows some ideas from programming languages.</p>
 <p>The main criticism along this line goes something like this: if vi is a programming language, where are the conditionals?</p>
 <p>First, there are explicit conditionals in Ex commands (<code>:g</code> and <code>:v</code>).</p>
 <p>Second, when movement operators fail to move the cursor (e.g., <code>f</code> where the argument character cannot be found), the modification operator it is combined with has no effect.</p>
-<p>But more importantly, third, vi is a domain specific programming language intended primarily for interactive use. That is, vi is meant to be used with the text displayed for the user (programmer) to see – hence the name <code>vi</code> derived from <em>visual</em>. Criticising the lack of conditionals in vi's normal mode is like criticising the lack of type checking in Makefiles: it is out of scope.</p>
+<p>But more importantly, third, vi is a domain specific programming language intended primarily for interactive use. That is, vi is meant to be used with the text displayed for the user (programmer) to see – hence the name <code>vi</code> derived from <em>visual</em>. Criticising the lack of conditionals in vi’s normal mode is like criticising the lack of type checking in Makefiles: it is out of scope.</p>
 <h1 id="comparison-with-other-editors">Comparison with other editors</h1>
 <p>Other editors also have operators to modify the text and cursor position. For example, in <a href="https://atom.io/">Atom</a>, all the normal keys are used to insert the corresponding character into the text. Some control keys (e.g., backspace, delete) are used to modify the text in other ways. Some other control characters are used to change the cursor position. And finally, modifier keys (control, alt) chords are used to modify the text in programmable ways by calling into a scripting language (Javascript).</p>
 <p>Many editors fit the same description and only require minor variations: which scripting language they use, which control keys do what, etc.</p>
