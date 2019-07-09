@@ -11,3 +11,5 @@ Thoughts, articles, posts about code, programming languages, etc.
 [(2017-09-15) Natural languages in programming languages](/code/natural-languages-and-programming-languages.html)
 
 [(2017-10-19) Keyboard mapping](/code/keyboard-mapping.html)
+
+[(2019-07-09) Acme colour scheme for vim](/code/acme-theme.html)
