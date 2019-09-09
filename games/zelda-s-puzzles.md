@@ -81,3 +81,20 @@ In a role-playing game, characters have skills (tools) and motivations (objectiv
 The players use the former to accomplish the latter.
 The game master provides a simulation of the world based on the rules.
 
+
+--------------------------------------------------------------------------------
+
+Update from 2019-07-22
+
+## Breath of the Wild
+
+The latest game in the Zelda series, Breath of the Wild (BotW), breaks with the puzzling tradition of former Zelda games.
+BotW has a game engine where fire spreads, rocks fall, balloons float up, lightning strikes metal, etc.
+The physics engine is even intertwined with the *magic* (or, indistinguishably, otherworldly technology) whereby objects momentum can be zeroed and set anew.
+
+There are still some puzzles.
+Most notably the shrines tend to offer a single solution to a relatively well-defined problem.
+But by and large the game is about problem- (rather than puzzle-) solving.
+
+Even enemy encounters are problems that have many solutions.
+All of the properties of the physics engine mentioned above can be used in a fight: set fire to the grass on which enemies awaits, send rocks tumbling down onto an enemy camp, attach some balloons to an explosive barrel, throw a metal weapon onto an enemy just as lightning is about to strike.

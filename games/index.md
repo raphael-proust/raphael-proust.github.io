@@ -12,7 +12,7 @@ Thoughts, articles, posts about games, game design, etc.
 
 [(2017-06-30) It's all in the cards](/games/rpg-in-cards.html)
 
-[(2017-09-29) Zelda's puzzles](/games/zelda-s-puzzles.html)
+[(2017-09-29) Zelda's puzzles](/games/zelda-s-puzzles.html) (Updated 2019-07-22)
 
 [(2017-10-24) Inclusive design in Fantasy settings](/games/inclusive-design-in-fantasy-settings.html)
 
