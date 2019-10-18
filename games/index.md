@@ -28,3 +28,4 @@ Thoughts, articles, posts about games, game design, etc.
 
 [(2018-08-03) Character death in Dungeons and Dragons](/games/character-death-in-dnd.html)
 
+[(2019-10-18) A Normal Lost Phone](/games/a-normal-lost-phone.html)
