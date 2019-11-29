@@ -6,7 +6,7 @@
   <link rel="icon" type="image/png" href="/assets/favicon.png"/>
   <meta name="generator" content="pandoc" />
   <meta name="author" content="Raphaël Proust" />
-  <title>Dromedary and a half - On code</title>
+  <title>Dromedary and a half - Dix-milles</title>
   <link rel="stylesheet" href="/assets/style.css" />
 </head>
 <body>
@@ -20,15 +20,16 @@
 </header>
 <div id="content">
 <div id="header">
-<h1 class="title">On code</h1>
+<h1 class="title">Dix-milles</h1>
 </div>
-<p>Thoughts, articles, posts about code, programming languages, etc.</p>
-<p><a href="/code/vi-as-a-programming-language.html">(2017-07-05) Vi as a programming language</a></p>
-<p><a href="/code/odds.html">(2017-07-15) Odds (OCaml Dice Dice Something)</a></p>
-<p><a href="/code/natural-languages-and-programming-languages.html">(2017-09-15) Natural languages in programming languages</a></p>
-<p><a href="/code/keyboard-mapping.html">(2017-10-19) Keyboard mapping</a></p>
-<p><a href="/code/acme-theme.html">(2019-07-09) Acme colour scheme for vim</a></p>
-<p><a href="/code/dixmilles.html">(2019-11-29) Dix-milles</a></p>
+<p>Dix-milles (Ten-thousands) is a dice game with risk/reward management. A interesting mechanics forces players to make choices not only about their own risk but also about the potential rewards for other players.</p>
+<p>An implementation walkthrough in OCaml is presented at the end of this post. It is entirely self-contained and can be compiled with the OCaml compiler (<code>ocamlc</code>, or <code>ocamlopt</code>):</p>
+<pre><code>ocamlc -o dixmilles dixmilles.ml
+./dixmilles</code></pre>
+<p>or executed directly with the OCaml topleve (<code>ocaml</code>):</p>
+<pre><code>ocaml dixmilles.ml</code></pre>
+<hr />
+<p><a href="/code/dixmilles.ml">Download the implementation walkthrough</a></p>
 </div>
 </body>
 </html>
