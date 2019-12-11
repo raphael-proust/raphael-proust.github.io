@@ -54,9 +54,9 @@ end
    (six-sided) dice. This first part of the implementation is intended to make
    it easy for the rest of the code to work with dice.
 
-   This is called *domain modeling* and it consists in creating abstractions
-   that match the concepts that the program has to handle. If you make a dice
-   game, the program handles (an abstraction of) dice, and if you make
+   This is called *domain modeling*, in which you create abstractions
+   corresponding to the concepts that you handle in the program. If you make a
+   dice game, the program handles (an abstraction of) dice, and if you make
    accounting software, the program handles monies, accounts, and balances.
 
    An important part of domain modeling in OCaml, and other similar languages,
@@ -68,8 +68,8 @@ end
 
 (* ## Aside: modules
 
-   The implementation is separated into module. The module language in OCaml is
-   powerful, but we only use it for two purpose:
+   The implementation is separated into modules. The module language in OCaml is
+   powerful, but we only use it for two reasons:
 
    - namespaces: Functions, values and types are defined inside a module so that
      the rest of the code refers to them under the module name. E.g., `D6.roll`
@@ -122,13 +122,13 @@ module D6 : sig
 
      However, for our purpose the sum type is more appropriate because `int`s do
      not have static guarantees about their range (i.e., `7` would be a valid
-     rolled die as far as the type system is concerned). Thus, using the the sum
+     rolled die as far as the type system is concerned). Thus, using the sum
      type helps us lean on the type system to guarantee that all our data is
      sound. Doing so, we offload some of the reasoning about our program to an
      automated system.
 
      Moreover, for our purpose, rolled die are not numbers: they are never
-     added together nor compared. True, the face value of a dice is a good
+     added together nor compared. True, the face value of a die is a good
      mnemonic for the scoring system of the game of dix-milles, but dix-milles
      could be played with dice that have abstract symbols on their faces.
 
