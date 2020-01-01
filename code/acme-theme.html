@@ -33,8 +33,8 @@
 <p><img src="/assets/vacme-1-comments.png" /></p>
 <p>I would like to go even further and render keywords as a lighter shade that would blend in the background. Keywords are boilerplate – of sorts – and should not be displayed as prominently as identifiers or values.</p>
 <h2 id="diffs">Diffs</h2>
-<p>I use the diff capabilities of neovim often. Most of the time, through fugitive’s <code>:Gdiff</code>. I even made a git alias for that purpose: <code>review = !sh -c 'nvim -c \"tabdo Gdiff $0\" -p $(git diff --name-only $0)'</code></p>
-<p>The usual problem I have with diff views is that the colouring of the text and of the diff interfere. Specifically, the foreground colours of the text do not contrast Vacme, because it does not colour the text, does not interfere with the diff colouring.</p>
+<p>I use the diff capabilities of neovim often. Most of the time, through fugitive’s <code>:Gdiff</code>. I even made a git alias for that purpose: <code>review = !sh -c 'nvim -c \"tabdo Gdiff $1\" -p $(git diff --name-only $1)' _</code></p>
+<p>The usual problem I have with diff views is that the colouring of the text and of the diff interfere. Specifically, the foreground colours of the colour-highlighted text do not contrast with the background colours of diff-highlighted text. This is not a problem in Vacme, because it does not colour the text.</p>
 <p><img src="/assets/vacme-2-diff.png" /></p>
 <h2 id="colours">Colours</h2>
 <p>The terminal colours set for this theme to work are as follows:</p>

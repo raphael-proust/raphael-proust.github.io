@@ -34,11 +34,12 @@ Keywords are boilerplate – of sorts – and should not be displayed as promine
 
 I use the diff capabilities of neovim often.
 Most of the time, through fugitive's `:Gdiff`.
-I even made a git alias for that purpose: `review = !sh -c 'nvim -c \"tabdo Gdiff $0\" -p $(git diff --name-only $0)'`
+I even made a git alias for that purpose:
+`review = !sh -c 'nvim -c \"tabdo Gdiff $1\" -p $(git diff --name-only $1)' _`
 
 The usual problem I have with diff views is that the colouring of the text and of the diff interfere.
-Specifically, the foreground colours of the text do not contrast 
-Vacme, because it does not colour the text, does not interfere with the diff colouring.
+Specifically, the foreground colours of the colour-highlighted text do not contrast with the background colours of diff-highlighted text.
+This is not a problem in Vacme, because it does not colour the text.
 
 ![](/assets/vacme-2-diff.png)
 
