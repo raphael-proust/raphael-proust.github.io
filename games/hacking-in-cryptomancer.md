@@ -77,9 +77,9 @@ Cryptomancer is not the only TTRPG to give the players the responsibilities for 
 
 ## Video Games
 
-In video games, character actions are under more or less direct control of the player. E.g., in The Legend of Zelda: Breath of the Wild, the player is in direct control of the positioning of Link but the same player only instruct Link on what ingredients to mix together. The former involves somewhat direct controls (albeit positioning is a function of movement which is arguably somewhat indirectly controlled by the player) whereas the latter involves very indirect controls (choosing ingredients is not cooking). In other words, positioning (unlike cooking) is the responsibility of the player, not of link.
+In video games, character actions are under more or less direct control of the player. E.g., in The Legend of Zelda: Breath of the Wild, the player is in direct control of the positioning of Link but the same player only instruct Link on what ingredients to mix together. The former involves somewhat direct controls (albeit positioning is a function of movement which is arguably somewhat indirectly controlled by the player) whereas the latter involves very indirect controls (choosing ingredients is not cooking). In other words, positioning (unlike cooking) is the responsibility of the player, not of Link.
 
-Less well known but more to the point, [A Normal Lost Phone](/games/a-normal-lost-phone.html) smashes the in-game out-of-game boundary by having presenting the in-game Lost Phone as a mock interface on the Player's out-of-game actual phone. As a Player, you tap on the screen of your phone to control an in-game phone. The bulk of the responsibilities is shifted to the Player.
+Less well known but more to the point, [A Normal Lost Phone](/games/a-normal-lost-phone.html) smashes the in-game out-of-game boundary by presenting the in-game Lost Phone as a mock interface on the Player's out-of-game actual phone. As a Player, you tap on the screen of your phone to control an in-game phone. The bulk of the responsibilities is shifted to the Player.
 
 ## Flexibility
 
