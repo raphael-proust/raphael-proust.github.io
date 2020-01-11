@@ -31,9 +31,9 @@
 <h1 id="code-overview">Code overview</h1>
 <p>The code is relatively simple: a dice expression is a function that expects a PRNG state (<code>Random.State.t</code>) and produces a value. The combinators that operate on these simply create new closures that dispatch the PRNG state as needed.</p>
 <pre><code>type &#39;a t = Random.State.t -&gt; &#39;a
-let lift2 f x y = fun state folder -&gt;
-        let x = roll state folder x in
-        let y = roll state folder y in
+let lift2 f x y = fun state -&gt;
+        let x = roll state x in
+        let y = roll state y in
         f x y</code></pre>
 <p>The expressions are evaluated by applying the function to a PRNG state. If no state is provided, one is created for the whole of the expression.</p>
 <pre><code>let roll ?state t =
@@ -84,7 +84,7 @@ end</code></pre>
 <p>A verbose flag prints all intermediate rolls.</p>
 <h1 id="packaging">Packaging</h1>
 <p>The main reason to start the project was to refresh on the packaging (and release, etc.) part of OCaml development. This aspect of the OCaml ecosystem has evolved a lot.</p>
-<p><a href="http://erratique.ch/software/topkg">Topkg</a> is a packaging tool written by Daniel Bünzli. It takes care of pretty much every thing packaging wise. I encountered minor issues, mostly due to inexperience. (I had to force-push to my Github repository because I had forgotten dome files.)</p>
+<p><a href="http://erratique.ch/software/topkg">Topkg</a> is a packaging tool written by Daniel Bünzli. It takes care of pretty much everything packaging wise. I encountered minor issues, mostly due to inexperience. (I had to force-push to my Github repository because I had forgotten dome files.)</p>
 <p>For the release part, I was unable to automatically push to opam because of a missing dependency (<code>opam-publish</code>). I was then unable to install it explicitly because of an unrelated error (I need to unpin Lwt). For now, I simply made a pull request on opam-repository manually.</p>
 </div>
 </body>

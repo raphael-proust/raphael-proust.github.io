@@ -24,9 +24,9 @@ The combinators that operate on these simply create new closures that dispatch t
 
 ```
 type 'a t = Random.State.t -> 'a
-let lift2 f x y = fun state folder ->
-        let x = roll state folder x in
-        let y = roll state folder y in
+let lift2 f x y = fun state ->
+        let x = roll state x in
+        let y = roll state y in
         f x y
 ```
 
@@ -116,7 +116,7 @@ The main reason to start the project was to refresh on the packaging (and releas
 This aspect of the OCaml ecosystem has evolved a lot.
 
 [Topkg](http://erratique.ch/software/topkg) is a packaging tool written by Daniel Bünzli.
-It takes care of pretty much every thing packaging wise.
+It takes care of pretty much everything packaging wise.
 I encountered minor issues, mostly due to inexperience.
 (I had to force-push to my Github repository because I had forgotten dome files.)
 
