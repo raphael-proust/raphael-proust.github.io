@@ -24,6 +24,8 @@ I started learning Chinese and Toki Pona although I am not proficient in either.
 I work on the [Tezos](https://gitlab.com/tezos/tezos) project.
 Checkout [my CV](/cv.html) for more information.
 
+I irregularly publish homebrew content on the [Dungeon Masters Guild](https://www.dmsguild.com/browse.php?author=Rapha%C3%ABl%20Proust).
+
 
 ## Past
 
