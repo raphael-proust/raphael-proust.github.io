@@ -32,7 +32,7 @@ Vi programs modify that state in different ways.
 First, programs can modify the cursor position.
 This is achieved with movement operators: `h`, `j`, `k`, `l`, `w`, `e`, `{`, `}`, etc.
 There are also movement functions.
-These take an argument which control what the movement: `f`, `t`, etc..
+These take an argument which parametrise the movement on the state: `f`, `t`, etc..
 
 Second, programs can modify the text in different ways.
 Some modifications are immediate: `x`, `~`, `D`, `J`.
