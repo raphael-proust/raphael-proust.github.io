@@ -10,7 +10,7 @@ Raphaël Proust
 
 I am a software developer and a technical writer.
 
-I work in a variety of programming languages —including OCaml, Python, Scala, Javascript— on various types of software —such as web servers, document processing, games, libraries.
+I work in a variety of programming languages —including OCaml, Python, Scala, Javascript— on various types of software —such as blockchains, document processors, web servers, libraries.
 
 I write, edit and review courses, tutorials, manuals and rulebooks in French and English.
 
@@ -72,6 +72,69 @@ I write, edit and review courses, tutorials, manuals and rulebooks in French and
 ------------------------ -------------------------------------------------------
 
 
+## Projects at Nomadic Labs
+
+[Nomadic Labs](https://nomadic-labs.com/) is a company that provides software
+development and research in formal verification, distributed systems and
+programming languages.
+
+I joined Nomadic Labs in March 2018 as the company was expending to handle the
+development requirements of the [Tezos](https://tezos.com/) project. I am still
+working at Nomadic Labs, on Tezos and other related projects. Some of the items
+below are on-going.
+
+- **Code review** and **merging**
+
+	I reviewed merge requests (MRs). As appropriate to the specific merge request
+	I would either give a greenlight for merging, or request changes, or discuss
+	specific points with the original developers or with other developers with
+	expertise in the area affected by the changes.
+
+	I rebased and merged MRs that had been greenlit by other reviewers.
+
+	I participated and, for a time, ran weekly meetings to discuss and triage open
+	MRs.
+
+- **Overhauling the Tezos mempool**
+
+	The mempool is a component of the Tezos project responsible for receiving
+	information from the P2P gossip, folding the received information into the
+	local state, and, based on state changes, handing over some more information
+	to the P2P layer to be gossiped. A few colleagues and myself rewrote a new
+	mempool from scratch to fix some issues and improve performance.
+
+	This software component involves concurrency (information is received from
+	different peers at unpredictable times, but operations must be applied to the
+	state sequentially) and more specifically defensive scheduling: ensuring that
+	no peer can carry out a denial of service attack by saturating a node to the
+	point that it ignores other nodes. It also involves a high level of
+	abstraction because the nature of the state and the way information is folded
+	into it depends on another software component (the economic protocol) that
+	can change dynamically.
+
+	The development of this new mempool led to the release of
+	[`lwt-pipeline`](https://gitlab.com/nomadic-labs/lwt_pipeline) and the
+	extension of [`ringo`](https://gitlab.com/nomadic-labs/ringo).
+
+- **Releasing internal libraries** and **upstreaming changes to vendored libraries**
+
+	The Tezos project was originally built as a set of libraries and binaries all
+	placed within the same repository. After a while, some parts of the code had
+	matured into stable components with well-defined interfaces. These parts
+	could be released.
+
+	I took the lead in releasing libraries. This involved setting up their own
+	repository (including continuous integration), setting up the packaging
+	boilerplate, and modifying the code of Tezos to use the external libraries
+	rather than the embedded version.
+
+- **Other miscellaneous**
+
+	Work at Nomadic Labs also included developing various features, fixing some
+	bugs, triaging issues, etc. I also developed some of the tooling used for
+	linting.
+
+
 ## Projects at Cambridge Coding Academy and Cambridge Spark
 
 [Cambridge Coding Academy](https://cambridgecoding.com/) and
@@ -81,19 +144,17 @@ The former organises courses for teenagers; the latter for professionals.
 
 I started working for the companies as they were set up. When I finished my
 PhD, I started full time employment for these companies and worked on the
-projects listed below. I am still working, remotely, on a per-project basis
-with both companies.
+projects listed below.
 
 - **Student evaluation system**
 
-	I participated in the creation and I am still participating in the
-	maintenance and improvement of a system to automatically evaluate students.
-	I also handle part of the system administration for the machines that run
-	the system. The system analyses submitted code, records complete results
-	for later review by the teachers and gives immediate summarised feedback to
-	the students.
+	I participated in the creation, maintenance and improvement of a system to
+	automatically evaluate students. I also handled part of the system
+	administration for the machines that run the system. The system analysed
+	submitted code, recorded complete results for later review by the teachers and
+	gave immediate summarised feedback to the students.
 
-	The system involves Gitlab, Python, continuous integration, linting
+	The system involved Gitlab, Python, continuous integration, linting
 	libraries, unit testing, Docker images (both building and running), and
 	Amazon Web Services.
 
@@ -102,13 +163,13 @@ with both companies.
 
 	I wrote, reviewed, and edited
 	[courses for Cambridge Coding Academy](http://cambridgecoding.com/summerschool).
-	These courses, aimed at teenagers, cover basic programming, making web
+	These courses, aimed at teenagers, covered basic programming, making web
 	pages, building games, programmatically generating music, and creating
 	artificial intelligences.
 
 	I wrote, reviewed, and edited
 	[courses for Cambridge Spark](https://cambridgespark.com/training). These
-	courses, aimed at professionals, cover basic programming, data-analysis,
+	courses, aimed at professionals, covered basic programming, data-analysis,
 	and quantitative finance.
 
 
@@ -133,10 +194,10 @@ with both companies.
 
 	I contributed to two consecutive versions of the
 	[Cambridge Spark website](https://cambridgespark.com/). The website, coded
-	in Scala, uses the Play and Bootstrap frameworks, an SQL database, and
+	in Scala, used the Play and Bootstrap frameworks, an SQL database, and
 	custom Javascript.
 
-	I also assisted with the system administration. The website is hosted on
+	I also assisted with the system administration. The website was hosted on
 	Amazon Web Services.
 
 
@@ -144,7 +205,7 @@ with both companies.
 
 	I taught numerous courses for both teenagers (with Cambridge Coding
 	Academy) and professionals (with Cambridge Spark) about several aspects of
-	computer science. I also trained teachers and tutors.
+	computer science and programming. I also trained teachers and tutors.
 
 
 ## Projects at the University of Cambridge
@@ -193,8 +254,8 @@ I completed a PhD at the Computer Laboratory of the University of Cambridge.
 
 ## Miscellaneous
 
-- Natural languages: French (native), English (fluent), Chinese (beginner)
-- Programming languages: OCaml (native), make (fluent), shell (fluent), Javascript (fluent), Python (fluent), Scala (intermediate), Scheme (beginner), Haskell (beginner), C (beginner).
+- Natural languages: French (native), English (fluent), Spanish (beginner), Chinese (beginner)
+- Programming languages: OCaml (native), make (fluent), shell (fluent), Javascript (rusty), Python (rusty), Scala (rusty), Scheme (beginner), Haskell (beginner), C (beginner).
 - Markup languages: Markdown (native), HTML (fluent), LaTeX (intermediate)
 - Environment: Archlinux, Ubuntu, `vi`, `acme`, `make`, `mk`, Git, `opam`, `sh`, `rc`, Pandoc, Docker, etc.
-- Other: driver's Licence, fire warden training, skilled punter and skater
+- Other: driver's license, PADI Advanced Open Water Diver, fire warden training, skilled punter and skater
