@@ -11,10 +11,11 @@ body{ margin-top:1px; min-width:21em; max-width:32em; }
 }
 h1 { font-size:1.5em; }
 h2 { font-size:1.3em; }
-h1, h2 { text-transform:uppercase; letter-spacing:1px; font-weight:bold; font-family:sans-serif; }
-div#header h1, div#header h2 { text-align:center; }
-div#header h2 { font-size:0.7em; }
+h3 { font-size:1.2em; }
+h1, h2, h3 { text-transform:uppercase; letter-spacing:1px; font-weight:bold; font-family:sans-serif; }
+div#header h1 { text-align:center; }
 h1, h2, p, ul, ol, div, pre, hr, blockquote { margin-bottom:0.7em; }
+h1, h2, h3, h4, h5 { margin-top:1.1em; }
 a{ color:#111; text-decoration:inherit; border-bottom: #BBB solid 1px; }
 a:hover{ border-bottom: #00C solid 1px; }
 nav a { text-decoration:none; }
