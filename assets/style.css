@@ -2,13 +2,10 @@
 * { margin:0; padding:0; border:0; outline:0; font-size:100%; vertical-align:baseline; color:inherit; }
 html, body { margin:auto; height:100%; }
 body { font-size:1em; line-height:1.4em; font-family:serif; text-align:left; color:#222; background-color:#ddd; padding-left:1.85em; padding-right:1.85em; }
-body{ margin-top:1px; min-width:21em; max-width:32em; }
-@media only screen and (max-device-width: 480px) {
-	body { margin-top:0px; width:18em; min-width:0; max-width:none; }
-}
-@media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
-	body{ margin-top:0px; width:32em; min-width:0; max-width:none; font-size:125%; }
-}
+body{ margin-top:1px; margin-bottom:10px; min-width:21em; max-width:32em; }
+@media only screen and (min-device-width: 330px) and (max-device-width: 480px) { body { width:90%; min-width:0; max-width:none; } }
+@media only screen and (min-device-width: 480px) and (max-device-width: 780px) { body{ width:24em; min-width:0; max-width:none; } }
+@media only screen and (min-device-width: 780px) and (max-device-width: 1024px) { body{ width:32em; min-width:0; max-width:none; } }
 h1 { font-size:1.5em; }
 h2 { font-size:1.3em; }
 h3 { font-size:1.2em; }
