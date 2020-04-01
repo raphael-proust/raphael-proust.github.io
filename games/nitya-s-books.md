@@ -19,6 +19,8 @@ The first of the two books, Nitya's Notes, includes many character options:
 There is too much content to summarise it all here.
 So instead, here are a few excerpts:
 
+The Transmuted is a character that used to be a pet, but their carer was also a caster who decided to make them a person.
+
 > ### Transmuted
 > 
 > Transmuted are so rare that very few people, even the better traveled, have ever seen one.
@@ -34,22 +36,22 @@ So instead, here are a few excerpts:
 > 
 > Your transmuted character has a variety of abilities, some from your pet nature and others imparted by the magic that made you.
 > 
-> **Ability Scores Increase** Your Constitution score increases by 2.
-> **Age** Once transmuted, you mature at a slow rate and can live for up to 200 years.
-> **Alignment** Transmuted generally have a similar good-neutral-evil alignment as their transmuter. Their lawful-neutral-chaotic alignment depends more on the instinct of their original pets: Cats tend to be more chaotic, Dogs tend to be more lawful.
-> **Size** Transmuted have a wide range of height (from 4 feet to 7 feet) and weights (from 80 to 250 pounds). Regardless, your size is Medium.
-> **Speed** Your base walking speed is 30 feet.
-> 
+> **Ability Scores Increase** Your Constitution score increases by 2.<br/>
+> **Age** Once transmuted, you mature at a slow rate and can live for up to 200 years.<br/>
+> **Alignment** Transmuted generally have a similar good-neutral-evil alignment as their transmuter. Their lawful-neutral-chaotic alignment depends more on the instinct of their original pets: Cats tend to be more chaotic, Dogs tend to be more lawful.<br/>
+> **Size** Transmuted have a wide range of height (from 4 feet to 7 feet) and weights (from 80 to 250 pounds). Regardless, your size is Medium.<br/>
+> **Speed** Your base walking speed is 30 feet.<br/>
 > **Magically stable shape** Because of the magic that gave you your new shape, other shape-changing magic is less likely to successfully affect you.
 > You have advantage on saving throws against spells and other magical effects that would alter your form.
-> Additionally, you are immune to the lycanthropy curse.
-> **Beast origin** You are proficient in the Animal Handling skill.
-> **Magical origin** You learn one cantrip of your choice from the Bard, Druid, Cleric, Sorcerer, or Wizard spell list. Your spellcasting ability for this cantrip is determined by which class's spell list the cantrip is chosen from: Wisdom for Druid or Cleric, Charisma for Bard or Sorcerer, and Intelligence for Wizard.
-> 
-> **Language** You can speak, read, and write Common and one other language of your choice that your transmuter speaks.
+> Additionally, you are immune to the lycanthropy curse.<br/>
+> **Beast origin** You are proficient in the Animal Handling skill.<br/>
+> **Magical origin** You learn one cantrip of your choice from the Bard, Druid, Cleric, Sorcerer, or Wizard spell list. Your spellcasting ability for this cantrip is determined by which class's spell list the cantrip is chosen from: Wisdom for Druid or Cleric, Charisma for Bard or Sorcerer, and Intelligence for Wizard.<br/>
+> **Language** You can speak, read, and write Common and one other language of your choice that your transmuter speaks.<br/>
 > **Subrace** Depending on which pet you used to be before the transmuting, you belong to one of the subraces. \[The book includes the following subraces: Bunny, Cat, Dog, Rat, and Turtle.\]
 
-> ### Symbiotic Magic (Sorcerer subclass)
+The Symbiotic Magic is a Sorcerous Origin that is onset by a small organism that lives in the Sorcerer's brain.
+
+> ### Symbiotic Magic
 > 
 > You are two. And two are you.
 > 
@@ -69,6 +71,8 @@ So instead, here are a few excerpts:
 > 
 > When you reach 14th level, you become able to keep concentration for a little bit longer than other people. Whenever you break concentration, you can decide to maintain the effect of your spell until the beginning of your next turn.
 
+The Tattoo Kit is a Artisan's tools for those who put pigments under others' skin.
+
 > ### Tattoo Kit
 > 
 > A tattoo kit (20 gp, 4 lb.) contains the necessary components to create tattoos.
@@ -86,6 +90,8 @@ So instead, here are a few excerpts:
 > **Tattoo**
 > You can create tattoos.
 > Both the preparation and the tattooing itself take time.
+
+The Gloves of Familiarity are a pair of enchanted gloves to try and make others friendlier to you.
 
 > ### Gloves of Familiarity
 > 
