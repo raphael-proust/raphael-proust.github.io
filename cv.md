@@ -257,5 +257,5 @@ I completed a PhD at the Computer Laboratory of the University of Cambridge.
 - Natural languages: French (native), English (fluent), Spanish (intermediate), Chinese (beginner)
 - Programming languages: OCaml (native), make (fluent), shell (fluent), Javascript (rusty), Python (rusty), Scala (rusty), Scheme (beginner), Haskell (beginner), C (beginner).
 - Markup languages: Markdown (native), HTML (fluent), LaTeX (intermediate)
-- Environment: Archlinux, Ubuntu, `vi`, `acme`, `make`, `mk`, Git, `opam`, `sh`, `rc`, Pandoc, Docker, etc.
+- Environment: Archlinux, `vi`/`nvim`, `acme`, `make`, `mk`, `git`, `opam`, `sh`, `rc`, `pandoc`, etc.
 - Other: driver's license, PADI Advanced Open Water Diver, fire warden training, skilled punter and skater

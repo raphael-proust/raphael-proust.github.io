@@ -32,4 +32,4 @@ Thoughts, articles, posts about games, game design, etc.
 
 [(2019-11-11) Hacking in Cryptomancer](/games/hacking-in-cryptomancer.html)
 
-[(2020-04-01) Nitya's Books](/games/nitya-s-books.html)
+[(2020-04-01) Release: Nitya's Books](/games/nitya-s-books.html)

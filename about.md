@@ -11,7 +11,7 @@ I am also proficient in Python, Javascript, and Scala.
 I have also been in contact with Scheme, Haskell and C.
 Most of my public software contributions are on [Github](http://github.com/raphael-proust/) and on [Gitlab](https://gitlab.com/raphael-proust).
 
-I speak French and English.
+I speak French, English and some Spanish.
 I started learning Chinese and Toki Pona although I am not proficient in either.
 
 
