@@ -1,6 +1,6 @@
 (* # Foreword: Dix-milles
 
-   Dix-milles (Ten-thousands) is a dice game with risk/reward management. A
+   Dix-milles (Ten-thousands) is a dice game with risk/reward management. An
    interesting mechanics forces players to make choices not only about their own
    risk but also about the potential rewards for other players.
 
@@ -272,7 +272,8 @@ module D6s : sig
 
   (* `Algebra` exposes the functions `subset` and `diff` as infix operators. In
      OCaml, an infix operator is defined by surrounding it in brackets. See the
-     [manual]() for more details. *)
+     [manual]() for more details.
+  *)
   module Algebra : sig
 
     (* `a <= b` is `subset ~small:a ~big:b` *)
@@ -422,7 +423,7 @@ module Points : sig
      points you scored, 250 points are used to increase your score up to the
      target score (10000), and the remainder (400 - 250 = 150 points) decreases
      your score down from the target score. Your final score is the target score
-     minus 150 points: 10000 - 150 = 3850 points.
+     minus 150 points: 10000 - 150 = 9850 points.
 
      To minimise the number of possible bugs, it is better to implement such
      logic once and for all, and let all other parts of the code use the one
@@ -494,15 +495,14 @@ module Scoring : sig
        observed in some details) by any part of the code) and
      - an abstract type (which can only be constructed and destructed by parts
        of the code that have access to the definition).
-       With a private type, the values can only be constructed by parts of the
-       code that have access to the unrestricted definition (inside the module)
-       but it can be destructed (e.g., it can be converted to `D6s.t` for free)
-       anywhere.
+     With a private type, the values can only be constructed by parts of the
+     code that have access to the unrestricted definition (inside the module)
+     but it can be destructed (e.g., it can be converted to `D6s.t` for free)
+     anywhere.
   *)
   type atom = private D6s.t
 
-  (* `v` lists all the existing atoms from the rules, along with the number of
-     points they are worth. *)
+  (* `v` lists all the existing atoms from the rules *)
   val v : atom list
 
   (* GAME RULE: it is possible to select multiple atoms from a roll.
@@ -563,7 +563,7 @@ end = struct
 
   let v = List.map fst scorer
 
-  (* Score an atom by looking it up in the list `v` *)
+  (* Score an atom by looking it up in the list `scorer` *)
   let score_atom c = List.assoc c scorer
   (* Score a `t` by summing the scores of all its atoms *)
   let score c = List.fold_left (fun acc c -> acc + score_atom c) 0 c
@@ -607,13 +607,13 @@ end = struct
   let rec choices t v =
     let open D6s.Algebra in
     v (* Take all scoring atoms *)
-  |> List.filter (fun pick -> pick <= t) (* Find those that appear in [t]*)
+    |> List.filter (fun pick -> pick <= t) (* Find those that appear in [t]*)
     |> List.map (fun pick ->
         (* each of those is a valid pick *)
         [pick] ::
         (* and so is
            this valid pick followed (`pick :: _`)
-           picks (`choices`)
+           by picks (`choices`)
            from the leftover (`t - pick`) *)
         List.map
           (fun further_choice -> pick :: further_choice)
