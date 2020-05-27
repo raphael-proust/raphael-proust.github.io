@@ -140,7 +140,7 @@ Another example is to use Cryptokitties-like mechanics to generate new card: use
 
 ## Guaranteed scarcity
 
-The code of CardCoin™ can guarantee some level of scarcity of some chards.
+The code of CardCoin™ can guarantee some level of scarcity of some cards.
 For example, Wizzies of the Blocky Shores™ can publish a set of new cards that contain a no-reprint flag.
 This no-reprint flag renders invalid any future operation that would introduce the same cards.
 
