@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Raphaël Proust" />
+  <title>Dromedary and a half - Lwt introduction/tutorial Part 1 of 2</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+<header>
+<nav>
+	<a href="/code/index.html">On code</a> |
+	<a href="/games/index.html">On games</a> |
+	<a href="/misc/index.html">Miscellanées</a> |
+	<a href="/about.html">About</a>
+</nav>
+</header>
+<div id="content">
+<div id="header">
+<h1 class="title">Lwt introduction/tutorial Part 1 of 2</h1>
+</div>
+<p><a href="http://ocsigen.org/lwt">Lwt</a> (<a href="https://github.com/ocsigen/lwt/">code</a>) is a library for writing concurrent programs in OCaml. It is used in multiple OCaml projects including <a href="https://mirage.io/">Mirage</a> (<a href="https://github.com/mirage/">code</a>) and <a href="https://tezos.com/">Tezos</a> (<a href="https://gitlab.com/tezos/tezos/">code</a>).</p>
+<p>I recently ran some internal training at <a href="https://nomadic-labs.com/">Nomadic Labs</a> about Lwt: What it is? How to use it effectively? What to watch out for? Etc. Below is a write-up of that training. It covers: basic concepts (promises, states), simple use, description of the internals, and advanced use (cancellation and exception propagation).</p>
+<h1 id="prelude">Prelude</h1>
+<p>Lwt is a library. You can install it as an <code>opam</code> package named <code>lwt</code>. Installing <code>base-unix</code> before is recommended to get access to operating system wrappers.</p>
+<pre><code>opam install base-unix
+opam install lwt</code></pre>
+<p>The <code>lwt</code> package installs the <code>lwt</code> library (and <code>lwt.unix</code> sub-library if you have installed <code>base-unix</code>) that you can refer to in your <code>dune</code> build files.</p>
+<pre><code>(library
+ (name ..)
+ (public_name ..)
+ (libraries lwt)
+ (flags (:standard)))</code></pre>
+<p>Declaring a dependence to the <code>lwt</code> library in your <code>dune</code> build file gives you access to the <code>Lwt</code> module.</p>
+<p>Lwt, <code>lwt</code>, <code>lwt</code>, <code>Lwt</code></p>
+<h1 id="lwt-as-a-black-box">Lwt as a black-box</h1>
+<p>Lwt is a library for creating and manipulating <em>promises</em>.</p>
+<pre><code>(** The type of a promise for a value of type [&#39;a]. *)
+type &#39;a t</code></pre>
+<p>A promise is a cell that may hold a value or an exception. Moreover, a promise that doesn’t hold a value or an exception, can change to hold a value or an exception.</p>
+<p>A promise that doesn’t hold anything is said to be <em>pending</em>. When a promise that holds nothing changes to hold something it is said to <em>resolve</em> or to <em>be resolved</em>. In particular, a promise that resolves to hold a value is said to be <em>fulfilled</em> whereas a promise that resolves to hold an exception is said to be <em>rejected</em>.</p>
+<p>The Lwt library provides a way to introspect the state of promise:</p>
+<pre><code>type &#39;a state =
+  | Return of &#39;a
+  | Fail of exn
+  | Sleep
+
+val state: &#39;a t -&gt; &#39;a state</code></pre>
+<h1 id="a-necessary-side-note-on-terminology-and-backwards-compatibility">A necessary side-note on terminology and backwards compatibility</h1>
+<p>The Lwt library is old. And a lot of the terminology (in the interface and, to a lesser extent, in the documentation) is dated. For example, the different variants for the type <code>state</code> (<code>Return</code>, <code>Fail</code> and <code>Sleep</code>) are based on an old description of Lwt as a thread library. In fact, “Lwt” stands for Light-Weight Threads.</p>
+<p>There are no threads in Lwt. There are only promises. But old descriptions of the library will occasionally contain dated references to threads. And the interface of the library is full of those references.</p>
+<h1 id="analogy">Analogy</h1>
+<p>A promise, as a cell that may hold nothing, a value, or an exception, is similar to a combination of other types:</p>
+<pre><code>&#39;a Lwt ≈ (&#39;a, exn) result option ref</code></pre>
+<p>This gives the following similarity table:</p>
+<table>
+<thead>
+<tr class="header">
+<th><code>p: 'a t</code></th>
+<th><code>('a, exn) result option ref</code></th>
+<th><code>state p</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>pending</td>
+<td><code>None</code></td>
+<td><code>Sleep</code></td>
+</tr>
+<tr class="even">
+<td>fulfilled</td>
+<td><code>Some (Ok _)</code></td>
+<td><code>Return _</code></td>
+</tr>
+<tr class="odd">
+<td>rejected</td>
+<td><code>Some (Error _)</code></td>
+<td><code>Fail _</code></td>
+</tr>
+</tbody>
+</table>
+<p>Note that this is just a similarity, not an equivalence. The main difference is that a promise can only ever transition from holding nothing to holding either a value or an exception.</p>
+<h1 id="creating-and-combining-promises">Creating and combining promises</h1>
+<h2 id="basic-monadic-interface">Basic monadic interface</h2>
+<p><code>Lwt.return: 'a -&gt; 'a t</code><br />
+<code>return v</code> evaluates immediately to a promise of type that is already fulfilled with the value <code>v</code>. This is the most basic way to create a promise. By itself it is fairly useless, but it turns out to be essential as a building block for more complicated promises. In particular, it fits as part of the Monadic interface to Lwt.</p>
+<p><code>Lwt.bind: 'a t -&gt; ('a -&gt; 'b t) -&gt; 'b t</code><br />
+<code>bind p f</code> evaluates to a promise, the state of which depends on the call arguments:</p>
+<ul>
+<li><p>If <code>p</code> is fulfilled to <code>x</code>, then <code>bind p f</code> evaluates to the promise <code>f x</code>.</p></li>
+<li><p>If <code>p</code> is rejected with <code>exc</code>, then <code>bind p f</code> evaluates to a promise rejected with <code>exc</code>.</p></li>
+<li><p>If <code>p</code> is pending, then <code>bind p f</code> evaluates to a promise <code>p'</code> that is pending. When <code>p</code> resolves, it has the following effects:</p>
+<ul>
+<li>if <code>p</code> is rejected, so is <code>p'</code>, and</li>
+<li>if <code>p</code> is fulfilled with <code>x</code>, then <code>p'</code> becomes behaviourally identical to the promise <code>f x</code>.</li>
+</ul></li>
+</ul>
+<p>Note that the notion of “becomes behaviourally identical to” is vague. We give more details in Part 2 of this tutorial. In the mean time, it means that the promise resolve at the same time and with the same value/exception.</p>
+<p><code>Lwt.( &gt;&gt;= ) : 'a t -&gt; ('a -&gt; 'b t) -&gt; 'b t</code><br />
+The infix operator <code>&gt;&gt;=</code> is an alias for <code>bind</code>. It is provided to allow for the use of the monadic style.</p>
+<pre><code>open_file name &gt;&gt;= fun handle -&gt;
+read_lines handle &gt;&gt;= fun lines -&gt;
+keep_matches pattern lines &gt;&gt;= fun lines -&gt;
+print_lines lines &gt;&gt;= fun () -&gt;
+..</code></pre>
+<p><code>Lwt.fail: exn -&gt; 'a t</code><br />
+<code>fail exc</code> evaluates immediately to a promise that is already rejected with the exception <code>exc</code>. Note that, as we discuss below, the use of <code>fail</code> should be reserved for populating data-structures (and other similar tasks) but that, within one of Lwt’s function, the use of <code>raise</code> is preferred.</p>
+<h2 id="resolvers">Resolvers</h2>
+<p><code>Lwt.task: unit -&gt; 'a t * 'a u</code><br />
+<code>task ()</code> evaluates immediately to a pair <code>(p, r)</code> where <code>p</code> is a pending promise and <code>r</code> is its associated <em>resolver</em>. For historical reasons, the resolver is often referred to as the wakener.</p>
+<p><code>Lwt.wakeup: 'a u -&gt; 'a -&gt; unit</code><br />
+<code>wakeup r v</code> causes the pending promise associated to the resolver <code>r</code> to become fulfilled with the value <code>v</code>. If the promise associated to <code>r</code> is already resolved, the call raises <code>Invalid_argument</code> – except if it is cancelled, which we will talk about bellow.</p>
+<p><code>Lwt.wakeup_exn: 'a u -&gt; exn -&gt; unit</code><br />
+<code>wakeup r exc</code> causes the pending promise associated to the resolver <code>r</code> to become rejected with the exception <code>exc</code>. If the promise associated to <code>r</code> is already resolved, the call raises <code>Invalid_argument</code> – except if it is cancelled, which we will talk about bellow.</p>
+<p>The <code>task</code> primitive is very powerful. It can be used to create never-resolving promises: <code>let never, _ = task ()</code> It can also be used to make your own control structures. For example, here is a function to pick the result from whichever of two promises is fulfilled first:</p>
+<pre><code>let first a b =
+  let p, r = task () in
+  let f v = match state p with
+    | Sleep -&gt; wakeup r v; return ()
+    | _ -&gt; return ()
+  let _ : unit t = a &gt;&gt;= f in
+  let _ : unit t = b &gt;&gt;= f in
+  p</code></pre>
+<p>Many of the control structures that could be written by hand using <code>task</code> and <code>wakeup</code> are common enough to earn a place in the <code>Lwt</code> module.</p>
+<h2 id="common-combinators">Common combinators</h2>
+<p><code>Lwt.join: unit t list -&gt; unit t</code><br />
+<code>join ps</code> is a promise that resolves when all the promises in <code>ps</code> have done so. If all the promises of <code>ps</code> are already resolved when the call is made, then an already resolved promise is returned. Note that if any of the promises is rejected, then the joined promise is also rejected (after all the other promises are resolved). Otherwise, if all the promises are fulfilled, then the joined promise is also fulfilled.</p>
+<p><code>Lwt.all: 'a t list -&gt; 'a list t</code><br />
+<code>all ps</code> is a promise that resolves when all the promises in <code>ps</code> have done so. If all the promises of <code>ps</code> are already resolved when the call is made, then an already resolved promise is returned. Note that if any of the promises is rejected, then the <code>all</code>-promise is also rejected (after all the other promises are resolved). Otherwise, if all the promises are fulfilled, then the <code>all</code>-promise is also fulfilled. The value that <code>all ps</code> is fulfilled with is a list of the values that the promises of <code>ps</code> are fulfilled with. The order of the values is preserved.</p>
+<p><code>Lwt.both: 'a t -&gt; 'b t -&gt; ('a * 'b) t</code><br />
+<code>both p q</code> is a promise that resolves when both <code>p</code> and <code>q</code> have done so. If both <code>p</code> and <code>q</code> are already resolved when the call is made, then an already resolved promise is returned. Note that if either of <code>p</code> or <code>q</code> is rejected, then the <code>both</code>-promise is also rejected (after both <code>p</code> and <code>q</code> are resolved). Otherwise, if both <code>p</code> and <code>q</code> are fulfilled, then the <code>both</code>-promise is also fulfilled.</p>
+<p><code>Lwt.choose: 'a t list -&gt; 'a t</code><br />
+<code>choose ps</code> is a promise that resolves as soon as one of the promises in <code>ps</code> has done so. If one or more of the promises in <code>ps</code> are already resolved when the call is made, then an already promise is returned. Note that if the first promise to resolve is rejected, so is the choice promise. And vice-versa if the first promise to resolve is fulfilled, so is the choice promise. If multiple promises resolve at the same time (the condition for which we will discuss later), then a promise is chosen arbitrarily.</p>
+<h1 id="exception-catching">Exception catching</h1>
+<p><code>Lwt.catch: (unit -&gt; 'a t) -&gt; (exn -&gt; 'a t) -&gt; 'a t</code><br />
+The function <code>catch</code> attaches a handler to a given promise. The handler is called if the promise is rejected. This gives an oportunity to transform a rejection into a fulfillement. Typical use is along the lines of:</p>
+<pre><code>let load_setting key =
+  catch
+    (fun () -&gt;
+      find_setting key &gt;&gt;= fun value -&gt;
+      let value = normalize value in
+      if not (is_valid key value) then
+        raise (Config_error &quot;Invalid value&quot;);
+      log &quot;CONF: %s-%s&quot; key value &gt;&gt;= fun () -&gt;
+      record_setting key value &gt;&gt;= fun () -&gt;
+      return value
+    )
+    (function
+      | Not_found -&gt;
+        log &quot;CONF: no value for %s&quot; key &gt;&gt;= fun () -&gt;
+        return (default_setting key)
+      | Invalid_argument msg -&gt;
+        log &quot;CONF: invalid value for %s&quot; key &gt;&gt;= fun () -&gt;
+        raise (Config_error &quot;Cannot normalise value&quot;)
+      | exc -&gt; raise exc)</code></pre>
+<p>In this expression, the promise simply loads some information and does some minor processing on the value. The handler treats different errors differently: It recovers from the <code>Not_found</code> exception by providing a default value. It transform <code>Invalid_argument</code> into a different exception. It reraises any other (unexpected) exception.</p>
+<p>Note also that both the promise and the exception handler use the <code>raise</code> primitive.</p>
+<p>All throughout Lwt, when a function <code>f</code> takes, as argument, a function <code>g</code> that returns a promise, then calls to <code>g</code> within the body of <code>f</code> are wrapped into a <code>try</code>-<code>with</code> construct to transform exceptions into rejections. E.g., in <code>bind p f</code> the application of <code>f</code> (to the value that <code>p</code> is fulfilled with) is protected by a <code>try</code>-<code>with</code>. This is why, within a function that is passed to an Lwt primitive, it is safe to use <code>raise</code> instead of <code>fail</code>.</p>
+<p>It is <em>possible</em> to use <code>fail</code> instead, but, as mentioned earlier, <code>raise</code> is <em>preferred</em>. This is because <code>raise</code> records the location of the exception, providing additional information that is useful for debugging.</p>
+<p><code>Lwt.try_bind : (unit -&gt; 'a t) -&gt; ('a -&gt; 'b t) -&gt; (exn -&gt; 'b t) -&gt; 'b t</code><br />
+The function <code>try_bind</code> takes a promise and two handler: one for fulfillment and one for rejection. More specifically, <code>try_bind f hf hr</code> behaves as <code>f () &gt;&gt;= hf</code> if <code>f ()</code> is fulfilled and as <code>f () &gt;&gt;= hr</code> if <code>f ()</code> is rejected.</p>
+<p><code>Lwt.finalize : (unit -&gt; 'a t) -&gt; (unit -&gt; unit t) -&gt; 'a t</code><br />
+The function <code>finalize</code> is similar to <code>try_bind</code> except it takes a single handler which is called when the given promise resolves. Unlike <code>try_bind</code>, the handler in <code>finalize</code> cannot determine whether the promise was fulfilled or rejected.</p>
+<h1 id="breaking-promises-and-pausing">Breaking promises and pausing</h1>
+<p><code>Lwt_main.run: 'a t -&gt; 'a</code><br />
+<code>run p</code> is an expression that blocks until the promise <code>p</code> is resolved. If <code>p</code> is already resolved when the call is made, then the expression does not block and returns a value immediately. If <code>p</code> is fulfilled with the value <code>v</code>, the <code>run p</code> expression evaluates to the value <code>v</code>. If <code>p</code> is rejected with the exception <code>exc</code>, the <code>run p</code> expression raises the exception <code>exc</code>.</p>
+<p>The function <code>run</code> is intended to be used at the top-level of a program. It forces the program to block, delaying <code>exit</code>, until the given promise is resolved.</p>
+<p>Note that the <code>Lwt_main</code> module is part of the <code>lwt.unix</code> sub-library which depends on the <code>base-unix</code> package. Different environments may provide alternatives to that function.</p>
+<p><code>Lwt.pause: unit -&gt; unit t</code><br />
+<code>pause ()</code> is a pending promise which is resolved after all the other promises have been given a chance to progress towards resolution. In Part 2 of this introduction/tutorial, we will talk in more details about the scheduling in Lwt, including the precise scheduling of <code>pause</code>. In the mean time, from a practical point of view, <code>pause</code> introduces explicit points in the program where a promise is pending for a short time. Consider the following program and the importance of <code>pause</code>: without it, the call to <code>count</code> loop forever consuming all the CPU and the value <code>counting</code> never evaluates to anything.</p>
+<pre><code>let r = ref 0 ;;
+let rec count () =
+  pause () &gt;&gt;= fun () -&gt;
+  incr r;
+  count () ;;
+let rec exit_on n =
+  if !r &gt;= n then
+    raise Exit
+  else begin
+    pause () &gt;&gt;= fun () -&gt;
+    exit_on n
+  end ;;
+let main () =
+  let counting = count () in
+  let exiting = exit_on 10 in
+  choose [ counting ; exiting ] ;;</code></pre>
+<p><code>Lwt_main.yield: unit -&gt; unit t</code><br />
+The function <code>yield</code> is a synonym for <code>pause</code>. It exists for historical reasons: <code>pause</code> was added later as a backend-independent yielding mechanism. There might be minor differences between <code>pause</code> and <code>yield</code>, but no difference that you should rely on.</p>
+<h1 id="part-2">Part 2</h1>
+<p>There are other interesting features of Lwt. And there are also features we have mentioned that we could not explain (cancelation) or not explain well (pause). Unfortunately, to have a good understanding of those features, a good undrstanding of the inner workings of Lwt is required. Part 2 of this introduction/tutorial provides details about the internal machinery, allowing us to understand the advanced features of Lwt.</p>
+<p><a href="/code/lwt-part-2.html">→ Onwards to part 2</a></p>
+</div>
+</body>
+</html>

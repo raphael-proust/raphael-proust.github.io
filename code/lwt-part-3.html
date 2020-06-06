@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Raphaël Proust" />
+  <title>Dromedary and a half - Lwt introduction/tutorial Part 3 of 2</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+<header>
+<nav>
+	<a href="/code/index.html">On code</a> |
+	<a href="/games/index.html">On games</a> |
+	<a href="/misc/index.html">Miscellanées</a> |
+	<a href="/about.html">About</a>
+</nav>
+</header>
+<div id="content">
+<div id="header">
+<h1 class="title">Lwt introduction/tutorial Part 3 of 2</h1>
+</div>
+<p><a href="/code/lwt-part-1.html">← Back to part 1</a><br />
+<a href="/code/lwt-part-2.html">← Back to part 2</a></p>
+<p>In this 2-part introduction/tutorial to Lwt, we collect a few remarks that are of little interest to users of Lwt.</p>
+<h1 id="historical-bagage">Historical bagage</h1>
+<p>The documentation of Lwt has evolved to consistently use a sound terminology: promise, resolution, pending, etc. This updated documentation gives a better description than the previous one. However, whilst the documentation has evolved, the effective signature of <code>Lwt</code> (the identifiers for values, types, etc.) has been left mostly untouched for backwards compatibility. This causes a disonance in places such as the official documentation of <code>wakeup</code> (edited for brevity):</p>
+<pre><code>[Lwt.wakeup r v] fulfills, with value [v], the pending
+promise associated with resolver [r].</code></pre>
+<p>Updating the effective signature of <code>Lwt</code> has serious implication for backwards compatibility. Doing so would probably require the introduction of a compatibility layer to allow other software to transition more easily. And even with this compatibility layer, it is not obvious that the change would be worth it. Of greater interest would be to update the documentation of other packages and libraries, including that of <code>lwt.unix</code>. Indeed, another source of disonnance is when third-party libraries describe the abstraction they provide on top of Lwt in old, deprectaed terms.</p>
+<p>Anyway, bellow is what a modern interface could look like. Note how the names match the concepts within Lwt and how named and optional parameters make some of the implicit behaviour explicit (e.g., the replacement of <code>task</code> and <code>wait</code> by a single function with a <code>cancelable</code> parameter).</p>
+<pre><code>(* BASE TYPE *)
+
+type &#39;a promise
+type &#39;a t = &#39;a promise
+
+(* INTROSPECTION *)
+
+type &#39;a state =
+  | Fulfilled of &#39;a
+  | Rejected of exn
+  | Pending
+val state: &#39;a t -&gt; &#39;a state
+
+(* RESOLUTION *)
+
+type &#39;a resolver = &#39;a Lwt.u
+val pending: cancelable:bool -&gt; unit -&gt; (&#39;a t, &#39;a resolver)
+val resolve: ?later:unit -&gt; &#39;a resolver -&gt; (&#39;a, exn) result -&gt; unit
+val fulfill: ?later:unit -&gt; &#39;a resolver -&gt; &#39;a -&gt; unit
+val reject: ?later:unit -&gt; &#39;a resolver -&gt; exn -&gt; unit
+
+(* OTHER INSTANTIATIONS *)
+
+val resolved: &#39;a -&gt; &#39;a t
+val rejected: exn -&gt; &#39;a t
+
+(* COMBINATORS *)
+
+val bind: &#39;a t -&gt; (&#39;a -&gt; &#39;b t) -&gt; &#39;b t
+..
+(* note: [any] replaces both [choose] and [pick] *)
+val any: ~cancel_pending:true -&gt; &#39;a t list -&gt; &#39;a t
+..
+(* note [either] is the dual of [both] *)
+val either: &#39;a t -&gt; &#39;a t -&gt; &#39;a t
+
+(* CALLBACKS *)
+
+val on_resolution: &#39;a t -&gt; (&#39;a -&gt; unit) -&gt; (exc -&gt; unit) -&gt; unit
+val on_fulfillment: &#39;a t -&gt; (&#39;a -&gt; unit) -&gt; unit
+val on_rejection: &#39;a t -&gt; (exn -&gt; unit) -&gt; unit
+..
+
+(* MONADIC INTERFACE *)
+
+val return: &#39;a -&gt; &#39;a t
+val ( &gt;&gt;= ): &#39;a t -&gt; (&#39;a -&gt; &#39;b t) -&gt; &#39;b t</code></pre>
+<h1 id="the-ecosystem">The ecosystem</h1>
+<p>Lwt provides a useful abstraction for handling concurrency in OCaml. But futher abstractions are sometimes necessary. Some of these abstractions are distributed with Lwt:</p>
+<p><code>Lwt_unix</code> and the rest of the <code>lwt.unix</code> sublibrary provide Lwt-aware interface to the operating system. The main role of this library is to provide wrappers around potentially blocking system calls. There is more details about it in <a href="">Part 2</a>.</p>
+<p><code>Lwt_list</code> (distributed with the <code>lwt</code> library) provides Lwt-aware list traversal functions. E.g., <code>map_p: ('a -&gt; 'b Lwt.t) -&gt; 'a list -&gt; 'b list Lwt.t</code> for applying a transformation to all the elements of a list concurrently. The module takes care of synchronisation and propagating rejections.</p>
+<p><code>Lwt_stream</code> (disrtributed with the <code>lwt</code> library) provides streams: Lwt-aware lazy collections. With streams you are given a promise of the next element rather the next element itself.</p>
+<p>Many other abstractions are available through <code>opam</code>. There are too many to list them all; here is one that I wrote:</p>
+<p><code>Lwt_pipeline</code> (distributed with the <code>lwt-pipeline</code> package) provides batch processing for list over multi-steps transformations. Pipelines are assembled from steps (<code>('a, 'b) step</code>). Steps are applied either synchronously (<code>sync: ('a -&gt; 'b) -&gt; ('a, 'b) step</code>) meaning that the application of the step does not yield, asynchronously-sequentially (<code>async_s: ('a -&gt; 'b Lwt.t) -&gt; ('a, 'b) step</code>) meaning that the application of the step may yield but that only a single element may be processed at once, or asynchronously-concurrently (<code>async_p: ('a -&gt; 'b Lwt.t) -&gt; ('a, 'b) step</code>) meaning that the application of the step may yield and that multiple elements may be processed concurrently. In addition, elements that traverse the pipeline are kept in order. Typical use looks like:</p>
+<pre><code>let p =
+  cons (async_p fetch)
+  @@ cons (sync parse)
+  @@ cons (async_p analyse)
+  @@ cons (async_s validate)
+  @@ nil
+run p data</code></pre>
+<p>And opam also has packages that provide Lwt-aware interfaces for servers, databases, APIs for specific services, etc.</p>
+<p>And finally, Lwt has good support within <code>js_of_ocaml</code>. This is not surprising considering both projects are linked to the <a href="https://ocsigen.org/home/intro.html">Ocsigen</a> project. The package <a href="https://ocsigen.org/js_of_ocaml/3.1.0/manual/lwt"><code>js_of_ocaml-lwt</code></a> even provides primitives for interacting with browser events (mouse button clicks, keyboard key presses, elements focus change, etc.).</p>
+<h1 id="warnings-about-this-tutorial">Warnings about this tutorial</h1>
+<p>It is important to realise that the simplified model of Part 2 is a simplified model. It does not include all the details of the real implementation.</p>
+<p>An important difference is the existence of proxy promises: when a promise is marked as being equivalent to another promise. Proxy promises are useful internally for performance. Specifically, in <code>bind</code> (and other similar functions), proxying can be used to avoid having to attach callbacks and cancelation links between the intermdiate promise and the final promise.</p>
+<p>So, whilst the model of Part 2 is useful to discuss the coarse semantics of Lwt, it is not sufficient to discuss the all the finer aspects of the semantics, nor any of the other aspects of Lwt such as performance or memory consumption.</p>
+</div>
+</body>
+</html>
