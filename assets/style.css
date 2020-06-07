@@ -19,6 +19,7 @@ nav a { text-decoration:none; }
 ul { list-style:circle; }
 abbr { text-transform:uppercase; font-size:0.9em; line-height:100%; }
 tt, code, pre { font-family:monospace; font-size:12px; }
+code:hover, pre:hover { background-color: #e8e8e8; }
 header { padding-top:1.4em; padding-bottom:0.5em; border-bottom:solid; border-width:1px; border-color:#444; margin-bottom:0.7em; }
 header nav { display:inline-block; }
 p { text-align:justify; }
@@ -26,5 +27,5 @@ hr { border-bottom: #444 solid 1px; width: 80%; margin-left: auto; margin-right:
 blockquote { margin-left: 1.5em; margin-top:1.5em; }
 blockquote:before { color: #aaa; content: open-quote; font-size: 3.5em; line-height: 0.1em; margin-right: 0.15; vertical-align: -0.3em; }
 sup { font-size:80%; vertical-align:3px; line-height: 14px; }
-tr:hover { background-color: #eee; }
+tr:hover { background-color: #e8e8e8; }
 table { width: 100%; margin-bottom: 1em; }
