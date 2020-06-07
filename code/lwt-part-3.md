@@ -1,5 +1,5 @@
 ---
-title: Lwt introduction/tutorial Part 3 of 2
+title: Lwt introduction/tutorial Part 3 of 2
 ...
 
 [← Back to part 1](/code/lwt-part-1.html)  
@@ -16,8 +16,15 @@ However, whilst the documentation has evolved, the effective signature of `Lwt` 
 This causes a disonance in places such as the official documentation of `wakeup` (edited for brevity):
 
 ```
-[Lwt.wakeup r v] fulfills, with value [v], the pending
+[wakeup r v] fulfills, with value [v], the pending
 promise associated with resolver [r].
+```
+
+Compare with the documentation prior to big update in which it is said to act on a “sleeping” thread:
+
+```
+[wakeup t e] makes the sleeping thread [t] terminate
+and return the value of the expression [e].
 ```
 
 Updating the effective signature of `Lwt` has serious implication for backwards compatibility.
@@ -46,6 +53,7 @@ val state: 'a t -> 'a state
 (* RESOLUTION *)
 
 type 'a resolver = 'a Lwt.u
+(* note: [pending] replaces both [task] and [wait] *)
 val pending: cancelable:bool -> unit -> ('a t, 'a resolver)
 val resolve: ?later:unit -> 'a resolver -> ('a, exn) result -> unit
 val fulfill: ?later:unit -> 'a resolver -> 'a -> unit
@@ -61,7 +69,7 @@ val rejected: exn -> 'a t
 val bind: 'a t -> ('a -> 'b t) -> 'b t
 ..
 (* note: [any] replaces both [choose] and [pick] *)
-val any: ~cancel_pending:true -> 'a t list -> 'a t
+val any: ~cancel_rest:bool -> 'a t list -> 'a t
 ..
 (* note [either] is the dual of [both] *)
 val either: 'a t -> 'a t -> 'a t

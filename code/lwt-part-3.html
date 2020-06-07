@@ -6,7 +6,7 @@
   <link rel="icon" type="image/png" href="/assets/favicon.png"/>
   <meta name="generator" content="pandoc" />
   <meta name="author" content="Raphaël Proust" />
-  <title>Dromedary and a half - Lwt introduction/tutorial Part 3 of 2</title>
+  <title>Dromedary and a half - Lwt introduction/tutorial Part 3 of 2</title>
   <link rel="stylesheet" href="/assets/style.css" />
 </head>
 <body>
@@ -20,15 +20,18 @@
 </header>
 <div id="content">
 <div id="header">
-<h1 class="title">Lwt introduction/tutorial Part 3 of 2</h1>
+<h1 class="title">Lwt introduction/tutorial Part 3 of 2</h1>
 </div>
 <p><a href="/code/lwt-part-1.html">← Back to part 1</a><br />
 <a href="/code/lwt-part-2.html">← Back to part 2</a></p>
 <p>In this 2-part introduction/tutorial to Lwt, we collect a few remarks that are of little interest to users of Lwt.</p>
 <h1 id="historical-bagage">Historical bagage</h1>
 <p>The documentation of Lwt has evolved to consistently use a sound terminology: promise, resolution, pending, etc. This updated documentation gives a better description than the previous one. However, whilst the documentation has evolved, the effective signature of <code>Lwt</code> (the identifiers for values, types, etc.) has been left mostly untouched for backwards compatibility. This causes a disonance in places such as the official documentation of <code>wakeup</code> (edited for brevity):</p>
-<pre><code>[Lwt.wakeup r v] fulfills, with value [v], the pending
+<pre><code>[wakeup r v] fulfills, with value [v], the pending
 promise associated with resolver [r].</code></pre>
+<p>Compare with the documentation prior to big update in which it is said to act on a “sleeping” thread:</p>
+<pre><code>[wakeup t e] makes the sleeping thread [t] terminate
+and return the value of the expression [e].</code></pre>
 <p>Updating the effective signature of <code>Lwt</code> has serious implication for backwards compatibility. Doing so would probably require the introduction of a compatibility layer to allow other software to transition more easily. And even with this compatibility layer, it is not obvious that the change would be worth it. Of greater interest would be to update the documentation of other packages and libraries, including that of <code>lwt.unix</code>. Indeed, another source of disonnance is when third-party libraries describe the abstraction they provide on top of Lwt in old, deprectaed terms.</p>
 <p>Anyway, bellow is what a modern interface could look like. Note how the names match the concepts within Lwt and how named and optional parameters make some of the implicit behaviour explicit (e.g., the replacement of <code>task</code> and <code>wait</code> by a single function with a <code>cancelable</code> parameter).</p>
 <pre><code>(* BASE TYPE *)
@@ -47,6 +50,7 @@ val state: &#39;a t -&gt; &#39;a state
 (* RESOLUTION *)
 
 type &#39;a resolver = &#39;a Lwt.u
+(* note: [pending] replaces both [task] and [wait] *)
 val pending: cancelable:bool -&gt; unit -&gt; (&#39;a t, &#39;a resolver)
 val resolve: ?later:unit -&gt; &#39;a resolver -&gt; (&#39;a, exn) result -&gt; unit
 val fulfill: ?later:unit -&gt; &#39;a resolver -&gt; &#39;a -&gt; unit
@@ -62,7 +66,7 @@ val rejected: exn -&gt; &#39;a t
 val bind: &#39;a t -&gt; (&#39;a -&gt; &#39;b t) -&gt; &#39;b t
 ..
 (* note: [any] replaces both [choose] and [pick] *)
-val any: ~cancel_pending:true -&gt; &#39;a t list -&gt; &#39;a t
+val any: ~cancel_rest:bool -&gt; &#39;a t list -&gt; &#39;a t
 ..
 (* note [either] is the dual of [both] *)
 val either: &#39;a t -&gt; &#39;a t -&gt; &#39;a t

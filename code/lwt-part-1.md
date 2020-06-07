@@ -1,5 +1,5 @@
 ---
-title: Lwt introduction/tutorial Part 1 of 2
+title: Lwt introduction/tutorial Part 1 of 2
 ...
 
 [Lwt](http://ocsigen.org/lwt) ([code](https://github.com/ocsigen/lwt/)) is a library for writing concurrent programs in OCaml.

@@ -1,5 +1,5 @@
 ---
-title: Lwt introduction/tutorial Part 2 of 2
+title: Lwt introduction/tutorial Part 2 of 2
 ...
 
 [← Back to part 1](/code/lwt-part-1.html)  
@@ -223,8 +223,7 @@ let task () =
   let p =
     { state =
         Pending {
-          when_fulfills = [];
-          when_rejects = [];
+          ..;
           cancelation = Self; }
     }
   in
@@ -233,8 +232,7 @@ let wait () =
   let p =
     { state =
         Pending {
-          when_fulfills = [];
-          when_rejects = [];
+          ..;
           cancelation = Others []; }
     }
   in
@@ -252,8 +250,7 @@ let bind p f =
       let p'' =
         { state =
             Pending {
-              when_fulfills = [];
-              when_rejects = [];
+              ..;
               cancelation = Others [ p ]; }
         }
       in
