@@ -6,7 +6,7 @@
   <link rel="icon" type="image/png" href="/assets/favicon.png"/>
   <meta name="generator" content="pandoc" />
   <meta name="author" content="Raphaël Proust" />
-  <title>Dromedary and a half - Lwt introduction/tutorial Part 2 of 2</title>
+  <title>Dromedary and a half - Lwt introduction/tutorial Part 2 of 2</title>
   <link rel="stylesheet" href="/assets/style.css" />
 </head>
 <body>
@@ -20,7 +20,7 @@
 </header>
 <div id="content">
 <div id="header">
-<h1 class="title">Lwt introduction/tutorial Part 2 of 2</h1>
+<h1 class="title">Lwt introduction/tutorial Part 2 of 2</h1>
 </div>
 <p><a href="/code/lwt-part-1.html">← Back to part 1</a></p>
 <p>In order to understand the advanced features of Lwt, it is necessary to understand the internals of Lwt: how promises are created, stored, resolved, etc. This page delves into those details. It assumes familiarity with the basic concepts of Lwt covered in <a href="/code/lwt-part-1.html">Part 1</a>.</p>
@@ -139,8 +139,7 @@ type pending = {
   let p =
     { state =
         Pending {
-          when_fulfills = [];
-          when_rejects = [];
+          ..;
           cancelation = Self; }
     }
   in
@@ -149,8 +148,7 @@ let wait () =
   let p =
     { state =
         Pending {
-          when_fulfills = [];
-          when_rejects = [];
+          ..;
           cancelation = Others []; }
     }
   in
@@ -164,8 +162,7 @@ let wait () =
       let p&#39;&#39; =
         { state =
             Pending {
-              when_fulfills = [];
-              when_rejects = [];
+              ..;
               cancelation = Others [ p ]; }
         }
       in
