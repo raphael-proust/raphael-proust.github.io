@@ -8,12 +8,12 @@ title: Lwt introduction/tutorial Part 3 of 2
 In this 2-part introduction/tutorial to Lwt, we collect a few remarks that are of little interest to users of Lwt.
 
 
-# Historical bagage
+# Historical baggage
 
 The documentation of Lwt has evolved to consistently use a sound terminology: promise, resolution, pending, etc.
 This updated documentation gives a better description than the previous one.
 However, whilst the documentation has evolved, the effective signature of `Lwt` (the identifiers for values, types, etc.) has been left mostly untouched for backwards compatibility.
-This causes a disonance in places such as the official documentation of `wakeup` (edited for brevity):
+This causes a dissonance in places such as the official documentation of `wakeup` (edited for brevity):
 
 ```
 [wakeup r v] fulfills, with value [v], the pending
@@ -31,7 +31,7 @@ Updating the effective signature of `Lwt` has serious implication for backwards 
 Doing so would probably require the introduction of a compatibility layer to allow other software to transition more easily.
 And even with this compatibility layer, it is not obvious that the change would be worth it.
 Of greater interest would be to update the documentation of other packages and libraries, including that of `lwt.unix`.
-Indeed, another source of disonnance is when third-party libraries describe the abstraction they provide on top of Lwt in old, deprectaed terms.
+Indeed, another source of dissonance is when third-party libraries describe the abstraction they provide on top of Lwt in old, deprecated terms.
 
 Anyway, bellow is what a modern interface could look like.
 Note how the names match the concepts within Lwt and how named and optional parameters make some of the implicit behaviour explicit (e.g., the replacement of `task` and `wait` by a single function with a `cancelable` parameter).
@@ -76,7 +76,7 @@ val either: 'a t -> 'a t -> 'a t
 
 (* CALLBACKS *)
 
-val on_resolution: 'a t -> ('a -> unit) -> (exc -> unit) -> unit
+val on_resolution: 'a t -> ('a -> unit) -> (exn -> unit) -> unit
 val on_fulfillment: 'a t -> ('a -> unit) -> unit
 val on_rejection: 'a t -> (exn -> unit) -> unit
 ..
@@ -92,18 +92,18 @@ val ( >>= ): 'a t -> ('a -> 'b t) -> 'b t
 # The ecosystem
 
 Lwt provides a useful abstraction for handling concurrency in OCaml.
-But futher abstractions are sometimes necessary.
+But further abstractions are sometimes necessary.
 Some of these abstractions are distributed with Lwt:
 
-`Lwt_unix` and the rest of the `lwt.unix` sublibrary provide Lwt-aware interface to the operating system.
+`Lwt_unix` and the rest of the `lwt.unix` sub-library provide Lwt-aware interface to the operating system.
 The main role of this library is to provide wrappers around potentially blocking system calls.
-There is more details about it in [Part 2]().
+There is more details about it in.
 
 `Lwt_list` (distributed with the `lwt` library) provides Lwt-aware list traversal functions.
 E.g., `map_p: ('a -> 'b Lwt.t) -> 'a list -> 'b list Lwt.t` for applying a transformation to all the elements of a list concurrently.
 The module takes care of synchronisation and propagating rejections.
 
-`Lwt_stream` (disrtributed with the `lwt` library) provides streams: Lwt-aware lazy collections.
+`Lwt_stream` (distributed with the `lwt` library) provides streams: Lwt-aware lazy collections.
 With streams you are given a promise of the next element rather the next element itself.
 
 Many other abstractions are available through `opam`.
@@ -139,6 +139,6 @@ It does not include all the details of the real implementation.
 
 An important difference is the existence of proxy promises: when a promise is marked as being equivalent to another promise.
 Proxy promises are useful internally for performance.
-Specifically, in `bind` (and other similar functions), proxying can be used to avoid having to attach callbacks and cancelation links between the intermdiate promise and the final promise.
+Specifically, in `bind` (and other similar functions), proxying can be used to avoid having to attach callbacks and cancellation links between the intermediate promise and the final promise.
 
 So, whilst the model of Part 2 is useful to discuss the coarse semantics of Lwt, it is not sufficient to discuss the all the finer aspects of the semantics, nor any of the other aspects of Lwt such as performance or memory consumption.
