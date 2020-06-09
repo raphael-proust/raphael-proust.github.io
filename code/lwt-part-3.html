@@ -25,14 +25,14 @@
 <p><a href="/code/lwt-part-1.html">← Back to part 1</a><br />
 <a href="/code/lwt-part-2.html">← Back to part 2</a></p>
 <p>In this 2-part introduction/tutorial to Lwt, we collect a few remarks that are of little interest to users of Lwt.</p>
-<h1 id="historical-bagage">Historical bagage</h1>
-<p>The documentation of Lwt has evolved to consistently use a sound terminology: promise, resolution, pending, etc. This updated documentation gives a better description than the previous one. However, whilst the documentation has evolved, the effective signature of <code>Lwt</code> (the identifiers for values, types, etc.) has been left mostly untouched for backwards compatibility. This causes a disonance in places such as the official documentation of <code>wakeup</code> (edited for brevity):</p>
+<h1 id="historical-baggage">Historical baggage</h1>
+<p>The documentation of Lwt has evolved to consistently use a sound terminology: promise, resolution, pending, etc. This updated documentation gives a better description than the previous one. However, whilst the documentation has evolved, the effective signature of <code>Lwt</code> (the identifiers for values, types, etc.) has been left mostly untouched for backwards compatibility. This causes a dissonance in places such as the official documentation of <code>wakeup</code> (edited for brevity):</p>
 <pre><code>[wakeup r v] fulfills, with value [v], the pending
 promise associated with resolver [r].</code></pre>
 <p>Compare with the documentation prior to big update in which it is said to act on a “sleeping” thread:</p>
 <pre><code>[wakeup t e] makes the sleeping thread [t] terminate
 and return the value of the expression [e].</code></pre>
-<p>Updating the effective signature of <code>Lwt</code> has serious implication for backwards compatibility. Doing so would probably require the introduction of a compatibility layer to allow other software to transition more easily. And even with this compatibility layer, it is not obvious that the change would be worth it. Of greater interest would be to update the documentation of other packages and libraries, including that of <code>lwt.unix</code>. Indeed, another source of disonnance is when third-party libraries describe the abstraction they provide on top of Lwt in old, deprectaed terms.</p>
+<p>Updating the effective signature of <code>Lwt</code> has serious implication for backwards compatibility. Doing so would probably require the introduction of a compatibility layer to allow other software to transition more easily. And even with this compatibility layer, it is not obvious that the change would be worth it. Of greater interest would be to update the documentation of other packages and libraries, including that of <code>lwt.unix</code>. Indeed, another source of dissonance is when third-party libraries describe the abstraction they provide on top of Lwt in old, deprecated terms.</p>
 <p>Anyway, bellow is what a modern interface could look like. Note how the names match the concepts within Lwt and how named and optional parameters make some of the implicit behaviour explicit (e.g., the replacement of <code>task</code> and <code>wait</code> by a single function with a <code>cancelable</code> parameter).</p>
 <pre><code>(* BASE TYPE *)
 
@@ -73,7 +73,7 @@ val either: &#39;a t -&gt; &#39;a t -&gt; &#39;a t
 
 (* CALLBACKS *)
 
-val on_resolution: &#39;a t -&gt; (&#39;a -&gt; unit) -&gt; (exc -&gt; unit) -&gt; unit
+val on_resolution: &#39;a t -&gt; (&#39;a -&gt; unit) -&gt; (exn -&gt; unit) -&gt; unit
 val on_fulfillment: &#39;a t -&gt; (&#39;a -&gt; unit) -&gt; unit
 val on_rejection: &#39;a t -&gt; (exn -&gt; unit) -&gt; unit
 ..
@@ -83,10 +83,10 @@ val on_rejection: &#39;a t -&gt; (exn -&gt; unit) -&gt; unit
 val return: &#39;a -&gt; &#39;a t
 val ( &gt;&gt;= ): &#39;a t -&gt; (&#39;a -&gt; &#39;b t) -&gt; &#39;b t</code></pre>
 <h1 id="the-ecosystem">The ecosystem</h1>
-<p>Lwt provides a useful abstraction for handling concurrency in OCaml. But futher abstractions are sometimes necessary. Some of these abstractions are distributed with Lwt:</p>
-<p><code>Lwt_unix</code> and the rest of the <code>lwt.unix</code> sublibrary provide Lwt-aware interface to the operating system. The main role of this library is to provide wrappers around potentially blocking system calls. There is more details about it in <a href="">Part 2</a>.</p>
+<p>Lwt provides a useful abstraction for handling concurrency in OCaml. But further abstractions are sometimes necessary. Some of these abstractions are distributed with Lwt:</p>
+<p><code>Lwt_unix</code> and the rest of the <code>lwt.unix</code> sub-library provide Lwt-aware interface to the operating system. The main role of this library is to provide wrappers around potentially blocking system calls. There is more details about it in.</p>
 <p><code>Lwt_list</code> (distributed with the <code>lwt</code> library) provides Lwt-aware list traversal functions. E.g., <code>map_p: ('a -&gt; 'b Lwt.t) -&gt; 'a list -&gt; 'b list Lwt.t</code> for applying a transformation to all the elements of a list concurrently. The module takes care of synchronisation and propagating rejections.</p>
-<p><code>Lwt_stream</code> (disrtributed with the <code>lwt</code> library) provides streams: Lwt-aware lazy collections. With streams you are given a promise of the next element rather the next element itself.</p>
+<p><code>Lwt_stream</code> (distributed with the <code>lwt</code> library) provides streams: Lwt-aware lazy collections. With streams you are given a promise of the next element rather the next element itself.</p>
 <p>Many other abstractions are available through <code>opam</code>. There are too many to list them all; here is one that I wrote:</p>
 <p><code>Lwt_pipeline</code> (distributed with the <code>lwt-pipeline</code> package) provides batch processing for list over multi-steps transformations. Pipelines are assembled from steps (<code>('a, 'b) step</code>). Steps are applied either synchronously (<code>sync: ('a -&gt; 'b) -&gt; ('a, 'b) step</code>) meaning that the application of the step does not yield, asynchronously-sequentially (<code>async_s: ('a -&gt; 'b Lwt.t) -&gt; ('a, 'b) step</code>) meaning that the application of the step may yield but that only a single element may be processed at once, or asynchronously-concurrently (<code>async_p: ('a -&gt; 'b Lwt.t) -&gt; ('a, 'b) step</code>) meaning that the application of the step may yield and that multiple elements may be processed concurrently. In addition, elements that traverse the pipeline are kept in order. Typical use looks like:</p>
 <pre><code>let p =
@@ -100,7 +100,7 @@ run p data</code></pre>
 <p>And finally, Lwt has good support within <code>js_of_ocaml</code>. This is not surprising considering both projects are linked to the <a href="https://ocsigen.org/home/intro.html">Ocsigen</a> project. The package <a href="https://ocsigen.org/js_of_ocaml/3.1.0/manual/lwt"><code>js_of_ocaml-lwt</code></a> even provides primitives for interacting with browser events (mouse button clicks, keyboard key presses, elements focus change, etc.).</p>
 <h1 id="warnings-about-this-tutorial">Warnings about this tutorial</h1>
 <p>It is important to realise that the simplified model of Part 2 is a simplified model. It does not include all the details of the real implementation.</p>
-<p>An important difference is the existence of proxy promises: when a promise is marked as being equivalent to another promise. Proxy promises are useful internally for performance. Specifically, in <code>bind</code> (and other similar functions), proxying can be used to avoid having to attach callbacks and cancelation links between the intermdiate promise and the final promise.</p>
+<p>An important difference is the existence of proxy promises: when a promise is marked as being equivalent to another promise. Proxy promises are useful internally for performance. Specifically, in <code>bind</code> (and other similar functions), proxying can be used to avoid having to attach callbacks and cancellation links between the intermediate promise and the final promise.</p>
 <p>So, whilst the model of Part 2 is useful to discuss the coarse semantics of Lwt, it is not sufficient to discuss the all the finer aspects of the semantics, nor any of the other aspects of Lwt such as performance or memory consumption.</p>
 </div>
 </body>
