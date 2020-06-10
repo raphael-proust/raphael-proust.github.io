@@ -120,7 +120,7 @@ print_lines lines &gt;&gt;= fun () -&gt;
   let p, r = task () in
   let f v = match state p with
     | Sleep -&gt; wakeup r v; return ()
-    | _ -&gt; return ()
+    | _ -&gt; return () in
   let _ : unit t = a &gt;&gt;= f in
   let _ : unit t = b &gt;&gt;= f in
   p</code></pre>

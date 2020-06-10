@@ -161,7 +161,7 @@ let first a b =
   let p, r = task () in
   let f v = match state p with
     | Sleep -> wakeup r v; return ()
-    | _ -> return ()
+    | _ -> return () in
   let _ : unit t = a >>= f in
   let _ : unit t = b >>= f in
   p
