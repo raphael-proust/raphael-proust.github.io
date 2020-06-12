@@ -1,5 +1,5 @@
 ---
-title: Lwt introduction/tutorial Part 1 of 2
+# Lwt introduction/tutorial Part 1 of 2
 ...
 
 [Lwt](http://ocsigen.org/lwt) ([code](https://github.com/ocsigen/lwt/)) is a library for writing concurrent programs in OCaml.
@@ -16,14 +16,14 @@ Lwt is a library.
 You can install it as an `opam` package named `lwt`.
 Installing `base-unix` before is recommended to get access to operating system wrappers.
 
-```
+```bash
 opam install base-unix
 opam install lwt
 ```
 
 The `lwt` package installs the `lwt` library (and `lwt.unix` sub-library if you have installed `base-unix`) that you can refer to in your `dune` build files.
 
-```
+```dune
 (library
  (name ..)
  (public_name ..)
@@ -33,14 +33,12 @@ The `lwt` package installs the `lwt` library (and `lwt.unix` sub-library if you 
 
 Declaring a dependence to the `lwt` library in your `dune` build file gives you access to the `Lwt` module.
 
-Lwt, `lwt`, `lwt`, `Lwt`
-
 
 # Lwt as a black-box
 
 Lwt is a library for creating and manipulating *promises*.
 
-```
+```ocaml
 (** The type of a promise for a value of type ['a]. *)
 type 'a t
 ```
@@ -54,7 +52,7 @@ In particular, a promise that resolves to hold a value is said to be *fulfilled*
 
 The Lwt library provides a way to introspect the state of promise:
 
-```
+```ocaml
 type 'a state =
   | Return of 'a
   | Fail of exn
@@ -80,17 +78,17 @@ And the interface of the library is full of those references.
 
 A promise, as a cell that may  hold nothing, a value, or an exception, is similar to a combination of other types:
 
-```
+```ocaml
 'a Lwt ≈ ('a, exn) result option ref
 ```
 
 This gives the following similarity table:
 
-`p: 'a t`   | `('a, exn) result option ref`   | `state p`
-------------+---------------------------------+---------------
-pending     | `None`                          | `Sleep`
-fulfilled   | `Some (Ok _)`                   | `Return _`
-rejected    | `Some (Error _)`                | `Fail _`
+|`p: 'a t`   | `('a, exn) result option ref`   | `state p`|
+|------------|---------------------------------|----------|
+|pending     | `None`                          | `Sleep`|
+|fulfilled   | `Some (Ok _)`                   | `Return _`|
+|rejected    | `Some (Error _)`                | `Fail _`|
 
 Note that this is just a similarity, not an equivalence.
 The main difference is that a promise can only ever transition from holding nothing to holding either a value or an exception.
@@ -100,13 +98,17 @@ The main difference is that a promise can only ever transition from holding noth
 
 ## Basic monadic interface
 
-`Lwt.return: 'a -> 'a t`  
+```ocaml
+Lwt.return: 'a -> 'a t
+```
 `return v` evaluates immediately to a promise of type that is already fulfilled with the value `v`.
 This is the most basic way to create a promise.
 By itself it is fairly useless, but it turns out to be essential as a building block for more complicated promises.
 In particular, it fits as part of the Monadic interface to Lwt.
 
-`Lwt.bind: 'a t -> ('a -> 'b t) -> 'b t`  
+```ocaml
+Lwt.bind: 'a t -> ('a -> 'b t) -> 'b t
+```
 `bind p f` evaluates to a promise, the state of which depends on the call arguments:
 
 - If `p` is fulfilled to `x`, then `bind p f` evaluates to the promise `f x`.
@@ -121,11 +123,13 @@ Note that the notion of “becomes behaviourally identical to” is vague.
 We give more details in Part 2 of this tutorial.
 In the mean time, it means that the promise resolve at the same time and with the same value/exception.
 
-`Lwt.( >>= ) : 'a t -> ('a -> 'b t) -> 'b t`  
+```ocaml
+Lwt.( >>= ) : 'a t -> ('a -> 'b t) -> 'b t
+```  
 The infix operator `>>=` is an alias for `bind`.
 It is provided to allow for the use of the monadic style.
 
-```
+```ocaml
 open_file name >>= fun handle ->
 read_lines handle >>= fun lines ->
 keep_matches pattern lines >>= fun lines ->
@@ -133,21 +137,29 @@ print_lines lines >>= fun () ->
 ..
 ```
 
-`Lwt.fail: exn -> 'a t`  
+```ocaml
+Lwt.fail: exn -> 'a t
+```
 `fail exc` evaluates immediately to a promise that is already rejected with the exception `exc`.
 Note that, as we discuss below, the use of `fail` should be reserved for populating data-structures (and other similar tasks) but that, within one of Lwt's function, the use  of `raise` is preferred.
 
 ## Resolvers
 
-`Lwt.task: unit -> 'a t * 'a u`  
+```ocaml
+Lwt.task: unit -> 'a t * 'a u
+```  
 `task ()` evaluates immediately to a pair `(p, r)` where `p` is a pending promise and `r` is its associated *resolver*.
 For historical reasons, the resolver is often referred to as the wakener.
 
-`Lwt.wakeup: 'a u -> 'a -> unit`  
+```ocaml
+Lwt.wakeup: 'a u -> 'a -> unit
+```  
 `wakeup r v` causes the pending promise associated to the resolver `r` to become fulfilled with the value `v`.
 If the promise associated to `r` is already resolved, the call raises `Invalid_argument` – except if it is cancelled, which we will talk about bellow.
 
-`Lwt.wakeup_exn: 'a u -> exn -> unit`  
+```ocaml
+Lwt.wakeup_exn: 'a u -> exn -> unit
+```
 `wakeup r exc` causes the pending promise associated to the resolver `r` to become rejected with the exception `exc`.
 If the promise associated to `r` is already resolved, the call raises `Invalid_argument` – except if it is cancelled, which we will talk about bellow.
 
@@ -156,7 +168,7 @@ It can be used to create never-resolving promises: `let never, _ = task ()`
 It can also be used to make your own control structures.
 For example, here is a function to pick the result from whichever of two promises is fulfilled first:
 
-```
+```ocaml
 let first a b =
   let p, r = task () in
   let f v = match state p with
@@ -172,13 +184,17 @@ Many of the control structures that could be written by hand using `task` and `w
 
 ## Common combinators
 
-`Lwt.join: unit t list -> unit t`  
+```ocaml
+Lwt.join: unit t list -> unit t
+```  
 `join ps` is a promise that resolves when all the promises in `ps` have done so.
 If all the promises of `ps` are already resolved when the call is made, then an already resolved promise is returned.
 Note that if any of the promises is rejected, then the joined promise is also rejected (after all the other promises are resolved).
 Otherwise, if all the promises are fulfilled, then the joined promise is also fulfilled.
 
-`Lwt.all: 'a t list -> 'a list t`  
+```ocaml
+Lwt.all: 'a t list -> 'a list t
+```
 `all ps` is a promise that resolves when all the promises in `ps` have done so.
 If all the promises of `ps` are already resolved when the call is made, then an already resolved promise is returned.
 Note that if any of the promises is rejected, then the `all`-promise is also rejected (after all the other promises are resolved).
@@ -186,13 +202,17 @@ Otherwise, if all the promises are fulfilled, then the `all`-promise is also ful
 The value that `all ps` is fulfilled with is a list of the values that the promises of `ps` are fulfilled with.
 The order of the values is preserved.
 
-`Lwt.both: 'a t -> 'b t -> ('a * 'b) t`  
+```
+Lwt.both: 'a t -> 'b t -> ('a * 'b) t
+````  
 `both p q` is a promise that resolves when both `p` and `q` have done so.
 If both `p` and `q` are already resolved when the call is made, then an already resolved promise is returned.
 Note that if either of `p` or `q` is rejected, then the `both`-promise is also rejected (after both `p` and `q` are resolved).
 Otherwise, if both `p` and `q` are fulfilled, then the `both`-promise is also fulfilled.
 
-`Lwt.choose: 'a t list -> 'a t`  
+```ocaml
+Lwt.choose: 'a t list -> 'a t
+```  
 `choose ps` is a promise that resolves as soon as one of the promises in `ps` has done so.
 If one or more of the promises in `ps` are already resolved when the call is made, then an already promise is returned.
 Note that if the first promise to resolve is rejected, so is the choice promise.
@@ -202,13 +222,15 @@ If multiple promises resolve at the same time (the condition for which we will d
 
 # Exception catching
 
-`Lwt.catch: (unit -> 'a t) -> (exn -> 'a t) -> 'a t`  
+```ocaml
+Lwt.catch: (unit -> 'a t) -> (exn -> 'a t) -> 'a t
+```  
 The function `catch` attaches a handler to a given promise.
 The handler is called if the promise is rejected.
 This gives an oportunity to transform a rejection into a fulfillement.
 Typical use is along the lines of:
 
-```
+```ocaml
 let load_setting key =
   catch
     (fun () ->
@@ -246,18 +268,24 @@ It is *possible* to use `fail` instead, but, as mentioned earlier, `raise` is *p
 This is because `raise` records the location of the exception, providing additional information that is useful for debugging.
 
 
-`Lwt.try_bind : (unit -> 'a t) -> ('a -> 'b t) -> (exn -> 'b t) -> 'b t`  
+```ocaml
+Lwt.try_bind : (unit -> 'a t) -> ('a -> 'b t) -> (exn -> 'b t) -> 'b t
+````  
 The function `try_bind` takes a promise and two handler: one for fulfillment and one for rejection.
 More specifically, `try_bind f hf hr` behaves as `f () >>= hf` if `f ()` is fulfilled and as `f () >>= hr` if `f ()` is rejected.
 
-`Lwt.finalize : (unit -> 'a t) -> (unit -> unit t) -> 'a t`  
+```ocaml
+Lwt.finalize : (unit -> 'a t) -> (unit -> unit t) -> 'a t
+```  
 The function `finalize` is similar to `try_bind` except it takes a single handler which is called when the given promise resolves.
 Unlike `try_bind`, the handler in `finalize` cannot determine whether the promise was fulfilled or rejected.
 
 
 # Breaking promises and pausing
 
-`Lwt_main.run: 'a t -> 'a`  
+```ocaml
+Lwt_main.run: 'a t -> 'a
+```  
 `run p` is an expression that blocks until the promise `p` is resolved.
 If `p` is already resolved when the call is made, then the expression does not block and returns a value immediately.
 If `p` is fulfilled with the value `v`, the `run p` expression evaluates to the value `v`.
@@ -269,13 +297,15 @@ It forces the program to block, delaying `exit`, until the given promise is reso
 Note that the `Lwt_main` module is part of the `lwt.unix` sub-library which depends on the `base-unix` package.
 Different environments may provide alternatives to that function.
 
-`Lwt.pause: unit -> unit t`  
+```ocaml
+Lwt.pause: unit -> unit t
+```  
 `pause ()` is a pending promise which is resolved after all the other promises have been given a chance to progress towards resolution.
 In Part 2 of this introduction/tutorial, we will talk in more details about the scheduling in Lwt, including the precise scheduling of `pause`.
 In the mean time, from a practical point of view, `pause` introduces explicit points in the program where a promise is pending for a short time.
 Consider the following program and the importance of `pause`: without it, the call to `count` loop forever consuming all the CPU and the value `counting` never evaluates to anything.
 
-```
+```ocaml
 let r = ref 0 ;;
 let rec count () =
   pause () >>= fun () ->
