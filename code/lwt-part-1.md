@@ -247,8 +247,8 @@ This is because `raise` records the location of the exception, providing additio
 
 
 `Lwt.try_bind : (unit -> 'a t) -> ('a -> 'b t) -> (exn -> 'b t) -> 'b t`  
-The function `try_bind` takes a promise and two handler: one for fulfillment and one for rejection.
-More specifically, `try_bind f hf hr` behaves as `f () >>= hf` if `f ()` is fulfilled and as `f () >>= hr` if `f ()` is rejected.
+The function `try_bind` takes a promise and two handler: one for fulfilment and one for rejection.
+More specifically, `try_bind f hf hr` behaves as `bind (f ()) hf` if `f ()` is fulfilled and as `catch (f ()) hr` if `f ()` is rejected.
 
 `Lwt.finalize : (unit -> 'a t) -> (unit -> unit t) -> 'a t`  
 The function `finalize` is similar to `try_bind` except it takes a single handler which is called when the given promise resolves.
