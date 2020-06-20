@@ -85,15 +85,14 @@ below are on-going.
 
 - **Code review** and **merging**
 
-	I reviewed merge requests (MRs). As appropriate to the specific merge request
-	I would either give a greenlight for merging, or request changes, or discuss
-	specific points with the original developers or with other developers with
-	expertise in the area affected by the changes.
+	I reviewed merge requests (MRs): inspecting changes to the code before giving
+	a greenlight for merging, or requesting changes, or discussing specific
+	points with the original developers.
 
 	I rebased and merged MRs that had been greenlit by other reviewers.
 
-	I participated and, for a time, ran weekly meetings to discuss and triage open
-	MRs.
+	I participated and, for a time, ran weekly meetings to discuss and triage
+	open MRs.
 
 - **Overhauling the Tezos mempool**
 
@@ -105,12 +104,13 @@ below are on-going.
 
 	This software component involves concurrency (information is received from
 	different peers at unpredictable times, but operations must be applied to the
-	state sequentially) and more specifically defensive scheduling: ensuring that
-	no peer can carry out a denial of service attack by saturating a node to the
-	point that it ignores other nodes. It also involves a high level of
-	abstraction because the nature of the state and the way information is folded
-	into it depends on another software component (the economic protocol) that
-	can change dynamically.
+	state sequentially) and more specifically defensive scheduling: it must
+	protect against potential denial of service attacks whereby
+	malicious peers saturate a node to the point that it ignores other,
+	non-malicous, nodes. It also involves a high level of abstraction because the
+	nature of the state and the way information is folded into it depends on
+	another software component (the economic protocol) that can change
+	dynamically.
 
 	The development of this new mempool led to the release of
 	[`lwt-pipeline`](https://gitlab.com/nomadic-labs/lwt_pipeline) and the
@@ -124,7 +124,7 @@ below are on-going.
 	could be released.
 
 	I took the lead in releasing libraries. This involved setting up their own
-	repository (including continuous integration), setting up the packaging
+	repository (with continuous integration), setting up the packaging
 	boilerplate, and modifying the code of Tezos to use the external libraries
 	rather than the embedded version.
 
@@ -254,8 +254,8 @@ I completed a PhD at the Computer Laboratory of the University of Cambridge.
 
 ## Miscellaneous
 
-- Natural languages: French (native), English (fluent), Spanish (intermediate), Chinese (beginner)
-- Programming languages: OCaml (native), make (fluent), shell (fluent), Javascript (rusty), Python (rusty), Scala (rusty), Scheme (beginner), Haskell (beginner), C (beginner).
-- Markup languages: Markdown (native), HTML (fluent), LaTeX (intermediate)
-- Environment: Archlinux, `vi`/`nvim`, `acme`, `make`, `mk`, `git`, `opam`, `sh`, `rc`, `pandoc`, etc.
-- Other: driver's license, PADI Advanced Open Water Diver, fire warden training, skilled punter and skater
+- Natural languages: French (native), English (fluent), Spanish (intermediate), Chinese (beginner), Toki Pona (beginner).
+- Programming languages: OCaml (native), make (fluent), shell (intermediate), Javascript (rusty), Python (rusty), Scala (rusty), Scheme (beginner), Haskell (beginner), C (beginner).
+- Markup languages: Markdown (native), HTML (fluent), LaTeX (intermediate).
+- Environment: Archlinux, `vi`/`nvim`, `git`, `acme`, `make`, `mk`, `opam`, `sh`/`zsh`, `rc`, `pandoc`, etc.
+- Other: driver's license, PADI Advanced Open Water Diver, fire warden training, skilled punter and skater.

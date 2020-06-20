@@ -99,16 +99,16 @@
 <p>I joined Nomadic Labs in March 2018 as the company was expending to handle the development requirements of the <a href="https://tezos.com/">Tezos</a> project. I am still working at Nomadic Labs, on Tezos and other related projects. Some of the items below are on-going.</p>
 <ul>
 <li><p><strong>Code review</strong> and <strong>merging</strong></p>
-<p>I reviewed merge requests (MRs). As appropriate to the specific merge request I would either give a greenlight for merging, or request changes, or discuss specific points with the original developers or with other developers with expertise in the area affected by the changes.</p>
+<p>I reviewed merge requests (MRs): inspecting changes to the code before giving a greenlight for merging, or requesting changes, or discussing specific points with the original developers.</p>
 <p>I rebased and merged MRs that had been greenlit by other reviewers.</p>
 <p>I participated and, for a time, ran weekly meetings to discuss and triage open MRs.</p></li>
 <li><p><strong>Overhauling the Tezos mempool</strong></p>
 <p>The mempool is a component of the Tezos project responsible for receiving information from the P2P gossip, folding the received information into the local state, and, based on state changes, handing over some more information to the P2P layer to be gossiped. A few colleagues and myself rewrote a new mempool from scratch to fix some issues and improve performance.</p>
-<p>This software component involves concurrency (information is received from different peers at unpredictable times, but operations must be applied to the state sequentially) and more specifically defensive scheduling: ensuring that no peer can carry out a denial of service attack by saturating a node to the point that it ignores other nodes. It also involves a high level of abstraction because the nature of the state and the way information is folded into it depends on another software component (the economic protocol) that can change dynamically.</p>
+<p>This software component involves concurrency (information is received from different peers at unpredictable times, but operations must be applied to the state sequentially) and more specifically defensive scheduling: it must protect against potential denial of service attacks whereby malicious peers saturate a node to the point that it ignores other, non-malicous, nodes. It also involves a high level of abstraction because the nature of the state and the way information is folded into it depends on another software component (the economic protocol) that can change dynamically.</p>
 <p>The development of this new mempool led to the release of <a href="https://gitlab.com/nomadic-labs/lwt_pipeline"><code>lwt-pipeline</code></a> and the extension of <a href="https://gitlab.com/nomadic-labs/ringo"><code>ringo</code></a>.</p></li>
 <li><p><strong>Releasing internal libraries</strong> and <strong>upstreaming changes to vendored libraries</strong></p>
 <p>The Tezos project was originally built as a set of libraries and binaries all placed within the same repository. After a while, some parts of the code had matured into stable components with well-defined interfaces. These parts could be released.</p>
-<p>I took the lead in releasing libraries. This involved setting up their own repository (including continuous integration), setting up the packaging boilerplate, and modifying the code of Tezos to use the external libraries rather than the embedded version.</p></li>
+<p>I took the lead in releasing libraries. This involved setting up their own repository (with continuous integration), setting up the packaging boilerplate, and modifying the code of Tezos to use the external libraries rather than the embedded version.</p></li>
 <li><p><strong>Other miscellaneous</strong></p>
 <p>Work at Nomadic Labs also included developing various features, fixing some bugs, triaging issues, etc. I also developed some of the tooling used for linting.</p></li>
 </ul>
@@ -147,11 +147,11 @@
 </ul>
 <h2 id="miscellaneous">Miscellaneous</h2>
 <ul>
-<li>Natural languages: French (native), English (fluent), Spanish (intermediate), Chinese (beginner)</li>
-<li>Programming languages: OCaml (native), make (fluent), shell (fluent), Javascript (rusty), Python (rusty), Scala (rusty), Scheme (beginner), Haskell (beginner), C (beginner).</li>
-<li>Markup languages: Markdown (native), HTML (fluent), LaTeX (intermediate)</li>
-<li>Environment: Archlinux, <code>vi</code>/<code>nvim</code>, <code>acme</code>, <code>make</code>, <code>mk</code>, <code>git</code>, <code>opam</code>, <code>sh</code>, <code>rc</code>, <code>pandoc</code>, etc.</li>
-<li>Other: driver’s license, PADI Advanced Open Water Diver, fire warden training, skilled punter and skater</li>
+<li>Natural languages: French (native), English (fluent), Spanish (intermediate), Chinese (beginner), Toki Pona (beginner).</li>
+<li>Programming languages: OCaml (native), make (fluent), shell (intermediate), Javascript (rusty), Python (rusty), Scala (rusty), Scheme (beginner), Haskell (beginner), C (beginner).</li>
+<li>Markup languages: Markdown (native), HTML (fluent), LaTeX (intermediate).</li>
+<li>Environment: Archlinux, <code>vi</code>/<code>nvim</code>, <code>git</code>, <code>acme</code>, <code>make</code>, <code>mk</code>, <code>opam</code>, <code>sh</code>/<code>zsh</code>, <code>rc</code>, <code>pandoc</code>, etc.</li>
+<li>Other: driver’s license, PADI Advanced Open Water Diver, fire warden training, skilled punter and skater.</li>
 </ul>
 </div>
 </body>
