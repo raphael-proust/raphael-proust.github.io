@@ -23,7 +23,7 @@ I wonder what other stories can be told with a similar delivery method. Maybe I 
 
 The game has a pretty good immersion: you are playing yourself finding a phone and trying to figure out who it belongs to. The phone you found is simulated inside your own phone so it looks very real: you are holding a physical phone, the screen of which displays a phone UI which you interact with just like you would with a phone. That makes the immersion work very well.
 
-There are a few immersion-breaking elements. That is to say, there are a few moments where it feels like the game's limit would not apply to an actual lost phone you would actually find. For example, you cannot send a message to contacts registered in the phone (not even out of bound, using your own phone because this one is out of credit). Although there are a few times where the game needs you to send specific messages and so those are ok.
+There are a few immersion-breaking elements. That is to say, there are a few moments where it feels like the game's limit would not apply to an actual lost phone you would actually find. For example, you cannot send a message to contacts registered in the phone (not even off-band, using your own phone). Although there are a few times where the game needs you to send specific messages and so those are ok.
 
 
 ## Weak ending

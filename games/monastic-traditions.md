@@ -10,7 +10,7 @@ It offers three options for Monk characters:
 - the Way of the Fengshui, and
 - the Way of the Ink Artistry.
 
-Mechanically, the first two classes fill a gap in that they give Monks crowd control and, respectively, battlefield control capabilities.
+Mechanically, the first two classes fill a gap in that they give Monks crowd control and battlefield control capabilities.
 Similar capabilities are already available in the subclasses from the Player Handbook – e.g., the Way Way of the Four Elements' Water Whip Discipline or the Way of the Open Hand's Open Hand Technique.
 However, unlike the subclasses from the Player Handbook, these two new subclasses focus exclusively on crowd and battlefield control.
 

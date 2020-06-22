@@ -30,7 +30,7 @@ This framework uses three levels of description of games.
 ## Mechanics
 
 The first level, the *mechanics* level, is the one of individual rules.
-It describes how the simplest parts of the game interact with each other (“this bonus is added to the result of that dice throw”, “this statistic is compared to that threshold”), how quantities evolve over the course of a game (“increase that statistic by this amount”, “reduce your hit points by this number”), what physical actions players take (“roll two dice and keep the highest”, “move this piece that many squares”).
+It describes how the simplest parts of the game interact with each other (“this bonus is added to the result of that dice roll”, “this statistic is compared to that threshold”), how quantities evolve over the course of a game (“increase that statistic by this amount”, “reduce your hit points by this number”), what physical actions players take (“roll two dice and keep the highest”, “move this piece that many squares”).
 
 The mechanics are also the immediate way (but not the most important way) through which players experience the game.
 They form the interface of the game, in the same way that the buttons and dialogue boxes form the interface of a program.
@@ -183,8 +183,8 @@ As a result, the game is challenging: players must overcome difficulties, find a
 ### Realism
 
 Another role of the dice is to model the characters' universe.
-For example, the more an action is difficult to achieve in the characters' universe, the less likely the players are to succeed at the corresponding dice roll.
-Similarly, the more effective weapon is in the characters' universe, the more likely players are to get high damage in an attack roll.
+For example, the more difficult an action is to achieve in the characters' universe, the less likely the players are to succeed at the corresponding dice roll.
+Similarly, the more effective a weapon is in the characters' universe, the more likely players are to get high damage in an attack roll.
 
 This somewhat realistic modelling of the characters' universe maintains a sense of make-belief and helps players engage in Fantasy.
 

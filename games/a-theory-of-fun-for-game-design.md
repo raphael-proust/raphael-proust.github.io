@@ -35,7 +35,6 @@ Koster's book extends beyond its title and tackles additional questions.
 One such additional question is:  
 Are games just for fun?
 
-The first question is answered by the mere definition of fun.
 Yes, games are for fun, but fun is more than mere entertainment.
 Games are for fun, and thus they are for learning and thus they involve some form of transmission from the author (the game designer) to the player.
 

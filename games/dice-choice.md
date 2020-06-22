@@ -24,7 +24,7 @@ This style of play creates tension and suspense (the future is unknown, the surv
 
 # Choices and outcomes and role-play
 
-Under this style of play, the players make choices based on expected outcomes (reward and probability of success).
+Under this style of play, the players make choices based on *expectations* of outcomes (reward and probability of success).
 The actual outcomes are the product of randomness.
 
 Another drive for players choices is role-play: “what would my character try to do?”

@@ -4,7 +4,7 @@ title: Character death in Dungeons and Dragons
 
 I recently lost my first character in a [Dungeons and Dragons (D&D)](https://www.youtube.com/watch?v=2PEt5RdNHNw) game.
 It was a sad time.
-But it also gave me time to think about character death both as a D&D æsthetic (in the sense of the [Mechanics-Dynamics-Æsthetics](http://www.cs.northwestern.edu/~hunicke/MDA.pdf) framework), and more practically about how to handle it as a Dungeon Master (DM).
+But it also gave me time to think about character death both as a D&D æsthetics (in the sense of the [Mechanics-Dynamics-Æsthetics](http://www.cs.northwestern.edu/~hunicke/MDA.pdf) framework), and more practically about how to handle it as a Dungeon Master (DM).
 
 # Some background
 
@@ -34,7 +34,7 @@ The hit-point/damage mechanic gives rise to the character death dynamic which su
 - **Challenge**: it adds stakes to combat encounters and in-game explorations.
 	In this way, it is similar to video games with auto-save that prevent do-overs.
 
-- **Fellowship**: it gives to players the occasion to role-play their character's reaction to others' death.
+- **Fellowship**: it gives players the occasion to role-play their character's reaction to others' death.
 	Even though it represents an in-game interaction (character-to-character), it is an out-of-game interaction: as a player with a dead character, you listen to other players role-playing the mourning of your character.
 
 	In my case, the fellowship æsthetic culminated when another player role-played his ranger's animal companion, an ape that could communicate simple ideas, asking “why spider girl become rotten banana?” – making a reference to Nithia's character/abilities and to the way she died.
@@ -58,7 +58,7 @@ In the most commonly used option, the player makes a new character, the DM whisk
 However, repetition of this standard option – as experienced in deadly campaigns such as the Tomb of Annihilation – breaks down some of the æsthetics that character death supports.
 
 - **Fantasy**: the world is one with consequences, but ridiculous ones where new characters pop-up when one dies.
-	Verisimilitude is broken, there is no endless supply of heroes that somehow appear just as another dies.
+	Verisimilitude is broken by an endless supply of heroes that somehow appear just as another dies.
 - **Narrative**: the appearance of replacements, whilst technically moving the story, doesn't so much move it forward as side-ways.
 	It makes the game into more of a farce than a drama – which is fine if you are playing the goofy kind of game, but not so much otherwise.
 - **Challenge**: the stakes are low, you just need to re-roll a character when you die.

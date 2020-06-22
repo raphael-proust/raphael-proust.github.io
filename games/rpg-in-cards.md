@@ -35,9 +35,9 @@ Additionally, some cards can only be played in some areas and some cards can be 
 Cards flow from one area to another via different mechanics.
 The most common are
 
+- *Drawing*: move cards from the deck to your hand.
 - *Playing*: move cards from your hand into either the discard or (an area of) the mat.
 - *Destroying*: move cards from the mat to the discard.
-- *Drawing*: move cards from the deck to your hand.
 - *Discarding*: move cards from the hand to the discard (and ignore their effect).
 
 But any other flow is possible.
@@ -87,7 +87,7 @@ Indeed, rolling dice for damage when you play a Barbarian or a Thief feels the s
 On the other hand, playing differently coloured decks in MTG feels very different.
 The card arts, names and descriptions contribute to this difference, but the mechanics contribute as well.
 In an MTG deck, black magic cards often resurrect creatures from the graveyard – or, in mechanics term, make cards flow from the discard onto the mat.
-This mechanic has flavour: as a player you raise the dead by pulling cards out of your discard.
+This mechanic has flavour: the discard is a graveyard from which you raise the dead!
 
 These mechanics with a flavour can be applied to RPGs.
 Here are a few possible examples.
@@ -233,7 +233,7 @@ This section focuses on the specific use of randomness to keep players in check.
 With cards, you can only play from your hand.
 Even though a card may allow you to play additional cards from the deck or the discard, the original card that lets you do that must have been in your hand to enter play.
 This is one of the ways in which the cards limit the players.
-Interestingly, it is the opposite of the way dice limit the players.
+Interestingly, it is the opposite of the way the dice limit the players.
 Specifically, with dice, players can try anything, but their success is uncertain; with cards, players are uncertain about what their hand will be and thus what actions they will be able to take, but the success is given.
 Thus, the dice specific choose-then-resolve style of play is turned on its head: draw-and-choose.
 
@@ -313,7 +313,7 @@ It needs to be done in a way that preserves (or enhances) the core æsthetics of
 Another issue that needs attention is the lack of adaptive threshold mechanism.
 For example, in dice-based RPGs, some enemies tend to be harder to hit than others.
 With card mechanics, how can this be replicated?
-There are solutions to this issue.
+There are ways to mitigate this issue, but it needs work from game designers.
 
 Finally, an interesting issue to tackle is the rate limit on some abilities.
 In SRD/D&D, some abilities can be used only once between two periods of rest.
