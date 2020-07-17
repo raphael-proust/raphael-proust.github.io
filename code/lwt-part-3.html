@@ -102,6 +102,98 @@ run p data</code></pre>
 <p>It is important to realise that the simplified model of Part 2 is a simplified model. It does not include all the details of the real implementation.</p>
 <p>An important difference is the existence of proxy promises: when a promise is marked as being equivalent to another promise. Proxy promises are useful internally for performance. Specifically, in <code>bind</code> (and other similar functions), proxying can be used to avoid having to attach callbacks and cancellation links between the intermediate promise and the final promise.</p>
 <p>So, whilst the model of Part 2 is useful to discuss the coarse semantics of Lwt, it is not sufficient to discuss the all the finer aspects of the semantics, nor any of the other aspects of Lwt such as performance or memory consumption.</p>
+<hr />
+<h1 id="addendum-non-obvious-evaluation-order">Addendum: non-obvious evaluation order</h1>
+<p>Below is a simple example program. The program is interspersed with print statements (in the form of <code>print_endline</code>) to show the evaluation order. These print statements stand in for any kind of side-effect that might happen in a real program.</p>
+<p>The example program highlights some of the non-trivial behaviours that Lwt can exhibit. The most interesting of these exhibited behaviours is an interaction of <code>bind</code> with <code>task</code>/<code>wakeup</code> leading to interleaving in the execution.</p>
+<p>After the example program, we give a detailed walkthrough of the execution. This walkthrough highlights and explains the behaviours of the program.</p>
+<h3 id="the-code">The code</h3>
+<p>This is the example program.</p>
+<pre><code>let stop_point, wakey = Lwt.task ()
+
+let side_promise, wakey =
+  print_endline &quot;Side 1&quot;;
+  stop_point (* wait for event *) &gt;&gt;= fun () -&gt;
+  print_endline &quot;Side 2&quot;;
+  Lwt.pause () (* wait one iteration *) &gt;&gt;= fun () -&gt;
+  print_endline &quot;Side 3&quot;;
+  Lwt.pause () (* wait another iteration *) &gt;&gt;= fun () -&gt;
+  print_endline &quot;Side 4&quot;;
+  Lwt.return ()
+
+let main_promise =
+  print_endline &quot;Main 1&quot;;
+  Lwt.wakeup wakey () (* send event *);
+  print_endline &quot;Main 2&quot;;
+  Lwt.pause () (* wait one iteration *) &gt;&gt;= fun () -&gt;
+  print_endline &quot;Main 3&quot;;
+  Lwt.return ()
+
+let _main =
+  print_endline &quot;Scheduler starts&quot;;
+  Lwt_main.run main_promise;
+  print_endline &quot;Scheduler ends&quot;</code></pre>
+<p>The program produces the following output – which we explain below.</p>
+<pre><code>Side 1
+Main 1
+Side 2
+Main 2
+Scheduler starts
+Side 3
+Main 3
+Scheduler ends</code></pre>
+<h3 id="the-walkthrough">The walkthrough</h3>
+<ol type="1">
+<li><p>The standard OCaml top-down execution starts with the first <code>let</code>-binding: <code>Lwt.task</code> is called, it creates a pending promise and a resolver, these are bound to <code>stop_point</code> and <code>wakey</code> respectively.</p></li>
+<li><p>The standard OCaml top-down execution continues with the evaluation of <code>side_promise</code>.</p>
+<p>The AST for <code>side_promise</code> starts with a sequence the left-hand side of which is executed. This produces the output <code>Side 1</code> as a side-effect.</p>
+<p>The right-hand side of the sequence in <code>side_promise</code>’s AST is a call to <code>bind</code> (through the infix alias <code>&gt;&gt;=</code>). The first argument of this bind is <code>stop_point</code>. Because this first argument is a pending promise, <code>bind</code> creates a pending promise and attaches a callback to <code>stop_point</code>. The callback is responsible for making the pending promise created by <code>bind</code> progress when <code>stop_point</code> becomes resolved. The pending promise created by <code>bind</code> is returned.</p>
+<p>The returned pending promise is now bound to the variable <code>side_promise</code>.</p></li>
+<li><p>The standard OCaml top-down execution continues: <code>main_promise</code> begins to be evaluated.</p>
+<p>The AST for <code>main_promise</code> is a (semi-colon-separated) sequence of three statements, followed by a call to <code>bind</code>. The sequence starts evaluating in order. The first statement produces the output <code>Main 1</code>.</p>
+<p>The second statement, <code>Lwt.wakeup wakey ()</code>, resolves the <code>stop_point</code> promise. Resolving the <code>stop_promise</code> causes the callbacks attached to it to be executed. There is one callback attached to it: the one that is responsible for making progress towards the resolution of <code>side_promise</code>.</p>
+<p>The callback is executed. Its execution produces the output <code>Side 2</code>. Its execution then reaches a <code>pause ()</code>, or, more specifically, it reaches a call to <code>bind</code> with <code>pause ()</code> as a first argument. This <code>pause ()</code> registers a new pending (paused) promise with the scheduler. The call to <code>bind</code> attaches a callback to this pending (paused) promise that is responsible for making <code>side_promise</code> progress towards resolution.</p>
+<p>The callback returns <code>()</code>, causing <code>wakeup</code> to return <code>()</code>, causing the execution to continue to the next statement in the sequence.</p>
+<p>The next statement produces the output <code>Main 2</code>.</p>
+<p>The next part of <code>main_promise</code>’s AST is a <code>pause ()</code>/<code>bind</code>. The <code>pause ()</code> registers a new pending (paused) promise with the scheduler. The <code>bind</code> creates a new pending promise and then attaches a callback to the pending (paused) promise that is responsible for making the newly created pending promise progress towards resolution. It then returns the newly created promise.</p>
+<p>The returned promise is now bound to <code>main_promise</code>.</p></li>
+<li><p>The standard OCaml top-down execution continues and the evaluation of <code>_main</code> starts. This causes the output <code>Scheduler starts</code> to be printed.</p>
+<p>A call to <code>Lwt_main.run</code> follows. Because the promise passed to <code>Lwt_main.run</code> (<code>main_promise</code>) is pending, <code>Lwt_main.run</code> resolves each of the pending (paused) promises that are registered with the scheduler. Each time it resolves one pending (paused) promise, it triggers the execution of the callbacks attached to it.</p>
+<p>In the case of the pending (paused) promise from the <code>side_promise</code>, the callback produces the output <code>Side 3</code>, followed by a <code>pause ()</code>/<code>bind</code> which causes the creation and registration of a pending (paused) promise and the attachment of callbacks as described above.</p>
+<p>In the case of the pending (paused) promise from the <code>main_promise</code>, the callback produces the output <code>Main 3</code>, followed by <code>Lwt.return ()</code>. Because the callback ends with an already resolved promise, it resolves the <code>main_promise</code>. (Note that there aren’t any callbacks attached to <code>main_promise</code> so there are no additional side-effects from this callback.)</p>
+<p>Because the <code>main_promise</code> promise is now resolved, the next iteration of the scheduler does not resolve pending (paused) promises. Instead, the scheduler simply returns the value that <code>main_promise</code> was fulfilled with: <code>()</code>.</p>
+<p>The evaluation of <code>_main</code> continues with the printing of <code>Scheduler ends</code>.</p></li>
+<li><p>The standard OCaml top-down execution continues. It reaches the end of the program. This causes the program to <code>exit</code>.</p></li>
+</ol>
+<h3 id="notable-exhibited-behaviours">Notable exhibited behaviours</h3>
+<p>The execution above exhibits multiple interesting behaviours. We focus on two. First: the output <code>Side 4</code> is never printed. This is because <code>main_promise</code> resolves after one iteration of the scheduler which does not give enough time (enough iterations) to <code>side_promise</code> to resolve.</p>
+<p>Note that this specific behaviour is dependent upon the scheduler. The example above was executed with the Unix scheduler (<code>Lwt_main.run</code> in the package <code>lwt.unix</code>). A different scheduler, such as the one for <code>js_of_ocaml</code>, might differ.</p>
+<p>Also note that in many cases, leaving some promises pending is not an issue and can even be a desired behaviour. For example, in a server it is possible to pass a promise that only resolves when the process receives a signal (typically <code>SIGINT</code> or <code>SIGTERM</code>). Leaving some promises pending then is a non-issue.</p>
+<p>Finally, note that it is very easy to work around this behaviour when desired. You merely need to pass the joined promise <code>Lwt.join [main_promise; side_promise]</code> to <code>Lwt_main.run</code>.</p>
+<p>Even if the list of promises that must be resolved is not known in advanced, you can register them dynamically in a global mutable variable and loop back to another call to <code>Lwt_main.run</code> until the global mutable variable contains only resolved promises. Implementation is left as an exercise.</p>
+<p>Second, an arguably more important behaviour to point out: some of the execution of <code>side_promise</code> was interleaved within a non-yielding section of the execution of <code>main_promise</code>. More specifically, the output <code>Side 2</code> was printed between <code>Main 1</code> and <code>Main 2</code> even though there are no yield points between the two <code>Main</code> print statements. In other words: we observed <strong>interleaving without yielding.</strong></p>
+<p>When you reason about promises as threads, this is unintuitive: it appears as a kind of context-switch without an explicit cooperation point between the cooperative threads. However, there are no threads and there isn’t even any “interleaving”: there are just callbacks attached and called in order to make progress towards resolution. And explicit yield points (the calls to <code>Lwt.pause</code> and <code>Lwt_unix.yield</code>) are mechanisms through which the code that makes a given promise progress towards resolution allows code that makes other promises progress towards resolution to execute.</p>
+<p>In order to avoid this behaviour, this perceived interleaving, from happening, you merely need to not resolve other promises within your critical sections. Avoid calling <code>wakeup</code> and other such functions: <code>wakeup_exn</code>, and even <code>wakeup_later</code> the name of which is somewhat misleading.</p>
+<p>You can move the promise resolution either syntactically or programmatically. For the former case, simply move the call to <code>wakeup</code> to the end of your critical section. For the latter case, simply replace the call with <code>ignore (Lwt.pause () &gt;&gt;= fun () -&gt; Lwt.wakeup wakey (); Lwt.return)</code>.</p>
+<p>An important caveat: some other functions may also resolve promises. For example, pushing a value into a stream may resolve a promise that is waiting for a value to appear on that stream. It means that the following program might print an interrupted greeting.</p>
+<pre><code>let (s, push) = Lwt_stream.create ()
+
+let p =
+  Lwt_stream.next s &gt;&gt;= fun () -&gt;
+  print_string &quot;\nBANG\n!&quot;;
+  Lwt.return ()
+
+let main_promise =
+  ..
+  Lwt.pause () &gt;&gt;= fun () -&gt;
+  (* critical section begins *)
+  print_string &quot;Hello &quot;;
+  push (Some ());
+  print_string &quot;World!&quot;;
+  (* critical section ends *)
+  Lwt.pause () &gt;&gt;= fun () -&gt;
+  ..</code></pre>
+<p>Unfortunately, the documentation of <code>Lwt_stream</code> and other Lwt-adjacent libraries is often insufficient to understand which non-yielding function may lead to promise resolution and the corresponding execution of attached callbacks. If you observe “interleaving”, you will need to find what function is responsible for it and it might involve reading some source code. Once you have found this function, please consider contributing some documentation to the project it appears in.</p>
 </div>
 </body>
 </html>

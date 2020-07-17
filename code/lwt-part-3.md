@@ -142,3 +142,194 @@ Proxy promises are useful internally for performance.
 Specifically, in `bind` (and other similar functions), proxying can be used to avoid having to attach callbacks and cancellation links between the intermediate promise and the final promise.
 
 So, whilst the model of Part 2 is useful to discuss the coarse semantics of Lwt, it is not sufficient to discuss the all the finer aspects of the semantics, nor any of the other aspects of Lwt such as performance or memory consumption.
+
+
+-----------------------------------
+
+# Addendum: non-obvious evaluation order
+
+Below is a simple example program.
+The program is interspersed with print statements (in the form of `print_endline`) to show the evaluation order.
+These print statements stand in for any kind of side-effect that might happen in a real program.
+
+The example program highlights some of the non-trivial behaviours that Lwt can exhibit.
+The most interesting of these exhibited behaviours is an interaction of `bind` with `task`/`wakeup` leading to interleaving in the execution.
+
+After the example program, we give a detailed walkthrough of the execution.
+This walkthrough highlights and explains the behaviours of the program.
+
+
+### The code
+
+This is the example program.
+
+```
+let stop_point, wakey = Lwt.task ()
+
+let side_promise, wakey =
+  print_endline "Side 1";
+  stop_point (* wait for event *) >>= fun () ->
+  print_endline "Side 2";
+  Lwt.pause () (* wait one iteration *) >>= fun () ->
+  print_endline "Side 3";
+  Lwt.pause () (* wait another iteration *) >>= fun () ->
+  print_endline "Side 4";
+  Lwt.return ()
+
+let main_promise =
+  print_endline "Main 1";
+  Lwt.wakeup wakey () (* send event *);
+  print_endline "Main 2";
+  Lwt.pause () (* wait one iteration *) >>= fun () ->
+  print_endline "Main 3";
+  Lwt.return ()
+
+let _main =
+  print_endline "Scheduler starts";
+  Lwt_main.run main_promise;
+  print_endline "Scheduler ends"
+```
+
+The program produces the following output – which we explain below.
+
+```
+Side 1
+Main 1
+Side 2
+Main 2
+Scheduler starts
+Side 3
+Main 3
+Scheduler ends
+```
+
+### The walkthrough
+
+1. The standard OCaml top-down execution starts with the first `let`-binding: `Lwt.task` is called, it creates a pending promise and a resolver, these are bound to `stop_point` and `wakey` respectively.
+
+2. The standard OCaml top-down execution continues with the evaluation of `side_promise`.
+
+   The AST for `side_promise` starts with a sequence the left-hand side of which is executed.
+   This produces the output `Side 1` as a side-effect.
+
+   The right-hand side of the sequence in `side_promise`'s AST is a call to `bind` (through the infix alias `>>=`).
+   The first argument of this bind is `stop_point`.
+   Because this first argument is a pending promise, `bind` creates a pending promise and attaches a callback to `stop_point`.
+   The callback is responsible for making the pending promise created by `bind` progress when `stop_point` becomes resolved.
+   The pending promise created by `bind` is returned.
+
+   The returned pending promise is now bound to the variable `side_promise`.
+
+3. The standard OCaml top-down execution continues: `main_promise` begins to be evaluated.
+
+   The AST for `main_promise` is a (semi-colon-separated) sequence of three statements, followed by a call to `bind`.
+   The sequence starts evaluating in order.
+   The first statement produces the output `Main 1`.
+
+   The second statement, `Lwt.wakeup wakey ()`, resolves the `stop_point` promise.
+   Resolving the `stop_promise` causes the callbacks attached to it to be executed.
+   There is one callback attached to it: the one that is responsible for making progress towards the resolution of `side_promise`.
+
+   The callback is executed.
+   Its execution produces the output `Side 2`.
+   Its execution then reaches a `pause ()`, or, more specifically, it reaches a call to `bind` with `pause ()` as a first argument.
+   This `pause ()` registers a new pending (paused) promise with the scheduler.
+   The call to `bind` attaches a callback to this pending (paused) promise that is responsible for making `side_promise` progress towards resolution.
+
+   The callback returns `()`, causing `wakeup` to return `()`, causing the execution to continue to the next statement in the sequence.
+
+   The next statement produces the output `Main 2`.
+
+   The next part of `main_promise`'s AST is a `pause ()`/`bind`.
+   The `pause ()` registers a new pending (paused) promise with the scheduler.
+   The `bind` creates a new pending promise and then attaches a callback to the pending (paused) promise that is responsible for making the newly created pending promise progress towards resolution.
+   It then returns the newly created promise.
+
+   The returned promise is now bound to `main_promise`.
+
+4. The standard OCaml top-down execution continues and the evaluation of `_main` starts.
+   This causes the output `Scheduler starts` to be printed.
+
+   A call to `Lwt_main.run` follows.
+   Because the promise passed to `Lwt_main.run` (`main_promise`) is pending, `Lwt_main.run` resolves each of the pending (paused) promises that are registered with the scheduler.
+   Each time it resolves one pending (paused) promise, it triggers the execution of the callbacks attached to it.
+
+   In the case of the pending (paused) promise from the `side_promise`, the callback produces the output `Side 3`, followed by a `pause ()`/`bind` which causes the creation and registration of a pending (paused) promise and the attachment of callbacks as described above.
+
+   In the case of the pending (paused) promise from the `main_promise`, the callback produces the output `Main 3`, followed by `Lwt.return ()`.
+   Because the callback ends with an already resolved promise, it resolves the `main_promise`.
+   (Note that there aren't any callbacks attached to `main_promise` so there are no additional side-effects from this callback.)
+
+   Because the `main_promise` promise is now resolved, the next iteration of the scheduler does not resolve pending (paused) promises.
+   Instead, the scheduler simply returns the value that `main_promise` was fulfilled with: `()`.
+
+   The evaluation of `_main` continues with the printing of `Scheduler ends`.
+
+5. The standard OCaml top-down execution continues.
+   It reaches the end of the program.
+   This causes the program to `exit`.
+
+
+### Notable exhibited behaviours
+
+The execution above exhibits multiple interesting behaviours.
+We focus on two.
+First: the output `Side 4` is never printed.
+This is because `main_promise` resolves after one iteration of the scheduler which does not give enough time (enough iterations) to `side_promise` to resolve.
+
+Note that this specific behaviour is dependent upon the scheduler.
+The example above was executed with the Unix scheduler (`Lwt_main.run` in the package `lwt.unix`).
+A different scheduler, such as the one for `js_of_ocaml`, might differ.
+
+Also note that in many cases, leaving some promises pending is not an issue and can even be a desired behaviour.
+For example, in a server it is possible to pass a promise that only resolves when the process receives a signal (typically `SIGINT` or `SIGTERM`).
+Leaving some promises pending then is a non-issue.
+
+Finally, note that it is very easy to work around this behaviour when desired.
+You merely need to pass the joined promise `Lwt.join [main_promise; side_promise]` to `Lwt_main.run`.
+
+Even if the list of promises that must be resolved is not known in advanced, you can register them dynamically in a global mutable variable and loop back to another call to `Lwt_main.run` until the global mutable variable contains only resolved promises.
+Implementation is left as an exercise.
+
+Second, an arguably more important behaviour to point out: some of the execution of `side_promise` was interleaved within a non-yielding section of the execution of `main_promise`.
+More specifically, the output `Side 2` was printed between `Main 1` and `Main 2` even though there are no yield points between the two `Main` print statements.
+In other words: we observed **interleaving without yielding.**
+
+When you reason about promises as threads, this is unintuitive: it appears as a kind of context-switch without an explicit cooperation point between the cooperative threads.
+However, there are no threads and there isn't even any "interleaving": there are just callbacks attached and called in order to make progress towards resolution.
+And explicit yield points (the calls to `Lwt.pause` and `Lwt_unix.yield`) are mechanisms through which the code that makes a given promise progress towards resolution allows code that makes other promises progress towards resolution to execute.
+
+In order to avoid this behaviour, this perceived interleaving, from happening, you merely need to not resolve other promises within your critical sections.
+Avoid calling `wakeup` and other such functions: `wakeup_exn`, and even `wakeup_later` the name of which is somewhat misleading.
+
+You can move the promise resolution either syntactically or programmatically.
+For the former case, simply move the call to `wakeup` to the end of your critical section.
+For the latter case, simply replace the call with `ignore (Lwt.pause () >>= fun () -> Lwt.wakeup wakey (); Lwt.return)`.
+
+An important caveat: some other functions may also resolve promises.
+For example, pushing a value into a stream may resolve a promise that is waiting for a value to appear on that stream.
+It means that the following program might print an interrupted greeting.
+
+```
+let (s, push) = Lwt_stream.create ()
+
+let p =
+  Lwt_stream.next s >>= fun () ->
+  print_string "\nBANG\n!";
+  Lwt.return ()
+
+let main_promise =
+  ..
+  Lwt.pause () >>= fun () ->
+  (* critical section begins *)
+  print_string "Hello ";
+  push (Some ());
+  print_string "World!";
+  (* critical section ends *)
+  Lwt.pause () >>= fun () ->
+  ..
+```
+
+Unfortunately, the documentation of `Lwt_stream` and other Lwt-adjacent libraries is often insufficient to understand which non-yielding function may lead to promise resolution and the corresponding execution of attached callbacks.
+If you observe "interleaving", you will need to find what function is responsible for it and it might involve reading some source code.
+Once you have found this function, please consider contributing some documentation to the project it appears in.
