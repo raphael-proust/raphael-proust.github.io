@@ -41,7 +41,7 @@ opam install lwt</code></pre>
 <pre><code>(** The type of a promise for a value of type [&#39;a]. *)
 type &#39;a t</code></pre>
 <p>A promise is a cell that may hold a value or an exception. Moreover, a promise that doesn’t hold a value or an exception, can change to hold a value or an exception.</p>
-<p>A promise that doesn’t hold anything is said to be <em>pending</em>. When a promise that holds nothing changes to hold something it is said to <em>resolve</em> or to <em>be resolved</em>. In particular, a promise that resolves to hold a value is said to be <em>fulfilled</em> whereas a promise that resolves to hold an exception is said to be <em>rejected</em>.</p>
+<p>A promise that doesn’t hold anything is said to be <em>pending</em>. When a promise that holds nothing changes to hold something it is said to <em>resolve</em>, to <em>be resolved</em>, or to <em>become resolved</em>. In particular, a promise that resolves to hold a value is said to <em>fulfill</em>, to be <em>fulfilled</em>, or to <em>become fulfilled</em> whereas a promise that resolves to hold an exception is said to <em>reject</em>, to be <em>rejected</em>, or to <em>become rejected</em>.</p>
 <p>The Lwt library provides a way to introspect the state of promise:</p>
 <pre><code>type &#39;a state =
   | Return of &#39;a
@@ -51,7 +51,7 @@ type &#39;a t</code></pre>
 val state: &#39;a t -&gt; &#39;a state</code></pre>
 <h1 id="a-necessary-side-note-on-terminology-and-backwards-compatibility">A necessary side-note on terminology and backwards compatibility</h1>
 <p>The Lwt library is old. And a lot of the terminology (in the interface and, to a lesser extent, in the documentation) is dated. For example, the different variants for the type <code>state</code> (<code>Return</code>, <code>Fail</code> and <code>Sleep</code>) are based on an old description of Lwt as a thread library. In fact, “Lwt” stands for Light-Weight Threads.</p>
-<p>There are no threads in Lwt. There are only promises. But old descriptions of the library will occasionally contain dated references to threads. And the interface of the library is full of those references.</p>
+<p>There are no threads in Lwt. There are only promises. But old descriptions of the library will occasionally contain dated references to threads. And the interface of the library, because of backwards compatibility, is full of those references.</p>
 <h1 id="analogy">Analogy</h1>
 <p>A promise, as a cell that may hold nothing, a value, or an exception, is similar to a combination of other types:</p>
 <pre><code>&#39;a Lwt ≈ (&#39;a, exn) result option ref</code></pre>
@@ -170,7 +170,7 @@ The function <code>finalize</code> is similar to <code>try_bind</code> except it
 <p>The function <code>run</code> is intended to be used at the top-level of a program. It forces the program to block, delaying <code>exit</code>, until the given promise is resolved.</p>
 <p>Note that the <code>Lwt_main</code> module is part of the <code>lwt.unix</code> sub-library which depends on the <code>base-unix</code> package. Different environments may provide alternatives to that function.</p>
 <p><code>Lwt.pause: unit -&gt; unit t</code><br />
-<code>pause ()</code> is a pending promise which is resolved after all the other promises have been given a chance to progress towards resolution. In Part 2 of this introduction/tutorial, we will talk in more details about the scheduling in Lwt, including the precise scheduling of <code>pause</code>. In the mean time, from a practical point of view, <code>pause</code> introduces explicit points in the program where a promise is pending for a short time. Consider the following program and the importance of <code>pause</code>: without it, the call to <code>count</code> loop forever consuming all the CPU and the value <code>counting</code> never evaluates to anything.</p>
+<code>pause ()</code> is a pending promise which is resolved after all the other promises have been given a chance to progress towards resolution. In Part 2 of this introduction/tutorial, we will talk in more details about the scheduling in Lwt, including the precise scheduling of <code>pause</code>. In the mean time, from a practical point of view, <code>pause</code> introduces explicit points in the program where a promise is pending for a short time. Consider the following program and the importance of <code>pause</code>: without it, the call to <code>count</code> loops forever consuming all the CPU and the value <code>counting</code> never evaluates to anything.</p>
 <pre><code>let r = ref 0 ;;
 let rec count () =
   pause () &gt;&gt;= fun () -&gt;
@@ -187,6 +187,12 @@ let main () =
   let counting = count () in
   let exiting = exit_on 10 in
   choose [ counting ; exiting ] ;;</code></pre>
+<p>Note that <code>return</code> and <code>bind</code> are no substitute for <code>pause</code>. Specifically, the below variant of the <code>count</code> function loops forever. This is because <code>Lwt.return ()</code> evaluates to an already resolved promise which causes <code>Lwt.( &gt;&gt;= )</code> to evaluates its right-hand side argument immediately.</p>
+<pre><code>(* This is incorrect: it loops forever *)
+let rec count () =
+  incr r;
+  Lwt.return () &gt;&gt;= fun () -&gt;
+  count () ;;</code></pre>
 <p><code>Lwt_main.yield: unit -&gt; unit t</code><br />
 The function <code>yield</code> is a synonym for <code>pause</code>. It exists for historical reasons: <code>pause</code> was added later as a backend-independent yielding mechanism. There might be minor differences between <code>pause</code> and <code>yield</code>, but no difference that you should rely on.</p>
 <h1 id="part-2">Part 2</h1>

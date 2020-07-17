@@ -199,12 +199,12 @@ let rec run p =
   | Fulfilled v -&gt; v
   | Rejected exc -&gt; raise exc
   | Pending _ -&gt;
-      let all_paused = List.rev !paused_promises in
-      paused_promises := []
+      let all_paused = !paused_promises in
+      paused_promises := [];
       List.iter (fun p -&gt; wakeup p ()) all_paused;
-      .. (* handle I/O, which may cause blocking *)
       run p</code></pre>
 <p>Note, however, that different environment have different ways to deal with paused promises. For example, in Unix the scheduler only kicks in when a call to <code>Lwt_main.run</code> is on-going. By contrast, in <code>js_of_ocaml</code> the scheduler is always running. For compatibility with other environment, you cannot rely on <code>pause</code> to hold your promises pending until you call <code>Lwt_main.run</code>.</p>
+<p>Also note that the mock scheduler above is only for building a mental model. The specifics might differ, but the core idea is there.</p>
 <h1 id="os-interactions">OS interactions</h1>
 <p>The last part of Lwt that this tutorial covers is interaction with the operating system. Whilst it is possible to call functions from OCaml’s <code>Unix</code> module, such functions are oblivious to Lwt and may cause issues. Most notably, these functions may block the execution of the program.</p>
 <p>There are multiple ways to interact with the OS without blocking. For the most common OS interactions (e.g., creating files, reading from pipes, accepting incoming connections, etc.), Lwt comes with the sub-library <code>lwt.unix</code> which includes the module <code>Lwt_unix</code> which contains Lwt-aware wrappers for the <code>Unix</code> module.</p>

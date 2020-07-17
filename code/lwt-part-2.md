@@ -319,10 +319,9 @@ let rec run p =
   | Fulfilled v -> v
   | Rejected exc -> raise exc
   | Pending _ ->
-      let all_paused = List.rev !paused_promises in
-      paused_promises := []
+      let all_paused = !paused_promises in
+      paused_promises := [];
       List.iter (fun p -> wakeup p ()) all_paused;
-      .. (* handle I/O, which may cause blocking *)
       run p
 ```
 
@@ -330,6 +329,9 @@ Note, however, that different environment have different ways to deal with pause
 For example, in Unix the scheduler only kicks in when a call to `Lwt_main.run` is on-going.
 By contrast, in `js_of_ocaml` the scheduler is always running.
 For compatibility with other environment, you cannot rely on `pause` to hold your promises pending until you call `Lwt_main.run`.
+
+Also note that the mock scheduler above is only for building a mental model.
+The specifics might differ, but the core idea is there.
 
 
 # OS interactions

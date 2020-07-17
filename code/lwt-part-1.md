@@ -49,8 +49,8 @@ A promise is a cell that may hold a value or an exception.
 Moreover, a promise that doesn't hold a value or an exception, can change to hold a value or an exception.
 
 A promise that doesn't hold anything is said to be *pending*.
-When a promise that holds nothing changes to hold something it is said to *resolve* or to *be resolved*.
-In particular, a promise that resolves to hold a value is said to be *fulfilled* whereas a promise that resolves to hold an exception is said to be *rejected*.
+When a promise that holds nothing changes to hold something it is said to *resolve*, to *be resolved*, or to *become resolved*.
+In particular, a promise that resolves to hold a value is said to *fulfill*, to be *fulfilled*, or to *become fulfilled* whereas a promise that resolves to hold an exception is said to *reject*, to be *rejected*, or to *become rejected*.
 
 The Lwt library provides a way to introspect the state of promise:
 
@@ -73,12 +73,12 @@ In fact, “Lwt” stands for Light-Weight Threads.
 There are no threads in Lwt.
 There are only promises.
 But old descriptions of the library will occasionally contain dated references to threads.
-And the interface of the library is full of those references.
+And the interface of the library, because of backwards compatibility, is full of those references.
 
 
 # Analogy
 
-A promise, as a cell that may  hold nothing, a value, or an exception, is similar to a combination of other types:
+A promise, as a cell that may hold nothing, a value, or an exception, is similar to a combination of other types:
 
 ```
 'a Lwt ≈ ('a, exn) result option ref
@@ -273,7 +273,7 @@ Different environments may provide alternatives to that function.
 `pause ()` is a pending promise which is resolved after all the other promises have been given a chance to progress towards resolution.
 In Part 2 of this introduction/tutorial, we will talk in more details about the scheduling in Lwt, including the precise scheduling of `pause`.
 In the mean time, from a practical point of view, `pause` introduces explicit points in the program where a promise is pending for a short time.
-Consider the following program and the importance of `pause`: without it, the call to `count` loop forever consuming all the CPU and the value `counting` never evaluates to anything.
+Consider the following program and the importance of `pause`: without it, the call to `count` loops forever consuming all the CPU and the value `counting` never evaluates to anything.
 
 ```
 let r = ref 0 ;;
@@ -292,6 +292,18 @@ let main () =
   let counting = count () in
   let exiting = exit_on 10 in
   choose [ counting ; exiting ] ;;
+```
+
+Note that `return` and `bind` are no substitute for `pause`.
+Specifically, the below variant of the `count` function loops forever.
+This is because `Lwt.return ()` evaluates to an already resolved promise which causes `Lwt.( >>= )` to evaluates its right-hand side argument immediately.
+
+```
+(* This is incorrect: it loops forever *)
+let rec count () =
+  incr r;
+  Lwt.return () >>= fun () ->
+  count () ;;
 ```
 
 `Lwt_main.yield: unit -> unit t`  
