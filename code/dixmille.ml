@@ -1,16 +1,16 @@
-(* # Foreword: Dix-milles
+(* # Foreword: Dix-mille
 
-   Dix-milles (Ten-thousands) is a dice game with risk/reward management. An
+   Dix-mille (Ten-thousands) is a dice game with risk/reward management. An
    interesting mechanics forces players to make choices not only about their own
    risk but also about the potential rewards for other players.
 
 *)
 
-(* # Introduction: dixmilles.ml
+(* # Introduction: dixmille.ml
 
-   This file contains all the code necessary to play dix-milles. Typically, each
+   This file contains all the code necessary to play dix-mille. Typically, each
    individual module would be defined in their own separate file. However, the
-   aim of this implementation of dix-milles is didactic. As such, it is intended
+   aim of this implementation of dix-mille is didactic. As such, it is intended
    to be read by a human more than it is intended to be compiled by a computer –
    although it is compilable by a computer.
 
@@ -22,7 +22,7 @@
    This implementation walkthrough assumes the reader is familiar with basic
    coding, but assumes no advanced knowledge.
 
-   With that in mind, here's a walkthrough of an implementation of dix-milles.
+   With that in mind, here's a walkthrough of an implementation of dix-mille.
 
 *)
 
@@ -50,7 +50,7 @@ end
 
 (* # Part 1: Domain modeling
 
-   Dix-milles is a dice game: during the course of the game, players roll
+   Dix-mille is a dice game: during the course of the game, players roll
    (six-sided) dice. This first part of the implementation is intended to make
    it easy for the rest of the code to work with dice.
 
@@ -129,7 +129,7 @@ module D6 : sig
 
      Moreover, for our purpose, rolled die are not numbers: they are never
      added together nor compared. True, the face value of a die is a good
-     mnemonic for the scoring system of the game of dix-milles, but dix-milles
+     mnemonic for the scoring system of the game of dix-mille, but dix-mille
      could be played with dice that have abstract symbols on their faces.
 
   *)
@@ -766,7 +766,7 @@ and Game : sig
      At the initial state, there are 5 dice available and 0 running points. *)
   val make: Player.t list -> t
 
-  (* `play t` runs a game of dix-milles, starting in the state `t`. It returns
+  (* `play t` runs a game of dix-mille, starting in the state `t`. It returns
      the first state in which one of the players has reached the target number
      of point.
 
