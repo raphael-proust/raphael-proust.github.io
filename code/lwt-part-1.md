@@ -103,6 +103,7 @@ rejected    | `Some (Error _)`                | `Fail _`
 
 Note that this is just a similarity, not an equivalence.
 The main difference is that a promise can only ever transition from holding nothing to holding either a value or an exception.
+Under no circumstances can a resolved promise become pending.
 
 
 # Creating and combining promises
@@ -110,13 +111,13 @@ The main difference is that a promise can only ever transition from holding noth
 ## Basic monadic interface
 
 `Lwt.return: 'a -> 'a t`  
-`return v` evaluates immediately to a promise of type that is already fulfilled with the value `v`.
+`return v` evaluates immediately to a promise that is already fulfilled with the value `v`.
 This is the most basic way to create a promise.
 By itself it is fairly useless, but it turns out to be essential as a building block for more complicated promises.
 In particular, it fits as part of the Monadic interface to Lwt.
 
 `Lwt.bind: 'a t -> ('a -> 'b t) -> 'b t`  
-`bind p f` evaluates to a promise, the state of which depends on the call arguments:
+`bind p f` evaluates immediately to a promise, the state of which depends on the call arguments:
 
 - If `p` is fulfilled to `x`, then `bind p f` evaluates to the promise `f x`.
 - If `p` is rejected with `exc`, then `bind p f` evaluates to a promise rejected with `exc`.
@@ -128,7 +129,7 @@ In particular, it fits as part of the Monadic interface to Lwt.
 
 Note that the notion of “becomes behaviourally identical to” is vague.
 We give more details in Part 2 of this tutorial.
-In the mean time, it means that the promise resolve at the same time and with the same value/exception.
+For now, it means that the promise resolves at the same time and with the same value/exception.
 
 `Lwt.( >>= ) : 'a t -> ('a -> 'b t) -> 'b t`  
 The infix operator `>>=` is an alias for `bind`.
@@ -150,15 +151,15 @@ Note that, as we discuss below, the use of `fail` should be reserved for populat
 
 `Lwt.task: unit -> 'a t * 'a u`  
 `task ()` evaluates immediately to a pair `(p, r)` where `p` is a pending promise and `r` is its associated *resolver*.
-For historical reasons, the resolver is often referred to as the wakener.
+For historical reasons, the resolver is often referred to as the wakener and the functions that act on it (below) are called `wakeup`.
 
 `Lwt.wakeup: 'a u -> 'a -> unit`  
 `wakeup r v` causes the pending promise associated to the resolver `r` to become fulfilled with the value `v`.
-If the promise associated to `r` is already resolved, the call raises `Invalid_argument` – except if it is cancelled, which we will talk about bellow.
+If the promise associated to `r` is already resolved, the call raises `Invalid_argument` – except if it is cancelled, which we will talk about below.
 
 `Lwt.wakeup_exn: 'a u -> exn -> unit`  
 `wakeup r exc` causes the pending promise associated to the resolver `r` to become rejected with the exception `exc`.
-If the promise associated to `r` is already resolved, the call raises `Invalid_argument` – except if it is cancelled, which we will talk about bellow.
+If the promise associated to `r` is already resolved, the call raises `Invalid_argument` – except if it is cancelled, which we will talk about below.
 
 The `task` primitive is very powerful.
 It can be used to create never-resolving promises: `let never, _ = task ()`
@@ -214,7 +215,7 @@ If multiple promises resolve at the same time (the condition for which we will d
 `Lwt.catch: (unit -> 'a t) -> (exn -> 'a t) -> 'a t`  
 The function `catch` attaches a handler to a given promise.
 The handler is called if the promise is rejected.
-This gives an oportunity to transform a rejection into a fulfillement.
+This gives an opportunity to transform a rejection into a fulfillement.
 Typical use is along the lines of:
 
 ```
@@ -269,8 +270,8 @@ Unlike `try_bind`, the handler in `finalize` cannot determine whether the promis
 `Lwt_main.run: 'a t -> 'a`  
 `run p` is an expression that blocks until the promise `p` is resolved.
 If `p` is already resolved when the call is made, then the expression does not block and returns a value immediately.
-If `p` is fulfilled with the value `v`, the `run p` expression evaluates to the value `v`.
-If `p` is rejected with the exception `exc`, the `run p` expression raises the exception `exc`.
+If `p` becomes fulfilled with the value `v`, the `run p` expression evaluates to the value `v`.
+If `p` becomes rejected with the exception `exc`, the `run p` expression raises the exception `exc`.
 
 The function `run` is intended to be used at the top-level of a program.
 It forces the program to block, delaying `exit`, until the given promise is resolved.
@@ -281,7 +282,7 @@ Different environments may provide alternatives to that function.
 `Lwt.pause: unit -> unit t`  
 `pause ()` is a pending promise which is resolved after all the other promises have been given a chance to progress towards resolution.
 In Part 2 of this introduction/tutorial, we will talk in more details about the scheduling in Lwt, including the precise scheduling of `pause`.
-In the mean time, from a practical point of view, `pause` introduces explicit points in the program where a promise is pending for a short time.
+In the mean time, from a practical point of view, `pause` introduces explicit points in the program where a promise is kept pending for a short time.
 Consider the following program and the importance of `pause`: without it, the call to `count` loops forever consuming all the CPU and the value `counting` never evaluates to anything.
 
 ```
@@ -318,14 +319,14 @@ let rec count () =
 `Lwt_main.yield: unit -> unit t`  
 The function `yield` is a synonym for `pause`.
 It exists for historical reasons: `pause` was added later as a backend-independent yielding mechanism.
-There might be minor differences between `pause` and `yield`, but no difference that you should rely on.
+There are minor differences between `pause` and `yield`, but no difference that you should rely on.
 
 
 # Part 2
 
 There are other interesting features of Lwt.
 And there are also features we have mentioned that we could not explain (cancelation) or not explain well (pause).
-Unfortunately, to have a good understanding of those features, a good undrstanding of the inner workings of Lwt is required.
+Unfortunately, to have a good understanding of those features, a good understanding of the inner workings of Lwt is required.
 Part 2 of this introduction/tutorial provides details about the internal machinery, allowing us to understand the advanced features of Lwt.
 
 [→ Onwards to part 2](/code/lwt-part-2.html)

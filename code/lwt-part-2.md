@@ -60,7 +60,7 @@ As a first approximation, we simply declare:
 
 ```
 type 'a pending = {
-  mutable when_fulfills: ('a -> unit) list;
+  mutable when_fulfils: ('a -> unit) list;
   mutable when_rejects: (exc -> unit) list;
   ..
 }
@@ -76,9 +76,9 @@ let task () =
   (p, p)
 let wakeup p v =
   match p.state with
-  | Pending { when_fulfills; } ->
+  | Pending { when_fulfils; } ->
       p.state <- Fulfilled v;
-      List.iter (fun f -> f v) when_fulfills
+      List.iter (fun f -> f v) when_fulfils
   | _ -> raise (Invalid_argument "..")
 let wakeup_exn p exc =
   match p.state with
@@ -96,7 +96,7 @@ But the general idea is as above.
 There are variants of `on_any` that attach different callbacks.
 Their semantics can be inferred from their name and type signature, but we list them here anyway.
 
-`Lwt.on_sucess: 'a t -> ('a -> unit) -> unit`  
+`Lwt.on_success: 'a t -> ('a -> unit) -> unit`  
 `on_success p h` calls `h` when `p` is fulfilled.
 If `p` is already fulfilled, it calls `h` immediately.
 Nothing happens if `p` is already rejected, is eventually rejected, or is never resolved.
@@ -312,8 +312,9 @@ However, when the scheduler's main-loop is running, it resolves paused promises 
 ```
 let paused_promises = ref []
 let pause () =
-  let p = { state = .. } in
-  paused_promises := p :: !paused_promises
+  let p = { state = Pending { .. } } in
+  paused_promises := p :: !paused_promises;
+  p
 let rec run p =
   match p.state with
   | Fulfilled v -> v
@@ -331,7 +332,7 @@ By contrast, in `js_of_ocaml` the scheduler is always running.
 For compatibility with other environment, you cannot rely on `pause` to hold your promises pending until you call `Lwt_main.run`.
 
 Also note that the mock scheduler above is only for building a mental model.
-The specifics might differ, but the core idea is there.
+The specifics differ, but the core idea is there.
 
 
 # OS interactions
@@ -344,7 +345,7 @@ There are multiple ways to interact with the OS without blocking.
 For the most common OS interactions (e.g., creating files, reading from pipes, accepting incoming connections, etc.), Lwt comes with the sub-library `lwt.unix` which includes the module `Lwt_unix` which contains Lwt-aware wrappers for the `Unix` module.
 
 `Lwt_unix.sleep: float -> unit t`  
-The promise `sleep t` is a pending promise that is resolved automatically after `t` seconds have elapsed.
+The promise `sleep t` is a pending promise that becomes resolved after `t` seconds have elapsed.
 Note that the resolution of the promise only happens if the scheduler is running – i.e., if there is an ongoing call to `Lwt_main.run`.
 If the scheduler is not running when the timer expires, then the promise is only resolved the next time the scheduler is started.
 

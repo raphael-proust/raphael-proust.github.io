@@ -5,7 +5,11 @@ title: Lwt introduction/tutorial Part 3 of 2
 [← Back to part 1](/code/lwt-part-1.html)  
 [← Back to part 2](/code/lwt-part-2.html)
 
-In this 2-part introduction/tutorial to Lwt, we collect a few remarks that are of little interest to users of Lwt.
+In this part 3 of this 2-part introduction/tutorial to Lwt, we collect a few remarks that are of lesser interest to users of Lwt.
+Specifically, topics that are unimportant for building a mental model of Lwt.
+We also collect addenda:
+
+- [2020-07](#addendum-non-obvious-evaluation-order): a walkthrough of the execution of a small example program to demonstrate a potential source of bugs.
 
 
 # Historical baggage
@@ -107,7 +111,7 @@ The module takes care of synchronisation and propagating rejections.
 With streams you are given a promise of the next element rather the next element itself.
 
 Many other abstractions are available through `opam`.
-There are too many to list them all; here is one that I wrote:
+There are too many to list them all; here is one that I wrote as part of my work on Tezos:
 
 `Lwt_pipeline` (distributed with the `lwt-pipeline` package) provides batch processing for list over multi-steps transformations.
 Pipelines are assembled from steps (`('a, 'b) step`).
@@ -282,8 +286,8 @@ The example above was executed with the Unix scheduler (`Lwt_main.run` in the pa
 A different scheduler, such as the one for `js_of_ocaml`, might differ.
 
 Also note that in many cases, leaving some promises pending is not an issue and can even be a desired behaviour.
-For example, in a server it is possible to pass a promise that only resolves when the process receives a signal (typically `SIGINT` or `SIGTERM`).
-Leaving some promises pending then is a non-issue.
+For example, in a server it is possible to call `Lwt_main.run` with a promise that only resolves when the process receives a signal (typically `SIGINT` or `SIGTERM`).
+Leaving some side promises pending then is a non-issue.
 
 Finally, note that it is very easy to work around this behaviour when desired.
 You merely need to pass the joined promise `Lwt.join [main_promise; side_promise]` to `Lwt_main.run`.
@@ -297,10 +301,13 @@ In other words: we observed **interleaving without yielding.**
 
 When you reason about promises as threads, this is unintuitive: it appears as a kind of context-switch without an explicit cooperation point between the cooperative threads.
 However, there are no threads and there isn't even any "interleaving": there are just callbacks attached and called in order to make progress towards resolution.
-And explicit yield points (the calls to `Lwt.pause` and `Lwt_unix.yield`) are mechanisms through which the code that makes a given promise progress towards resolution allows code that makes other promises progress towards resolution to execute.
+And explicit yield points (the calls to `Lwt.pause` and `Lwt_unix.yield`) are mechanisms through which a promise' own resolution is delayed in order to allow other promises to progress towards resolution on their own.
+
+What happens in the example above is actually that the code that make the `main_promise` progress towards resolution (the expression that evaluates to `main_promise`) also makes the `side_promise` progress towards resolution.
+The call to `wakeup` in the code that makes `main_promise` progress also makes `side_promise` progress.
 
 In order to avoid this behaviour, this perceived interleaving, from happening, you merely need to not resolve other promises within your critical sections.
-Avoid calling `wakeup` and other such functions: `wakeup_exn`, and even `wakeup_later` the name of which is somewhat misleading.
+Avoid calling `wakeup` and other such functions: `wakeup_exn`, and even the somewhat misleadingly named `wakeup_later`.
 
 You can move the promise resolution either syntactically or programmatically.
 For the former case, simply move the call to `wakeup` to the end of your critical section.
@@ -331,5 +338,5 @@ let main_promise =
 ```
 
 Unfortunately, the documentation of `Lwt_stream` and other Lwt-adjacent libraries is often insufficient to understand which non-yielding function may lead to promise resolution and the corresponding execution of attached callbacks.
-If you observe "interleaving", you will need to find what function is responsible for it and it might involve reading some source code.
+If you observe "interleaving", you will need to find which function is responsible for it and this task might involve reading some source code.
 Once you have found this function, please consider contributing some documentation to the project it appears in.

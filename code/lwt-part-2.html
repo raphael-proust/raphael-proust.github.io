@@ -48,7 +48,7 @@ If <code>p</code> is pending, it attaches the callbacks to <code>p</code>; conse
 <h2 id="internal-representation">Internal representation</h2>
 <p>This is achieved by attaching callbacks to pending promises. When Lwt modifies the internal state of a promise from <code>Pending</code> to either <code>Fulfilled</code> or <code>Rejected</code>, Lwt also calls all of the attached callbacks. As a first approximation, we simply declare:</p>
 <pre><code>type &#39;a pending = {
-  mutable when_fulfills: (&#39;a -&gt; unit) list;
+  mutable when_fulfils: (&#39;a -&gt; unit) list;
   mutable when_rejects: (exc -&gt; unit) list;
   ..
 }</code></pre>
@@ -59,9 +59,9 @@ let task () =
   (p, p)
 let wakeup p v =
   match p.state with
-  | Pending { when_fulfills; } -&gt;
+  | Pending { when_fulfils; } -&gt;
       p.state &lt;- Fulfilled v;
-      List.iter (fun f -&gt; f v) when_fulfills
+      List.iter (fun f -&gt; f v) when_fulfils
   | _ -&gt; raise (Invalid_argument &quot;..&quot;)
 let wakeup_exn p exc =
   match p.state with
@@ -72,7 +72,7 @@ let wakeup_exn p exc =
 <p>The internals are a little bit more complicated than that, in particular with respect to error management. But the general idea is as above.</p>
 <h2 id="other-explicit-callbacks">Other explicit callbacks</h2>
 <p>There are variants of <code>on_any</code> that attach different callbacks. Their semantics can be inferred from their name and type signature, but we list them here anyway.</p>
-<p><code>Lwt.on_sucess: 'a t -&gt; ('a -&gt; unit) -&gt; unit</code><br />
+<p><code>Lwt.on_success: 'a t -&gt; ('a -&gt; unit) -&gt; unit</code><br />
 <code>on_success p h</code> calls <code>h</code> when <code>p</code> is fulfilled. If <code>p</code> is already fulfilled, it calls <code>h</code> immediately. Nothing happens if <code>p</code> is already rejected, is eventually rejected, or is never resolved.</p>
 <p><code>Lwt.on_failure: 'a t -&gt; (exc -&gt; unit) -&gt; unit</code><br />
 <code>on_failure p h</code> calls <code>h</code> when <code>p</code> is rejected. If <code>p</code> is already rejected, it calls <code>h</code> immediately. Nothing happens if <code>p</code> is already fulfilled, is eventually fulfilled, or is never resolved.</p>
@@ -192,8 +192,9 @@ let wait () =
 <p>To achieve this, Lwt stores the pending promises created with <code>pause</code> into a global variable. By itself, this promise can make no progress. However, when the scheduler’s main-loop is running, it resolves paused promises at each iterations.</p>
 <pre><code>let paused_promises = ref []
 let pause () =
-  let p = { state = .. } in
-  paused_promises := p :: !paused_promises
+  let p = { state = Pending { .. } } in
+  paused_promises := p :: !paused_promises;
+  p
 let rec run p =
   match p.state with
   | Fulfilled v -&gt; v
@@ -204,12 +205,12 @@ let rec run p =
       List.iter (fun p -&gt; wakeup p ()) all_paused;
       run p</code></pre>
 <p>Note, however, that different environment have different ways to deal with paused promises. For example, in Unix the scheduler only kicks in when a call to <code>Lwt_main.run</code> is on-going. By contrast, in <code>js_of_ocaml</code> the scheduler is always running. For compatibility with other environment, you cannot rely on <code>pause</code> to hold your promises pending until you call <code>Lwt_main.run</code>.</p>
-<p>Also note that the mock scheduler above is only for building a mental model. The specifics might differ, but the core idea is there.</p>
+<p>Also note that the mock scheduler above is only for building a mental model. The specifics differ, but the core idea is there.</p>
 <h1 id="os-interactions">OS interactions</h1>
 <p>The last part of Lwt that this tutorial covers is interaction with the operating system. Whilst it is possible to call functions from OCaml’s <code>Unix</code> module, such functions are oblivious to Lwt and may cause issues. Most notably, these functions may block the execution of the program.</p>
 <p>There are multiple ways to interact with the OS without blocking. For the most common OS interactions (e.g., creating files, reading from pipes, accepting incoming connections, etc.), Lwt comes with the sub-library <code>lwt.unix</code> which includes the module <code>Lwt_unix</code> which contains Lwt-aware wrappers for the <code>Unix</code> module.</p>
 <p><code>Lwt_unix.sleep: float -&gt; unit t</code><br />
-The promise <code>sleep t</code> is a pending promise that is resolved automatically after <code>t</code> seconds have elapsed. Note that the resolution of the promise only happens if the scheduler is running – i.e., if there is an ongoing call to <code>Lwt_main.run</code>. If the scheduler is not running when the timer expires, then the promise is only resolved the next time the scheduler is started.</p>
+The promise <code>sleep t</code> is a pending promise that becomes resolved after <code>t</code> seconds have elapsed. Note that the resolution of the promise only happens if the scheduler is running – i.e., if there is an ongoing call to <code>Lwt_main.run</code>. If the scheduler is not running when the timer expires, then the promise is only resolved the next time the scheduler is started.</p>
 <p>Another way to call blocking functions is to wrap them in <code>Lwt_preemptive.detach</code> (provided by <code>lwt.unix</code>) or, equivalently, in <code>Mwt.run</code> (provided by <code>mwt</code>). This solution relies on OCaml’s <code>Thread</code> module to isolate the blocking calls in a different execution context. It is mostly useful when making calls to a third-party library that does not provide Lwt-aware system primitives.</p>
 <p>Blocking system calls are maintained in their own global variable. The scheduler checks these calls at each iteration, causing the process to actually sleep if none of the calls are done and no paused promises can be found.</p>
 <h1 id="part-3">Part 3</h1>
