@@ -3,7 +3,11 @@ title: Lwt introduction/tutorial Part 1 of 2
 ...
 
 [Lwt](http://ocsigen.org/lwt) ([code](https://github.com/ocsigen/lwt/)) is a library for writing concurrent programs in OCaml.
-It is used in multiple OCaml projects including [Mirage](https://mirage.io/) ([code](https://github.com/mirage/)) and [Tezos](https://tezos.com/) ([code](https://gitlab.com/tezos/tezos/)).
+It is used in multiple OCaml projects including
+[Unison](https://www.cis.upenn.edu/~bcpierce/unison/) ([code](https://github.com/bcpierce00/unison)),
+[Ocsigen](https://ocsigen.org/home/intro.html) ([code])(https://github.com/ocsigen/)),
+[Mirage](https://mirage.io/) ([code](https://github.com/mirage/)) and
+[Tezos](https://tezos.com/) ([code](https://gitlab.com/tezos/tezos/)).
 
 I recently ran some internal training at [Nomadic Labs](https://nomadic-labs.com/) about Lwt: What it is? How to use it effectively? What to watch out for? Etc.
 Below is a write-up of that training.
@@ -66,7 +70,12 @@ val state: 'a t -> 'a state
 # A necessary side-note on terminology and backwards compatibility
 
 The Lwt library is old.
-And a lot of the terminology (in the interface and, to a lesser extent, in the documentation) is dated.
+It was originally written by [Jérôme Vouillon](https://www.irif.fr/~vouillon/) as a support library for the [Unison](https://www.cis.upenn.edu/~bcpierce/unison/) file synchroniser.
+It became a core component of the [Ocsigen](https://ocsigen.org/home/intro.html) project which took care of the bulk of maintenance.
+It continued to progress and gain a wider adoption in the OCaml community.
+
+The Lwt library is old and carries a lot of historical baggage.
+The most noticeable bagage is the dated terminology (in the interface and, to a lesser extent, in the documentation).
 For example, the different variants for the type `state` (`Return`, `Fail` and `Sleep`) are based on an old description of Lwt as a thread library.
 In fact, “Lwt” stands for Light-Weight Threads.
 

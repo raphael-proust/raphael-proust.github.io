@@ -22,7 +22,7 @@
 <div id="header">
 <h1 class="title">Lwt introduction/tutorial Part 1 of 2</h1>
 </div>
-<p><a href="http://ocsigen.org/lwt">Lwt</a> (<a href="https://github.com/ocsigen/lwt/">code</a>) is a library for writing concurrent programs in OCaml. It is used in multiple OCaml projects including <a href="https://mirage.io/">Mirage</a> (<a href="https://github.com/mirage/">code</a>) and <a href="https://tezos.com/">Tezos</a> (<a href="https://gitlab.com/tezos/tezos/">code</a>).</p>
+<p><a href="http://ocsigen.org/lwt">Lwt</a> (<a href="https://github.com/ocsigen/lwt/">code</a>) is a library for writing concurrent programs in OCaml. It is used in multiple OCaml projects including <a href="https://www.cis.upenn.edu/~bcpierce/unison/">Unison</a> (<a href="https://github.com/bcpierce00/unison">code</a>), <a href="https://ocsigen.org/home/intro.html">Ocsigen</a> ([code])(https://github.com/ocsigen/)), <a href="https://mirage.io/">Mirage</a> (<a href="https://github.com/mirage/">code</a>) and <a href="https://tezos.com/">Tezos</a> (<a href="https://gitlab.com/tezos/tezos/">code</a>).</p>
 <p>I recently ran some internal training at <a href="https://nomadic-labs.com/">Nomadic Labs</a> about Lwt: What it is? How to use it effectively? What to watch out for? Etc. Below is a write-up of that training. It covers: basic concepts (promises, states), simple use, description of the internals, and advanced use (cancellation and exception propagation).</p>
 <h1 id="prelude">Prelude</h1>
 <p>Lwt is a library. You can install it as an <code>opam</code> package named <code>lwt</code>. Installing <code>base-unix</code> before is recommended to get access to operating system wrappers.</p>
@@ -50,7 +50,8 @@ type &#39;a t</code></pre>
 
 val state: &#39;a t -&gt; &#39;a state</code></pre>
 <h1 id="a-necessary-side-note-on-terminology-and-backwards-compatibility">A necessary side-note on terminology and backwards compatibility</h1>
-<p>The Lwt library is old. And a lot of the terminology (in the interface and, to a lesser extent, in the documentation) is dated. For example, the different variants for the type <code>state</code> (<code>Return</code>, <code>Fail</code> and <code>Sleep</code>) are based on an old description of Lwt as a thread library. In fact, “Lwt” stands for Light-Weight Threads.</p>
+<p>The Lwt library is old. It was originally written by <a href="https://www.irif.fr/~vouillon/">Jérôme Vouillon</a> as a support library for the <a href="https://www.cis.upenn.edu/~bcpierce/unison/">Unison</a> file synchroniser. It became a core component of the <a href="https://ocsigen.org/home/intro.html">Ocsigen</a> project which took care of the bulk of maintenance. It continued to progress and gain a wider adoption in the OCaml community.</p>
+<p>The Lwt library is old and carries a lot of historical baggage. The most noticeable bagage is the dated terminology (in the interface and, to a lesser extent, in the documentation). For example, the different variants for the type <code>state</code> (<code>Return</code>, <code>Fail</code> and <code>Sleep</code>) are based on an old description of Lwt as a thread library. In fact, “Lwt” stands for Light-Weight Threads.</p>
 <p>There are no threads in Lwt. There are only promises. But old descriptions of the library will occasionally contain dated references to threads. And the interface of the library, because of backwards compatibility, is full of those references.</p>
 <h1 id="analogy">Analogy</h1>
 <p>A promise, as a cell that may hold nothing, a value, or an exception, is similar to a combination of other types:</p>
