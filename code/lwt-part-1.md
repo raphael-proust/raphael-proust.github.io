@@ -5,7 +5,7 @@ title: Lwt introduction/tutorial Part 1 of 2
 [Lwt](http://ocsigen.org/lwt) ([code](https://github.com/ocsigen/lwt/)) is a library for writing concurrent programs in OCaml.
 It is used in multiple OCaml projects including
 [Unison](https://www.cis.upenn.edu/~bcpierce/unison/) ([code](https://github.com/bcpierce00/unison)),
-[Ocsigen](https://ocsigen.org/home/intro.html) ([code])(https://github.com/ocsigen/)),
+[Ocsigen](https://ocsigen.org/home/intro.html) ([code](https://github.com/ocsigen/)),
 [Mirage](https://mirage.io/) ([code](https://github.com/mirage/)) and
 [Tezos](https://tezos.com/) ([code](https://gitlab.com/tezos/tezos/)).
 
