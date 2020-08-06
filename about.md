@@ -7,9 +7,9 @@ I also enjoy the [Pokémon](http://www.pokemon.com/us/) franchise, the [Zelda](h
 
 After babbling BASIC on my CASIO graph 65, I learned [OCaml](https://ocaml.org/).
 I consider it my main programming language.
-I am also proficient in Python, Javascript, and Scala.
+I am also proficient, if rusty, in Python, Javascript, and Scala.
 I have also been in contact with Scheme, Haskell and C.
-Most of my public software contributions are on [Github](http://github.com/raphael-proust/) and on [Gitlab](https://gitlab.com/raphael-proust).
+Most of my public software contributions are on [Gitlab](https://gitlab.com/raphael-proust) and on [Github](http://github.com/raphael-proust/).
 
 I speak French, English and some Spanish.
 I started learning Chinese and Toki Pona although I am not proficient in either.
@@ -22,6 +22,7 @@ I started learning Chinese and Toki Pona although I am not proficient in either.
 ## Present
 
 I work on the [Tezos](https://gitlab.com/tezos/tezos) project.
+I am a co-maintainer of the [Lwt library](https://github.com/ocsigen/lwt/).
 Checkout [my CV](/cv.html) for more information.
 
 I irregularly publish homebrew content on the [Dungeon Masters Guild](https://www.dmsguild.com/browse.php?author=Rapha%C3%ABl%20Proust).
@@ -31,7 +32,7 @@ I irregularly publish homebrew content on the [Dungeon Masters Guild](https://ww
 
 I worked as a freelance software developer and technical writer.
 
-I was working for [Cambridge Spark](https://cambridgespark.com) and [Cambridge Coding Academy](http://cambridgecoding.com) as a software developer and a course developer.
+I worked for [Cambridge Spark](https://cambridgespark.com) and [Cambridge Coding Academy](http://cambridgecoding.com) as a software developer and a course developer.
 I wrote software to write, review, edit, publish, and deliver courses; I wrote, reviewed, edited, published, and delivered courses about software.
 
 I was a Ph.D. student at the [Computer Laboratory](http://www.cl.cam.ac.uk/) of the [University of Cambridge](http://www.cam.ac.uk/) under supervision of [Alan Mycroft](http://www.cl.cam.ac.uk/~am21/).
@@ -45,5 +46,5 @@ I was a student of [Magdalene College](http://www.magd.cam.ac.uk/) and was invol
 
 I use [Archlinux](https://www.archlinux.org), [suckless tools](http://suckless.org), [neovim](http://neovim.io), [acme](http://acme.cat-v.org), and other things.
 
-I have [a Github account](http://github.com/raphael-proust/) and [a Gitlab account](https://gitlab.com/raphael-proust).
+I have [a Gitlab account](https://gitlab.com/raphael-proust) and [a Github account](http://github.com/raphael-proust/).
 I have homonyms – but no accounts – on Twitter, Facebook, Linkedin, and probably more such websites.

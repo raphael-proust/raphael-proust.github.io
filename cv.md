@@ -4,8 +4,8 @@ title: Curriculum Vitæ
 
 Raphaël Proust  
 <code@bnwr.net> — [PGP key](/pgp--code-at-bnwr-dot-net)  
-[Github profile](https://github.com/raphael-proust)  
 [Gitlab profile](https://gitlab.com/raphael-proust)  
+[Github profile](https://github.com/raphael-proust)  
 
 
 I am a software developer and a technical writer.
@@ -18,8 +18,12 @@ I write, edit and review courses, tutorials, manuals and rulebooks in French and
 ## Chronology
 
 ------------------------ ------------------------------------------------------
- Mar 2018–Present        Software developer on the
+ Mar 2018–Present        Software developer at
+                         [Nomadic Labs](https://nomadic-labs.com/) on the
                          [Tezos project](https://gitlab.com/tezos/tezos)
+
+ Jul 2020–Present        Co-maintainer of the
+                         [Lwt library](https://github.com/ocsigen/lwt/)
 
  Aug 2017–Mar 2018       Freelance, remote software developer and technical
                          writer
@@ -68,20 +72,20 @@ I write, edit and review courses, tutorials, manuals and rulebooks in French and
 
  Sep 2005–Jul 2007       ‘Classes préparatoires’ (pre-engineering school)
 
- 2005                    ‘Baccalauréat’ of Science
+ 2005                    ‘Baccalauréat’ in Science
 ------------------------ -------------------------------------------------------
 
 
 ## Projects at Nomadic Labs
 
-[Nomadic Labs](https://nomadic-labs.com/) is a company that provides software
-development and research in formal verification, distributed systems and
-programming languages.
+[Nomadic Labs](https://nomadic-labs.com/) is a company that provides research
+and development in formal verification, distributed systems and programming
+languages.
 
 I joined Nomadic Labs in March 2018 as the company was expending to handle the
 development requirements of the [Tezos](https://tezos.com/) project. I am still
 working at Nomadic Labs, on Tezos and other related projects. Some of the items
-below are on-going.
+below are on-going. All items are written in past tense for consistency.
 
 - **Code review** and **merging**
 
@@ -107,7 +111,7 @@ below are on-going.
 	state sequentially) and more specifically defensive scheduling: it must
 	protect against potential denial of service attacks whereby
 	malicious peers saturate a node to the point that it ignores other,
-	non-malicous, nodes. It also involves a high level of abstraction because the
+	non-malicous nodes. It also involves a high level of abstraction because the
 	nature of the state and the way information is folded into it depends on
 	another software component (the economic protocol) that can change
 	dynamically.
@@ -149,14 +153,15 @@ projects listed below.
 - **Student evaluation system**
 
 	I participated in the creation, maintenance and improvement of a system to
-	automatically evaluate students. I also handled part of the system
-	administration for the machines that run the system. The system analysed
-	submitted code, recorded complete results for later review by the teachers and
-	gave immediate summarised feedback to the students.
+	automatically evaluate students. I also participated in the
+	system-administration for the machines that hosted the system.
 
-	The system involved Gitlab, Python, continuous integration, linting
-	libraries, unit testing, Docker images (both building and running), and
-	Amazon Web Services.
+	The system analysed submitted code, recorded complete results for later
+	review by the teachers and gave immediate summarised feedback to the students.
+
+	The system involved a self-hosted Gitlab instance, the Gitlab
+	API, Python, continuous integration, linting libraries, unit testing, Docker
+	images (both building and running), and Amazon Web Services.
 
 
 - **Course writing**
@@ -181,8 +186,8 @@ projects listed below.
 	request bigger changes. It automatically compiled the files as they were
 	submitted and let project managers publish them online on demand.
 
-	The system used Pandoc, custom LaTeX templates, custom HTML templates,
-	Makefiles, integration tests, and continuous integrations.
+	The system used Pandoc, custom LaTeX templates, custom HTML templates with
+	CSS, Makefiles, integration tests, and continuous integrations.
 
 
 - **Web development**
