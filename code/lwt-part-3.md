@@ -71,10 +71,10 @@ val rejected: exn -> 'a t
 (* COMBINATORS *)
 
 val bind: 'a t -> ('a -> 'b t) -> 'b t
-..
+…
 (* note: [any] replaces both [choose] and [pick] *)
-val any: ~cancel_rest:bool -> 'a t list -> 'a t
-..
+val any: ~cancel_remaining:bool -> 'a t list -> 'a t
+…
 (* note [either] is the dual of [both] *)
 val either: 'a t -> 'a t -> 'a t
 
@@ -83,12 +83,13 @@ val either: 'a t -> 'a t -> 'a t
 val on_resolution: 'a t -> ('a -> unit) -> (exn -> unit) -> unit
 val on_fulfillment: 'a t -> ('a -> unit) -> unit
 val on_rejection: 'a t -> (exn -> unit) -> unit
-..
+…
 
 (* MONADIC INTERFACE *)
 
 val return: 'a -> 'a t
 val ( >>= ): 'a t -> ('a -> 'b t) -> 'b t
+val ( let* ): 'a t -> ('a -> 'b t) -> 'b t
 ```
 
 
@@ -303,7 +304,7 @@ When you reason about promises as threads, this is unintuitive: it appears as a 
 However, there are no threads and there isn't even any "interleaving": there are just callbacks attached and called in order to make progress towards resolution.
 And explicit yield points (the calls to `Lwt.pause` and `Lwt_unix.yield`) are mechanisms through which a promise' own resolution is delayed in order to allow other promises to progress towards resolution on their own.
 
-What happens in the example above is actually that the code that make the `main_promise` progress towards resolution (the expression that evaluates to `main_promise`) also makes the `side_promise` progress towards resolution.
+What happens in the example above is actually that the code that makes the `main_promise` progress towards resolution (the expression that evaluates to `main_promise`) also makes the `side_promise` progress towards resolution.
 The call to `wakeup` in the code that makes `main_promise` progress also makes `side_promise` progress.
 
 In order to avoid this behaviour, this perceived interleaving, from happening, you merely need to not resolve other promises within your critical sections.
@@ -326,7 +327,7 @@ let p =
   Lwt.return ()
 
 let main_promise =
-  ..
+  …
   Lwt.pause () >>= fun () ->
   (* critical section begins *)
   print_string "Hello ";
@@ -334,9 +335,118 @@ let main_promise =
   print_string "World!";
   (* critical section ends *)
   Lwt.pause () >>= fun () ->
-  ..
+  …
 ```
 
 Unfortunately, the documentation of `Lwt_stream` and other Lwt-adjacent libraries is often insufficient to understand which non-yielding function may lead to promise resolution and the corresponding execution of attached callbacks.
 If you observe "interleaving", you will need to find which function is responsible for it and this task might involve reading some source code.
 Once you have found this function, please consider contributing some documentation to the project it appears in.
+
+
+# Addendum: `let*`, `and*`, `let+`, `and+`
+
+OCaml 4.08 introduced [binding operators](http://caml.inria.fr/pub/distrib/ocaml-4.08/ocaml-4.08-refman.html#s%3Abinding-operators): `let*`/`and*` syntax for monads.
+
+This syntax is [available for Lwt starting with version 5.3.0](https://discuss.ocaml.org/t/lwt-now-has-let-syntax/5651).
+
+When using this syntax, you simply replace `e1 >>= fun v -> e2` by `let* v = e1 in e2`.
+Similarly, you replace `e1 >|= fun v -> e2` by `let+ v = e1 in e2`.
+
+These new forms resemble vanilla OCaml as illustrated by the following code, equivalent to an example from [part 1](/code/lwt-part-1.html).
+
+```
+let* handle = open_file name in
+let* lines = read_lines handle in
+let* lines = keep_matches pattern lines in
+let* () = print_lines lines in
+…
+```
+
+# Addendum: other promise systems
+
+Some other programming languages have concurrency systems that are roughly equivalent to OCaml's Lwt.
+This section lists some of them.
+It includes more links than details because the differences can be quite subtle and I am not proficient enough in each of the rough equivalents below.
+
+
+### OCaml's Async
+
+OCaml has another collaborative promise library: [Async](https://opensource.janestreet.com/async/) from Jane Street.
+One of the important differences between Lwt and Async is the eagerness of evaluation.
+Specifically, the `bind` function in Lwt does not yield whereas it does in Async.
+
+Another of the important differences is the exception management.
+Lwt propagates exception along the bind-graph.
+Async uses [monitors](https://ocaml.janestreet.com/ocaml-core/latest/doc/async_kernel/Async_kernel/Monitor/index.html): runtime abstractions that are responsible for the handling of all exceptions raised within a certain portion of a program.
+
+The other differences are not as important as far as the execution model (the focus of this introduction) is concerned.
+However, one might be important as far as real-world use is concerned: Async is tightly integrated with the rest of the Jane Street libraries.
+
+
+### OCaml's Fut
+
+OCaml has another collaborative promise library: [Fut](https://erratique.ch/software/fut) by Daniel Bünzli.
+This is not released software yet: the interface may change.
+
+The main difference with Lwt is for exception handling: when the code that makes a promise progress towards resolution raises an exception, the promise is set to a specific state that indicates it will never determine and the exception is passed to a global handler.
+
+
+### Javascript's Promises
+
+Javascript's concurrency has evolved a lot from the origins of the language.
+Modern Javascript, at time of writing, relies on [`Promise`s](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
+
+Javascript Promises are similar to that of Lwt with the main differences being:
+
+- the Promises are native to the language, not a library,
+- the interface is smaller and focuses on providing the basic primitives, and
+- Javascript's flexibility in terms of typing allows for more overloading (e.g., see `then` in the table below).
+
+It is fairly easy to learn the basics of one system when you know the other.
+In fact, the monadic style adopted by Lwt maps well onto the method-chaining style used for Promises.
+This is demonstrated by the two following samples.
+
+```
+get_coordinates () >>= fun (x, y) ->
+get_input () >>= fun (dx, dy) ->
+return (x+dx, y+dy)
+```
+
+```
+get_coordinates().then((x, y) => {
+get_input().then((dx, dy) => {
+return(x+dx, y+dy)})})
+```
+
+(Note that a lighter syntax is possible in Javascript through the use of the `await` keyword which is roughly similar to the `let*` binding from Lwt.)
+
+A rough equivalence table for the `Promise` object:
+
++-------------------------------+-------------------------------------+
+| Javascript's `Promise`        | Lwt (OCaml)                         |
++===============================+=====================================+
+| `Promise.resolve(v)`          | `Lwt.return v`                      |
++-------------------------------+-------------------------------------+
+| `Promise.reject(v)`           | `Lwt.fail v`                        |
++-------------------------------+-------------------------------------+
+| `p.then(onResolve)`           | `p >>= onResolve` when `onResolve`  |
+|                               | returns a promise                   |
+|                               |                                     |
+|                               | `p >|= onResolve` otherwise         |
++-------------------------------+-------------------------------------+
+| `p.then(onResolve, onReject)` | `Lwt.try_bind p onResolve onReject` |
++-------------------------------+-------------------------------------+
+| `p.catch(onReject)`           | `Lwt.catch (fun () -> p) onReject`  |
++-------------------------------+-------------------------------------+
+| `Promise.all([p, …])`         | `Lwt.all [p; …]`                    |
+|                               |                                     |
+| Rejected as soon as one       | Rejected if one promise is, but     |
+| promise is rejected.          | only after all have resolved.       |
++-------------------------------+-------------------------------------+
+| `Promise.race([p, …])`        | `Lwt.choose [p; …]`                 |
++-------------------------------+-------------------------------------+
+
+There are some subtle differences about error management and some not so subtle differences inherited from the distinct typing disciplines (e.g., `>>=` and `>|=` correspond to the same `.then` method).
+Despite those differences, the two systems are similar enough that familiarity with one helps to learn the other.
+
+

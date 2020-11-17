@@ -30,8 +30,8 @@
 opam install lwt</code></pre>
 <p>The <code>lwt</code> package installs the <code>lwt</code> library (and <code>lwt.unix</code> sub-library if you have installed <code>base-unix</code>) that you can refer to in your <code>dune</code> build files.</p>
 <pre><code>(library
- (name ..)
- (public_name ..)
+ (name …)
+ (public_name …)
  (libraries lwt)
  (flags (:standard)))</code></pre>
 <p>Declaring a dependence to the <code>lwt</code> library in your <code>dune</code> build file gives you access to the <code>Lwt</code> module.</p>
@@ -106,7 +106,7 @@ The infix operator <code>&gt;&gt;=</code> is an alias for <code>bind</code>. It 
 read_lines handle &gt;&gt;= fun lines -&gt;
 keep_matches pattern lines &gt;&gt;= fun lines -&gt;
 print_lines lines &gt;&gt;= fun () -&gt;
-..</code></pre>
+…</code></pre>
 <p><code>Lwt.fail: exn -&gt; 'a t</code><br />
 <code>fail exc</code> evaluates immediately to a promise that is already rejected with the exception <code>exc</code>. Note that, as we discuss below, the use of <code>fail</code> should be reserved for populating data-structures (and other similar tasks) but that, within one of Lwt’s function, the use of <code>raise</code> is preferred.</p>
 <h2 id="resolvers">Resolvers</h2>

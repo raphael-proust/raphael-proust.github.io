@@ -29,8 +29,8 @@ The `lwt` package installs the `lwt` library (and `lwt.unix` sub-library if you 
 
 ```
 (library
- (name ..)
- (public_name ..)
+ (name …)
+ (public_name …)
  (libraries lwt)
  (flags (:standard)))
 ```
@@ -140,7 +140,7 @@ open_file name >>= fun handle ->
 read_lines handle >>= fun lines ->
 keep_matches pattern lines >>= fun lines ->
 print_lines lines >>= fun () ->
-..
+…
 ```
 
 `Lwt.fail: exn -> 'a t`  
