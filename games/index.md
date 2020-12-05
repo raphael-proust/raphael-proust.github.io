@@ -35,3 +35,5 @@ Thoughts, articles, posts about games, game design, etc.
 [(2020-04-01) Release: Nitya's Books](/games/nitya-s-books.html)
 
 [(2020-10-31) Deck-building/Hand-management mechanics for TTRPGs](/games/deckbuilding-ttrpg.html)
+
+[(2020-12-05) Katamari Damacy](/games/katamari-damacy.html)
