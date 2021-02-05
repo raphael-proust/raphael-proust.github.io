@@ -32,7 +32,7 @@ I irregularly publish homebrew content on the [Dungeon Masters Guild](https://ww
 
 I worked as a freelance software developer and technical writer.
 
-I worked for [Cambridge Spark](https://cambridgespark.com) and [Cambridge Coding Academy](http://cambridgecoding.com) as a software developer and a course developer.
+I worked for [Cambridge Spark](https://cambridgespark.com) and Cambridge Coding Academy([wayback machine link](http://web.archive.org/web/20200921170235/https://cambridgecoding.com/)) as a software developer and a course developer.
 I wrote software to write, review, edit, publish, and deliver courses; I wrote, reviewed, edited, published, and delivered courses about software.
 
 I was a Ph.D. student at the [Computer Laboratory](http://www.cl.cam.ac.uk/) of the [University of Cambridge](http://www.cam.ac.uk/) under supervision of [Alan Mycroft](http://www.cl.cam.ac.uk/~am21/).

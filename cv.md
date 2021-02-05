@@ -10,7 +10,7 @@ Raphaël Proust
 
 I am a software developer and a technical writer.
 
-I work in a variety of programming languages —including OCaml, Python, Scala, Javascript— on various types of software —such as blockchains, document processors, web servers, libraries.
+I work primarily with OCaml but also in a variety of programming languages —including Python, Javascript, Scala— on various types of software —such as blockchains, document processors, web servers, libraries.
 
 I write, edit and review courses, tutorials, manuals and rulebooks in French and English.
 
@@ -29,7 +29,8 @@ I write, edit and review courses, tutorials, manuals and rulebooks in French and
                          writer
 
  Sep 2016–Aug 2017       Software developer and technical writer at
-                         [Cambridge Coding Academy](https://cambridgecoding.com/)
+                         Cambridge Coding Academy
+                         ([wayback machine link](http://web.archive.org/web/20200921170235/https://cambridgecoding.com/))
                          and [Cambridge Spark](https://cambridgespark.com/).
 
  Sep 2012–Jul 2016       PhD student at the
@@ -86,6 +87,13 @@ I joined Nomadic Labs in March 2018 as the company was expending to handle the
 development requirements of the [Tezos](https://tezos.com/) project. I am still
 working at Nomadic Labs, on Tezos and other related projects. Some of the items
 below are on-going. All items are written in past tense for consistency.
+
+- **Internal training**
+
+	I organised and ran a training session focused on the Lwt library: basic
+	uses, best practices, etc.
+
+	(I expanded the slides into a [tutorial](/code/lwt-part-1.html).)
 
 - **Code review** and **merging**
 
