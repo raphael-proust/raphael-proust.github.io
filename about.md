@@ -17,9 +17,9 @@ I started learning Chinese and Toki Pona although I am not proficient in either.
 
 ------------------------------------------------------------------------
 
-# Occupation
+## Occupation
 
-## Present
+### Present
 
 I work on the [Tezos](https://gitlab.com/tezos/tezos) project.
 I am a co-maintainer of the [Lwt library](https://github.com/ocsigen/lwt/).
@@ -28,7 +28,7 @@ Checkout [my CV](/cv.html) for more information.
 I irregularly publish homebrew content on the [Dungeon Masters Guild](https://www.dmsguild.com/browse.php?author=Rapha%C3%ABl%20Proust).
 
 
-## Past
+### Past
 
 I worked as a freelance software developer and technical writer.
 
@@ -42,7 +42,7 @@ I was a student of [Magdalene College](http://www.magd.cam.ac.uk/) and was invol
 
 ------------------------------------------------------------------------
 
-# Misc
+## Misc
 
 I use [Archlinux](https://www.archlinux.org), [suckless tools](http://suckless.org), [neovim](http://neovim.io), [acme](http://acme.cat-v.org), and other things.
 

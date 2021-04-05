@@ -12,7 +12,7 @@ This description is not false per se, but it is reduced to a set of vague keywor
 As a result, the description is useless to work with, to design games.
 
 
-# Extra Credits' idea
+## Extra Credits' idea
 
 Extra Credits presents the following idea:
 In a [massively multiplayer online role-playing game (MMORPG)](https://en.wikipedia.org/wiki/Massively_multiplayer_online_role-playing_game) some events would be recorded.
@@ -29,7 +29,7 @@ Imagine if ships in [EVE Online](https://en.wikipedia.org/wiki/Eve_online) gaine
 The ship's crib sheet (“destroyed 21 ships in the [Bloodbath of B-R5RB](https://en.wikipedia.org/wiki/Bloodbath_of_B-R5RB)” and “carried the first supply mission to Ix33”) would cement the player-made lore in the in-game descriptions.
 
 
-# Mismatched impedance
+## Mismatched impedance
 
 Extra Credits' idea is good game design, but a bad match for blockchains: it should be implemented, but on a plain, run of the mill, good ol', buzzword-free database.
 
@@ -53,7 +53,7 @@ This centralised architecture is diametrically opposed to the core principle of 
 Blockchains are just a terrible match for MMORPGs.
 
 
-# Looking for a good match
+## Looking for a good match
 
 There are games that may benefit from blockchains.
 But instead of just taking a game idea and saying “well, it requires a database and blockchains are a sort of database aren't they?”, let's instead look at the specific features of blockchains and see what kind of game matches these features.
@@ -83,7 +83,7 @@ With all these characteristic in mind, we are looking for a game, or a significa
 4. is scarcity based.
 
 
-# The cards of a TCG
+## The cards of a TCG
 
 Leaving aside the matter of matches (which I will get back to later), a good match for the characteristics above is Trading Card Games (TCG).
 This is not surprising considering the original question from Extra Credits: “Can Blockchain Technology be a Game Mechanic?” in combination with the current use of blockchains for trading (virtual coins) and the trading mechanics of TCGs.
@@ -96,7 +96,7 @@ They use these decks to play against each other.
 For the purpose of example below, we consider a hypothetical block-chain based TCG: BlockCards™ published by Wizzies of the Blocky Shores™ running on a blockchain called CardCoin™.
 
 
-## Acquiring BlockCards™ cards
+### Acquiring BlockCards™ cards
 
 As a player, you can buy redeem codes from Wizzies of the Blocky Shores™.
 You can use these redeem codes to call a distribution smart contract on the CardCoin™ blockchain.
@@ -119,7 +119,7 @@ A card representing a wizard might have some perks, specifically those related t
 A card representing a ranger might gain perks from being traded, as if having travelled from one player's camp to another had honed its ranger skills.
 
 
-## Introducing new cards
+### Introducing new cards
 
 There are two separate aspects to the introduction of new cards: the design of new cards during which Wizzies of the Blocky Shores™ decide what new cards will be available, and the publishing of new cards during which Wizzies of the Blocky Shores™ make the new cards available to the players.
 
@@ -138,7 +138,7 @@ Another example is that cards can be combined: you can craft your own buffed war
 Another example is to use Cryptokitties-like mechanics to generate new card: use your barracks card, blacksmith card and some coin to obtain an armoured warrior card.
 
 
-## Guaranteed scarcity
+### Guaranteed scarcity
 
 The code of CardCoin™ can guarantee some level of scarcity of some cards.
 For example, Wizzies of the Blocky Shores™ can publish a set of new cards that contain a no-reprint flag.
@@ -148,7 +148,7 @@ Another possibility for Wizzies of the Blocky Shores™ is to publish a set of n
 The distribution smart contract that handles the redeeming of these cards simply refuses any operation after the redeeming deadline is passed.
 
 
-## Cards used in championships or special events
+### Cards used in championships or special events
 
 Because each card is an individual token, the ownership of which is tracked through CardCoin™, cards that have been used during championships, especially to win, can be traded as a rare collector item.
 (There are details below about playing games and running championships.)
@@ -158,7 +158,7 @@ For example, if you play during the Summer Rapid Games Tournament, all the cards
 You can keep using these cards that have been made better by use, or you can trade them for a higher price than the stock version.
 
 
-## Playing with the cards
+### Playing with the cards
 
 Whilst it is in theory possible to play card games with arbitrary delays, they are mostly played within short periods of time, each turn taking at most a couple of minutes.
 
@@ -170,7 +170,7 @@ Moreover, they can set restrictions and rule variants for their games.
 For example, their escrow smart contract accepts [30 cards instead of the standard 60 from the official rules](https://bulbapedia.bulbagarden.net/wiki/Half_Deck_(TCG)).
 
 
-## Benefits form the blockchain
+### Benefits form the blockchain
 
 As with any such idea, it is important to look back and ask:
 Why do I need a blockchain for it?
@@ -197,7 +197,7 @@ Players can run their own servers, experiment with alternative rules, organise t
 -----------------------------------------------------
 
 
-# Appendix: Cryptokitties
+## Appendix: Cryptokitties
 
 Cryptokitties is a blockchain thing in which people buy, sell and breed zoomorphised digital assets.
 In simpler terms, you can buy a Cryptokitty which is represented visually as a drawing of a cat.

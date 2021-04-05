@@ -67,17 +67,17 @@ How much of the advice in The Sense of Style can be applied to code?
 
 -----------------------------------
 
-# The Sense of Coding Style
+## The Sense of Coding Style
 
 Below is collected advice from The Sense of Style, adapted to writing source code.
 I also recommend reading the original: it is indirectly applicable to writing code (as shown below) and directly applicable to writing documentation and tutorials.
 
 
-## Preliminaries
+### Preliminaries
 
 A few things that need to be said beforehand.
 
-### What this is not
+#### What this is not
 
 This is not a tutorial.
 You cannot learn to code by reading this page.
@@ -93,7 +93,7 @@ Note that all the code examples are given in OCaml.
 However, the advice is more general: it can be applied to programs written in other languages.
 
 
-### Why this is important
+#### Why this is important
 
 Writing readable code is important for multiple reasons.
 First, it eases the life of the reviewer of your software.
@@ -109,11 +109,11 @@ Whilst Hoare makes the distinction between simple and complicated code, the same
 Just like simplicity, readability is a mean to an end: correctness.
 
 
-## Boilerplate advice
+### Boilerplate advice
 
 Advice surrounding a software project.
 
-### Avoid metadiscourse
+#### Avoid metadiscourse
 
 Metadiscourse is when you write about the structure of the writing (e.g., “Sections 1, 2 and 3 cover … and Sections 4 and 5 cover …”) or about the process of writing (e.g., “We started by researching … for which we attempted to interview … but we were unable to because …”).
 
@@ -138,7 +138,7 @@ Metadiscourse most often unnecessarily captures some of the limited attention of
 Avoid it.
 
 
-### Build narratives
+#### Build narratives
 
 In a project, arrange code in an order that the reader can follow.
 It can be general-to-specific, or big-to-small, or network-to-disk, or high-level-to-low-level, or user-inputs-to-screen-updates, or database-to-webpage.
@@ -155,7 +155,7 @@ Compare `subtract(accumulator, delta)` (“actively subtract `delta` from the `a
 In languages that support multiple styles of programming, use different kinds of names for different kinds of functions.
 Compare Python's `someList.sort()` and `sorted(someList)`.
 
-### Balance
+#### Balance
 
 All the advice given on this page (above and below) should be applied only to the extent that it makes code more readable.
 Never apply the advice blindly, ask yourself: what does this piece of advice achieve with my code?
@@ -169,11 +169,11 @@ Ask for advice.
 
 
 
-## Identifiers
+### Identifiers
 
 Naming things is hard.
 
-### Names
+#### Names
 
 Whilst many style guides insist on using long descriptive names for all variables, there are situations where short names are preferable.
 
@@ -216,7 +216,7 @@ Thus, `errors` is given a more descriptive name.
 
 
 
-### The curse of knowledge
+#### The curse of knowledge
 
 When you write code, you over-estimate your reader's familiarity with both the code and its context.
 When you over-estimate your reader you write more obscure code.
@@ -297,12 +297,12 @@ This advice applies equally to abstractions other than a monad.
 
 
 
-## Grammars
+### Grammars
 
 Advice about trees.
 
 
-### The graph, the tree, and the string
+#### The graph, the tree, and the string
 
 The Sense of Style goes to great lengths to explain how grammar is a way to encode parts of a graph of ideas into a string of words.
 Specifically, grammar allows a speaker/writer to represent a few ideas and the links between them (a graph) as a tree of grammatical constructs and then that tree as a string of words.
@@ -332,7 +332,7 @@ Reviewers attempt to first recover the tree, and then the process it describes.
 
 These are two things programmers can help reviewers with: recovering the tree and inferring what process it describes.
 
-### From the pixels on a screen to the AST
+#### From the pixels on a screen to the AST
 
 A reviewer starts by parsing your code to build a mental representation of the abstract syntax tree.
 The first step a reviewer takes is parsing your code: reading the visual representation of a stream of bytes on the screen, and building an AST from that visual representation.
@@ -344,7 +344,7 @@ It also explains how certain editor features (such as syntax colouring) or writi
 All in all, this paper gives a good framework for talking about the pixels-to-AST conversion.
 
 
-#### Indentation
+**Indentation**:
 
 One way that the programmer can help the reviewer is to match the visual representation to the AST.
 For example, indenting the code gives an easy way for the reviewer to asses the general shape of the AST.
@@ -413,7 +413,7 @@ This last example is one such case.
 Sequences of binding are another.
 
 
-#### Syntactical parallelism
+**Syntactical parallelism**:
 
 When two functions do similar things, they should have similar names.
 When two variables hold similar values, they should have similar names.
@@ -425,7 +425,7 @@ In general, when things are alike, their textual representation should be simila
 This is the syntactical pendant to structural parallelism (see below for details).
 
 
-### From the AST to groking the code
+#### From the AST to groking the code
 
 After parsing the AST in their head, a reviewer then tries to understand what the AST means:  
 How does control flow from one place to another?  
@@ -438,7 +438,7 @@ For example, when reading a line, they need to have an idea of what variables ar
 To ease the review, programmers can shape their trees in a way that reduces cognitive workload for the reviewers.
 
 
-#### The depth and width of trees
+**The depth and width of trees**:
 
 In order to reduce the cognitive workload of reviewers, prefer flat-and-wide trees to deep-and-narrow trees.
 This is because, in general, the conditions necessary to reach a deep node of the AST are more intricate.
@@ -454,7 +454,7 @@ Conversely, the beginning-heavy version requires more effort.
 Whether you take a line-by-line approach (in which you must first build up a conjunction of expressions, and then unwind it carefully one after the other in LIFO order) or a condition-by-condition approach (in which you read a condition and immediately move your attention to the `else`-branch before coming back to the `then`-branch), you need to keep more context in mind.
 
 
-#### The order of branches
+**The order of branches**:
 
 If you do have to include some deep trees, then prefer **end-heavy** trees.
 The heaviness being at the end means that the reviewer can understand the beginning part, commit that understanding to memory, and then move on to understand the rest.
@@ -522,7 +522,7 @@ let lines_of_file file =
 ```
 
 
-#### Structural parallelism
+**Structural parallelism**:
 
 When two functions do similar things, their AST should be shaped similarly.
 When two variables hold similar values, the AST of the expressions that initialises them should be shaped similarly.
@@ -565,7 +565,7 @@ Understanding the second version becomes a simple game of “spot the difference
 And a reviewer can easily cheat at such a game using tools such as `diff`.
 
 
-### Use positives
+#### Use positives
 
 Avoid `not` in your conditional.
 Prefer `length collection > threshold` rather than `not (length collection <= threshold)`.
@@ -589,7 +589,7 @@ In general, it is less important than ordering the branches of your conditional.
 Let's look back at the examples from the introduction, the pieces of code that spun this whole thing.
 We can apply the advice above to make the code more readable.
 
-### Chaining options
+**Chaining options**:
 
 The original parsing of the directory option looked like this.
 
@@ -642,11 +642,11 @@ let directory =
 An even more readable version uses an abstraction to remove the repetitive boilerplate.
 
 ```
-(** [>||>] separates multiple optional values and returns
-    the left-most one (i.e., the first one) that is
-    not [None].
-    More formally: [None >||> f] is [f ()]
-    and [Some v >||> _] is [v]. *)
+(* [>||>] separates multiple optional values and returns
+   the left-most one (i.e., the first one) that is
+   not [None].
+   More formally: [None >||> f] is [f ()]
+   and [Some v >||> _] is [v]. *)
 let ( >||> ) o if_none = match o with
 	| Some v -> v
 	| None -> if_none ()
@@ -657,7 +657,7 @@ let dir =
 	>||> fun () -> default_dir
 ```
 
-### Initialisation
+**Initialisation**:
 
 The original code setting up the formatters was as follows.
 
@@ -683,5 +683,4 @@ let mode_of_channel channel =
 setup_formatter Format.std_formatter (mode_of_channel Unix.stdout);
 setup_formatter Format.err_formatter (mode_of_channel Unix.stderr)
 ```
-
 

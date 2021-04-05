@@ -6,7 +6,7 @@ Dice are a ubiquitous device of Role Playing Game (RPG) systems.
 This post studies the different roles that dice take for both players and dungeon masters (DMs).
 
 
-# Ubiquity and pervasiveness
+## Ubiquity and pervasiveness
 
 Four sided dice are used in the Game of Ur;
 six sided dice have been used in non-RPG for a long time;
@@ -21,13 +21,13 @@ Dice and RPG rules are so intertwined that “diceless” has become [synonymous
 > The style of game is known as "diceless" because most games use dice as their randomiser;
 > some games such as Castle Falkenstein use other randomisers such as playing cards as substitutes for dice, and are not considered "diceless".
 
-# Framework
+## Framework
 
 This document uses the Mechanics-Dynamics-Æsthetics framework (by Hunicke, LeBlanc, and Zubek).
 This framework uses three levels of description of games.
 
 
-## Mechanics
+### Mechanics
 
 The first level, the *mechanics* level, is the one of individual rules.
 It describes how the simplest parts of the game interact with each other (“this bonus is added to the result of that dice roll”, “this statistic is compared to that threshold”), how quantities evolve over the course of a game (“increase that statistic by this amount”, “reduce your hit points by this number”), what physical actions players take (“roll two dice and keep the highest”, “move this piece that many squares”).
@@ -36,13 +36,13 @@ The mechanics are also the immediate way (but not the most important way) throug
 They form the interface of the game, in the same way that the buttons and dialogue boxes form the interface of a program.
 
 
-## Dynamics
+### Dynamics
 
 The second level, the dynamics level, is the one of interaction between rules that create emergent properties.
 It describes the way rules combine to create higher-order effects (the probability distribution of summed dice throw, the feedback loops that ensures balance) and the way they form a coherent system.
 
 
-## Æsthetics
+### Æsthetics
 
 The third level, the æsthetics level, is the one of emotional aspect of the game, the one the player describes when asked “is it fun?”
 It describes the way players experience the game as a whole, what they enjoy about it.
@@ -50,7 +50,7 @@ It describes the way players experience the game as a whole, what they enjoy abo
 In RPGs, common types of æsthetics include fantasy (pretending other things are real), narrative (building and experiencing story), challenge (overcoming difficulties and finding solutions to problems), fellowship (interacting with other players and building social bonds) and cooperation (helping each others and achieving goals together).
 
 
-## The example of experience
+### The example of experience
 
 Experience points (XP), the means by which to earn them (solving puzzles, killing monsters, negotiating agreements, etc.), the ways to spend them (levelling up, buying skill points, etc.) are common mechanics of RPG.
 
@@ -71,7 +71,7 @@ This flat reward is worth less and less to characters as they progress.
 Thus, for the characters to progress, the players must take on new, more difficult challenges.
 
 
-## The example of the dice roll
+### The example of the dice roll
 
 
 The dice roll is a mechanic of most RPGs.
@@ -80,13 +80,13 @@ E.g., in games with a critical success/failure system such as SRD/D&D, dice roll
 
 
 
-# Roles of the dice
+## Roles of the dice
 
 The dice fills multiple roles in an RPG system.
 Keeping with the MDA framework we consider these roles from the three perspective detailed above.
 
 
-## Dice roll mechanics
+### Dice roll mechanics
 
 
 Players and game masters use dice for multiple reasons.
@@ -96,13 +96,13 @@ Players and game masters use dice for multiple reasons.
 - To decide **success/failure** of an action such as dodging, casting, climbing, attacking, etc. This is sometimes referred to as a skill check.
 
 
-### Quantity
+#### Quantity
 
 Dice are used to determine quantities on different occasions; often for damage or healing.
 In most cases, the quantity is determined by adding the result of one or several dice rolls and possibly a constant number.
 For example, to determine damage in SRD/D&D, the number and sidedness of the dice is influenced by the weapon wielded, and the static constant by the wielder's statistics; some character features may also grant additional damage dice of possibly different sidedness.
 
-### Multiple choice
+#### Multiple choice
 
 Many rule books contain tables of random events, loot, characteristics, etc.
 For example, SRD/D&D offers tables to suggest personality traits associated to various backgrounds.
@@ -114,7 +114,7 @@ This is used to model the different probability of different elements of the tab
 There are variations on this simple mechanic.
 One such variation is when a certain result calls for more rolls—e.g., a high roll on a loot table may call for the result of two further rolls to be joined together.
 
-### Success/failure
+#### Success/failure
 
 Different systems implement the success/failure test in different ways.
 A simple implementation is to roll a single dice, add appropriate bonuses and compare the total with a threshold.
@@ -134,26 +134,26 @@ Specifically, they all implement a test for the success of an action that has al
 This is discussed later.
 
 
-### Critical success and failure
+#### Critical success and failure
 
 In multiple systems, some results of the dice are considered automatic success or failures – e.g., rolling 20 or 1 on an attack roll in SRD/D&D.
 These bypass the normal checking mechanism, the standard comparison with a threshold.
 Instead, these specific rolls have immediate effects.
 
 
-## Dice roll dynamics
+### Dice roll dynamics
 
 The specific mechanics described above give rise to dynamics discussed now.
 
 
-### Probability distributions
+#### Probability distributions
 
 When determining a quantity, the different ways to combine dice and bonuses result in different probability distributions.
 This result in different maxima, minima, averages, etc.
 
 For example, a spell healing $3\mathrm{d}4$ HP is better than a spell healing $2\mathrm{d}6$ than a spell healing $1\mathrm{d}12$.
 
-### Probability of success
+#### Probability of success
 
 When rolling for a success/failure test, different tests have different probability of success and failure.
 
@@ -161,12 +161,12 @@ In addition, the inclusion of critical success/failure means that nothing is cer
 Even when the normal mode of testing would result in 100% chance of success, failure is still possible – and vice versa.
 
 
-## Dice roll æsthetics
+### Dice roll æsthetics
 
 The dice roll dynamics described above give rise to the æsthetics discussed now.
 
 
-### Keeping players in check
+#### Keeping players in check
 
 One of the roles of the dice is to keep the players in check.
 To prevent the players from simply deciding: “my character unlocks the door to the treasure room,” “my character sneaks past the guards unnoticed,” or “my character jumps from the burning building onto the roof of the house across the street, unharmed.”
@@ -180,7 +180,7 @@ This limits the players power by giving a framework for deciding the outcome of 
 As a result, the game is challenging: players must overcome difficulties, find appropriate solutions, solve non-trivial problems.
 
 
-### Realism
+#### Realism
 
 Another role of the dice is to model the characters' universe.
 For example, the more difficult an action is to achieve in the characters' universe, the less likely the players are to succeed at the corresponding dice roll.

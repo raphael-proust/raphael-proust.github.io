@@ -7,7 +7,7 @@ It is an adaptation of a keynote address at a Game Conference into a book.
 In it, Raph Koster makes interesting points about topics that matter – to the game design professional, the game design amateur and to others.
 
 
-# Fun
+## Fun
 
 As the title suggests, the book is about fun – and also other things detailed below.
 Fun, according to the author, is about learning new patterns.
@@ -29,7 +29,7 @@ If games are the medium of fun, and if fun is about learning, then game designer
 In this case, the definition is appealing to the audience of the original keynote address – more on this below.
 
 
-# Games (and other media) and art
+## Games (and other media) and art
 
 Koster's book extends beyond its title and tackles additional questions.
 One such additional question is:  
@@ -52,7 +52,7 @@ the game designer can decide to teach patterns that force the player to question
 Just like films, most of which are for entertainment, just like paintings, most of which are for decoration, just like all those other media, games, most of which are for fun, can also be art.
 
 
-# Weaknesses
+## Weaknesses
 
 Before listing the main weaknesses of this book, I should make it clear that it addresses important questions and is worth a read.
 There are useful lessons to be learned in there.
@@ -62,7 +62,7 @@ To some extent, they are due to a mismatch between the content and the presentat
 
 With those caveats out of the way…
 
-## Pep talk
+### Pep talk
 
 Half of the book reads as a pep talk to game designers.
 Yes what you do matters.
@@ -75,7 +75,7 @@ What should game designers do?
 How can they make games that qualify as art?
 What responsibilities they have to accept?
 
-## Personal journey
+### Personal journey
 
 Some of the book is about the journey of self-discovery that the author went through.
 His personal struggle with accepting his own profession.
@@ -83,7 +83,7 @@ His personal struggle with accepting his own profession.
 It gives the book a sort of *making of* feel.
 And it's not related to fun or the theory thereof.
 
-## Tackling more questions
+### Tackling more questions
 
 Not only does the book addresses the notion of fun and the relation between games and other media,
 it also asks and answers even more questions.
@@ -95,7 +95,7 @@ Are there boy and girl games?
 
 This loosen the focus of the book.
 
-## Hand-waviness
+### Hand-waviness
 
 Some of the argumentation is vague and hand-wavy.
 It jumps from personal anecdotes to actual research-grade citations.
@@ -104,7 +104,7 @@ There is even a sophism in there – along the lines of “if X were true, we wo
 
 -------------------------------------
 
-# All in all
+## All in all
 
 Whilst the book falls short on some fronts, it's mainly because of the original format.
 If seen as a keynote address that aims to start conversations on specific topics in the game designer community, then yes, it does make sense to raise multiple questions, to capture an audience with personal anecdotes, etc.

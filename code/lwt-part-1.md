@@ -14,7 +14,7 @@ Below is a write-up of that training.
 It covers: basic concepts (promises, states), simple use, description of the internals, and advanced use (cancellation and exception propagation).
 
 
-# Prelude
+## Prelude
 
 Lwt is a library.
 You can install it as an `opam` package named `lwt`.
@@ -40,7 +40,7 @@ Declaring a dependence to the `lwt` library in your `dune` build file gives you 
 Lwt, `lwt`, `lwt`, `Lwt`
 
 
-# Lwt as a black-box
+## Lwt as a black-box
 
 Lwt is a library for creating and manipulating *promises*.
 
@@ -67,7 +67,7 @@ type 'a state =
 val state: 'a t -> 'a state
 ```
 
-# A necessary side-note on terminology and backwards compatibility
+## A necessary side-note on terminology and backwards compatibility
 
 The Lwt library is old.
 It was originally written by [Jérôme Vouillon](https://www.irif.fr/~vouillon/) as a support library for the [Unison](https://www.cis.upenn.edu/~bcpierce/unison/) file synchroniser.
@@ -85,7 +85,7 @@ But old descriptions of the library will occasionally contain dated references t
 And the interface of the library, because of backwards compatibility, is full of those references.
 
 
-# Analogy
+## Analogy
 
 A promise, as a cell that may hold nothing, a value, or an exception, is similar to a combination of other types:
 
@@ -106,9 +106,9 @@ The main difference is that a promise can only ever transition from holding noth
 Under no circumstances can a resolved promise become pending.
 
 
-# Creating and combining promises
+## Creating and combining promises
 
-## Basic monadic interface
+### Basic monadic interface
 
 `Lwt.return: 'a -> 'a t`  
 `return v` evaluates immediately to a promise that is already fulfilled with the value `v`.
@@ -147,7 +147,7 @@ print_lines lines >>= fun () ->
 `fail exc` evaluates immediately to a promise that is already rejected with the exception `exc`.
 Note that, as we discuss below, the use of `fail` should be reserved for populating data-structures (and other similar tasks) but that, within one of Lwt's function, the use  of `raise` is preferred.
 
-## Resolvers
+### Resolvers
 
 `Lwt.task: unit -> 'a t * 'a u`  
 `task ()` evaluates immediately to a pair `(p, r)` where `p` is a pending promise and `r` is its associated *resolver*.
@@ -180,7 +180,7 @@ let first a b =
 Many of the control structures that could be written by hand using `task` and `wakeup` are common enough to earn a place in the `Lwt` module.
 
 
-## Common combinators
+### Common combinators
 
 `Lwt.join: unit t list -> unit t`  
 `join ps` is a promise that resolves when all the promises in `ps` have done so.
@@ -210,7 +210,7 @@ And vice-versa if the first promise to resolve is fulfilled, so is the choice pr
 If multiple promises resolve at the same time (the condition for which we will discuss later), then a promise is chosen arbitrarily.
 
 
-# Exception catching
+## Exception catching
 
 `Lwt.catch: (unit -> 'a t) -> (exn -> 'a t) -> 'a t`  
 The function `catch` attaches a handler to a given promise.
@@ -265,7 +265,7 @@ The function `finalize` is similar to `try_bind` except it takes a single handle
 Unlike `try_bind`, the handler in `finalize` cannot determine whether the promise was fulfilled or rejected.
 
 
-# Breaking promises and pausing
+## Breaking promises and pausing
 
 `Lwt_main.run: 'a t -> 'a`  
 `run p` is an expression that blocks until the promise `p` is resolved.
@@ -322,7 +322,7 @@ It exists for historical reasons: `pause` was added later as a backend-independe
 There are minor differences between `pause` and `yield`, but no difference that you should rely on.
 
 
-# Part 2
+## Part 2
 
 There are other interesting features of Lwt.
 And there are also features we have mentioned that we could not explain (cancelation) or not explain well (pause).

@@ -12,7 +12,7 @@ It is considered good practice to use meaningful words or group of words as iden
 This makes the code self-documenting in that it attaches meaning to elements of a program.
 
 
-# Cases and position
+## Cases and position
 
 Some natural languages write different grammatical cases differently.
 German, Russian, Latin and many other languages have this feature.
@@ -23,7 +23,7 @@ Additionally, English verbs and nouns are often identical: “fish”, “search
 On top of which, English verbs nouns and nouns verbs.
 
 
-# Confusing identifiers
+## Confusing identifiers
 
 Cases and the ability to differentiate verbs from nouns is useful when using natural language words as identifiers in programs.
 Consider Python's `sort` and `sorted`:
@@ -35,7 +35,7 @@ However, some other built-in functions have nouns as identifier: “bool”, “
 For these, it is unclear whether they mutate their argument or not – does this function tuple (tuple-ise?) its argument or does it give back a tuple version of its argument?
 
 
-# Programming paradigms
+## Programming paradigms
 
 In Object Oriented Programming, objects have methods (usually identified by verbs) and fields (usually identified by nouns).
 One of the way Java programmers make sure these are differentiated is to use explicit getters and setters for the fields.

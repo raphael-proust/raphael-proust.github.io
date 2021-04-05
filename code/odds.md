@@ -17,7 +17,7 @@ roll 3d6 + 1d8 + 2
 
 Mostly, Odds/`roll` is an excuse to freshen up on my OCaml, and especially on the packaging aspect.
 
-# Code overview
+## Code overview
 
 The code is relatively simple: a dice expression is a function that expects a PRNG state (`Random.State.t`) and produces a value.
 The combinators that operate on these simply create new closures that dispatch the PRNG state as needed.
@@ -25,9 +25,9 @@ The combinators that operate on these simply create new closures that dispatch t
 ```
 type 'a t = Random.State.t -> 'a
 let lift2 f x y = fun state ->
-        let x = roll state x in
-        let y = roll state y in
-        f x y
+   let x = roll state x in
+   let y = roll state y in
+   f x y
 ```
 
 The expressions are evaluated by applying the function to a PRNG state.
@@ -35,43 +35,43 @@ If no state is provided, one is created for the whole of the expression.
 
 ```
 let roll ?state t =
-        let state = match state with
-                | None -> Random.State.make_self_init ()
-                | Some state -> state
-        in
-        t state
+   let state = match state with
+      | None -> Random.State.make_self_init ()
+      | Some state -> state
+   in
+   t state
 ```
 
 Finally, two modules are provided: a monad and a lifting of all of [`Pervasives`](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Pervasives.html) integer functions.
 
 ```
 module Monad: sig
-        val return: 'a -> 'a t
-        val bind: 'a t -> ('a -> 'b t) -> 'b t
-        val ( >>= ): 'a t -> ('a -> 'b t) -> 'b t
-        val map: 'a t -> ('a -> 'b) -> 'b t
-        val ( >|= ): 'a t -> ('a -> 'b) -> 'b t
+   val return: 'a -> 'a t
+   val bind: 'a t -> ('a -> 'b t) -> 'b t
+   val ( >>= ): 'a t -> ('a -> 'b t) -> 'b t
+   val map: 'a t -> ('a -> 'b) -> 'b t
+   val ( >|= ): 'a t -> ('a -> 'b) -> 'b t
 end
 module Algebra: sig
-        val ( ! ): int -> int t
-        val ( + ): int t -> int t -> int t
-        val ( - ): int t -> int t -> int t
-	…
+   val ( ! ): int -> int t
+   val ( + ): int t -> int t -> int t
+   val ( - ): int t -> int t -> int t
+   …
 end
 ```
 
-## Folding through rolls
+### Folding through rolls
 
 The version above is a simplification: the library also provides a way to fold through all the dice rolls that happen when an expression is evaluated.
 There is a `roll_fold` function:
 
 ```
 val roll_fold:
-	?state: Random.State.t ->
-	folder: ('acc -> int -> int -> 'acc) ->
-	init: 'acc ->
-	'a t ->
-	('a * 'acc)
+   ?state: Random.State.t ->
+   folder: ('acc -> int -> int -> 'acc) ->
+   init: 'acc ->
+   'a t ->
+   ('a * 'acc)
 ```
 
 To implement this, the dice expressions take an additional argument:
@@ -84,21 +84,20 @@ And the `roll_fold` function creates a reference to hold the accumulator, then w
 
 ```
 let roll_fold ?state ~folder ~init t =
-        let state = match state with
-                | None -> Random.State.make_self_init ()
-                | Some state -> state
-        in
-        let folded = ref init in
-        let folder x y = folded := folder !folded x y in
-        let result = roll state folder t in
-        (result, !folded)
-
+   let state = match state with
+      | None -> Random.State.make_self_init ()
+      | Some state -> state
+   in
+   let folded = ref init in
+   let folder x y = folded := folder !folded x y in
+   let result = roll state folder t in
+   (result, !folded)
 ```
 
-This is somewhat inelegant and it will probably be changed later.
+This is somewhat inelegant.
 
 
-## roll
+### roll
 
 The `roll` companion program simply parses its arguments as a dice expression and calls the library.
 To parse the arguments, it uses the library parser.
@@ -110,7 +109,7 @@ A verbose flag prints all intermediate rolls.
 
 
 
-# Packaging
+## Packaging
 
 The main reason to start the project was to refresh on the packaging (and release, etc.) part of OCaml development.
 This aspect of the OCaml ecosystem has evolved a lot.

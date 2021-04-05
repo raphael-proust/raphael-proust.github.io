@@ -5,7 +5,7 @@ title: Monty Hall
 The Monty Hall problem is a brain teaser based on a TV game show.
 It takes its name from the host of the TV game show: Monty Hall.
 
-# Stating the problem
+## Stating the problem
 
 Whilst there are some insignificant variations, the core of the game works as follows:
 
@@ -29,7 +29,7 @@ So it would stand to reason that the two doors are as likely to hide the prize.
 There are many different explanation for the surprising increased probability.
 Below is one that I find easy to grasp.
 
-# Re-stating the problem
+## Re-stating the problem
 
 In this version of the problem, there are actually two games of Monty Hall:
 
@@ -38,7 +38,7 @@ In this version of the problem, there are actually two games of Monty Hall:
 
 Which do you want to play?
 
-## 1-door Monty Hall
+### 1-door Monty Hall
 
 The game follows this script:
 
@@ -63,7 +63,7 @@ The victory condition is that the door you picked in step 2 hides the prize.
 You picked one door, which has 1/3 chances of hiding the prize, you have 1/3 chances to win the prize.
 There is nothing else to the game but pageantry.
 
-## 2-door Monty Hall
+### 2-door Monty Hall
 
 If you think the pageantry in the 1-door Monty Hall game was too much, get ready for some more.
 
@@ -94,7 +94,7 @@ You really picked two doors, which have a combined 2/3 chances of hiding the pri
 There is nothing else to the game but pageantry.
 
 
-## A note on the pageantry
+### A note on the pageantry
 
 In both games, the proximate goal of the pageantry is to make the game more captivating to the TV audience.
 The end goal is to sell ad spots, which is achieved by delivering a captivated audience to some marketing wizards.
@@ -116,7 +116,7 @@ Similarly, in the 2-door Monty Hall game, whether the host opens a door that hid
 The trick in the pageantry is just for show.
 
 
-# Un-re-stating the problem
+## Un-re-stating the problem
 
 There are two distinctions between the original and restated problems.
 The first distinction is what choice do you make: in the original problem you chose whether to switch doors or not, whereas in the restated problem you chose which of the two games (1-door or 2-door) to play.

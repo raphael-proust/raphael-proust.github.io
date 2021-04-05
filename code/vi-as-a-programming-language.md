@@ -13,7 +13,7 @@ Although some specific examples are from one clone or another, the core ideas of
 
 
 
-# Vi has *and is* a programming language
+## Vi has *and is* a programming language
 
 Most vi clones embed one or more scripting languages.
 This lets the user customise what their own instance of their favourite clone of vi is capable of: managing Git repositories, manipulating dates and timestamps, handling pairs of quotes, parentheses and other directional typographic markers, tampering with constructs from one programming language or another.
@@ -21,7 +21,7 @@ This lets the user customise what their own instance of their favourite clone of
 But, more importantly, vi is a programming language.
 
 
-## State and actions: hand-wavy semantics
+### State and actions: hand-wavy semantics
 
 The state handled by vi programs is primarily composed of the text and the cursor position.
 (Other elements such as modes and registers are discussed later.)
@@ -47,7 +47,7 @@ Third, almost all operators (be it for movement or text modification), can be ex
 This is done by prefixing operators with numbers.
 
 
-## Hand-wavy grammar
+### Hand-wavy grammar
 
 The operations described above combine in ways described by the following grammar.
 
@@ -70,7 +70,7 @@ Another simplification is that some movers operate line-wise.
 When they are used with a composite modifier, the modification applies to whole lines: from the one on which the cursor currently is to the one the cursor lands after the move.
 
 
-## Insert mode
+### Insert mode
 
 Another simplification is the omission of modes.
 A full semantic of vi is complex and has to consider many of the corner cases and exceptions.
@@ -82,7 +82,7 @@ This simplified view differs from vi because it is possible to do more than just
 For example, backspace can be used in insert mode to erase characters.
 
 
-## Meta-programming for everyone
+### Meta-programming for everyone
 
 Interestingly, vi is used to edit source code.
 In other words, vi is a programming language used to generate source code which is in turn compiled into programs.
@@ -90,7 +90,7 @@ To some extent, vi can be seen as a metalanguage that supports a range of object
 
 
 
-# Criticisms
+## Criticisms
 
 There is a case to be made that vi is not a programming language.
 That vi's UI merely borrows some ideas from programming languages.
@@ -106,7 +106,7 @@ That is, vi is meant to be used with the text displayed for the user (programmer
 Criticising the lack of conditionals in vi's normal mode is like criticising the lack of type checking in Makefiles: it is out of scope.
 
 
-# Comparison with other editors
+## Comparison with other editors
 
 Other editors also have operators to modify the text and cursor position.
 For example, in [Atom](https://atom.io/), all the normal keys are used to insert the corresponding character into the text.

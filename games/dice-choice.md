@@ -10,7 +10,7 @@ A future post gives an alternative to dice-based randomness which keeps some of 
 
 
 
-# Choosing first, resolving second
+## Choosing first, resolving second
 
 The success/failure test mechanic of most RPG systems, in whatever variation, gives an overarching style of play: choose first, resolve second.
 
@@ -22,7 +22,7 @@ The player then resolves the outcome of the attempt of their character.
 This style of play creates tension and suspense (the future is unknown, the survival of the party may depend on the result of a dice roll) and a sense of freedom (you can try anything).
 
 
-# Choices and outcomes and role-play
+## Choices and outcomes and role-play
 
 Under this style of play, the players make choices based on *expectations* of outcomes (reward and probability of success).
 The actual outcomes are the product of randomness.
@@ -36,7 +36,7 @@ And more importantly, even in this case, the choices and the outcomes are discon
 The same sense of tension, suspense and freedom still arises from this style of play.
 
 
-# A support role and a leading role
+## A support role and a leading role
 
 The choose-then-resolve style of play create tension and suspense which contribute to the narrative æsthetics.
 However, other elements also contribute to the narrative: the setting, the acting from both GM and players, the descriptions from the GM, etc.
@@ -48,7 +48,7 @@ All in all, even though the dice is a core mechanic of many RPGs, it only contri
 This is especially true for the fantasy æsthetic.
 
 
-# MDA in practice
+## MDA in practice
 
 The MDA framework offers three levels of descriptions of games: Mechanics, Dynamics and Æsthetics.
 More interestingly, it offers two points of view on games:

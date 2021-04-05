@@ -13,11 +13,11 @@ Unfortunately, this richness and variety comes at a cost: complexity.
 This is also discussed below.
 
 
-# Hand, deck, discard, draw, recycle, play, etc.
+## Hand, deck, discard, draw, recycle, play, etc.
 
 Unlike dice mechanics which can be neatly summarised and even expressed in a compact notation, card mechanics are more complex and use a more extended vocabulary.
 
-## Areas
+### Areas
 
 To start with, cards mechanics use the following areas:
 
@@ -30,7 +30,7 @@ Note that the mat can be divided into arbitrarily many sub-areas – e.g., in PT
 Additionally, some cards can only be played in some areas and some cards can be attached to other cards.
 
 
-## Flows
+### Flows
 
 Cards flow from one area to another via different mechanics.
 The most common are
@@ -50,7 +50,7 @@ For example:
 In some games, it is even possible to steal opponents cards, play cards from their decks to apply the effect for yourself, or other such mechanisms.
 
 
-## General mechanics and specific mechanics
+### General mechanics and specific mechanics
 
 In card rule systems, there are mechanics that apply to the game in general and mechanics that are specific to certain cards.
 
@@ -66,7 +66,7 @@ Additionally, each card can have specific mechanics: instructions that, when fol
 For example, some cards allow you to search your deck for a specific card, some cards allow you to draw more cards, some cards change the maximum hand-size when on the mat, some cards allow you to play the top card of the deck straight into play, etc.
 
 
-### Aside: classic card games vs TCGs, CCGs and the like
+#### Aside: classic card games vs TCGs, CCGs and the like
 
 In classic card games (e.g., poker) there are only (or mostly) general mechanics.
 In TCGs, CCGs and similar games, there are both general mechanics and rules for each cards.
@@ -75,7 +75,7 @@ This is where the richness and complexity of card rules come from.
 
 
 
-# Mechanics with a flavour
+## Mechanics with a flavour
 
 Cards have much richer mechanics than dice.
 Whilst richer mechanics can increase complexity (as discussed below) which can be detrimental to play (also discussed below), it also provides opportunities for game system design.
@@ -93,7 +93,7 @@ These mechanics with a flavour can be applied to RPGs.
 Here are a few possible examples.
 These are only to give an idea, they are not polished and they have not been play-tested.
 
-## Example: a few barbarian cards
+### Example: a few barbarian cards
 
 <div style="border: solid #aaa 1px;">
 
@@ -144,7 +144,7 @@ For example, one that allows them to draw more than three cards.
 Or one that allows them to draw more cards at the end of their berserk.
 
 
-## Example: different kinds of magic
+### Example: different kinds of magic
 
 The magic of a sorcerer is wild, it feeds on impulses and emotions.
 A sorcerer casts spur-of-the-moment spells.
@@ -199,7 +199,7 @@ This time, the mechanics make the outcome entirely predictable and feel more mea
 As illustrated here both the core mechanics of the card system and the specific mechanics of the cards themselves can be used to add flavour.
 
 
-## Example: sneaky characters
+### Example: sneaky characters
 
 A sneaky character, be it an assassin, a thief, or a scout, stays hidden as much as possible, is able to adapt to changing conditions and can act or move quickly.
 
@@ -224,7 +224,7 @@ The adaptability of sneaky characters can be baked into the card mechanics throu
 
 
 
-# Keeping players in check with cards
+## Keeping players in check with cards
 
 There are multiple ways in which cards can be used as a source of randomness.
 And in turn this randomness can be used for multiple aspects of the mechanics.
@@ -247,13 +247,13 @@ More interestingly, the composition of the deck changes with play: cards get dra
 This can be used to mimic characters getting tired, being affected by conditions, etc.
 
 
-# The issue of complexity
+## The issue of complexity
 
 Compared to dice, cards offer deeper mechanics which can be used to encode some of the flavour from different games or settings.
 The flip side of that depth and richness is complexity: card rules tend to be harder to learn and involve more special cases.
 
 
-## Adoption
+### Adoption
 
 Complexity is problematic for beginner players and more generally for adoption.
 
@@ -266,7 +266,7 @@ Additionally, RPG players are used to long rule books with special cases and eme
 Card games are complex, but not more complex than Pathfinder.
 
 
-## Too slow
+### Too slow
 
 Another problem with complexity is that it slows down play.
 All the different mechanics are based on different physical actions, each taking some time to perform.
@@ -283,7 +283,7 @@ Specifically, if, instead of physical cards, the players use an electronic play 
 
 
 
-## The GM does a lot
+### The GM does a lot
 
 Another problem is the complexity for the GM.
 In most RPGs, the GM effectively plays the role of all NPCs, be they ally or opponent.
@@ -295,7 +295,7 @@ This requires special attention because NPCs have a personality, imbued by the G
 Using computer programs to play the NPCs may, if done poorly, impact the fantasy æsthetics.
 
 
-# Issues other than complexity
+## Issues other than complexity
 
 Dice are cheap, sturdy, reusable, generic bits of plastic; you buy a dice set and you are good to go for almost any game.
 On the other hand, cards are (relatively) expensive, easily damaged, specific tokens; buying MTG cards gets you nowhere to play PTCG.
@@ -303,7 +303,7 @@ On the other hand, cards are (relatively) expensive, easily damaged, specific to
 
 
 
-# Prospects and ideas
+## Prospects and ideas
 
 Complexity is a major issue.
 There cannot be a card-based RPG with CCG/TCG mechanics without a good solution for complexity.

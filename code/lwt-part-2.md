@@ -11,7 +11,7 @@ It assumes familiarity with the basic concepts of Lwt covered in [Part 1](/code/
 To be more precise, this part of the tutorial gives an acceptably precise working model of Lwt, but not an exact one.
 In particular, we do not mention any parts that are not necessary for the understanding of the user-facing features.
 
-# A simple model of a promise
+## A simple model of a promise
 
 To start with, consider that a promise is simply a cell for a value.
 The cell can take different values that map almost exactly on the `state` type.
@@ -45,14 +45,14 @@ But we cannot write much more at this point.
 So we refine the model and expand on the definition of `pending`.
 
 
-# Callbacks
+## Callbacks
 
 `Lwt.on_any: 'a t -> ('a -> unit) -> (exn -> unit) -> unit`  
 If `p` is pending, it attaches the callbacks to `p`;
 consequently, when `p` resolves, either of `hf` or `hr` is called depending if the promise is fulfilled or rejected.
 If `p` is already resolved, `on_any p hf hr` calls either `hf` or `hr` immediately.
 
-## Internal representation
+### Internal representation
 
 This is achieved by attaching callbacks to pending promises.
 When Lwt modifies the internal state of a promise from `Pending` to either `Fulfilled` or `Rejected`, Lwt also calls all of the attached callbacks.
@@ -91,7 +91,7 @@ let wakeup_exn p exc =
 The internals are a little bit more complicated than that, in particular with respect to error management.
 But the general idea is as above.
 
-## Other explicit callbacks
+### Other explicit callbacks
 
 There are variants of `on_any` that attach different callbacks.
 Their semantics can be inferred from their name and type signature, but we list them here anyway.
@@ -112,7 +112,7 @@ If `p` is already resolved, it calls `h` immediately.
 Nothing happens if `p` is never resolved.
 
 
-## Implicit callbacks
+### Implicit callbacks
 
 Lwt also uses callbacks to implement promise combinators such as `bind`.
 To give an idea of how, here is an implementation in the simplified model.
@@ -144,7 +144,7 @@ Lwt does not keep `p''` in a list/table/map of promises.
 There are some exceptions to this which we mention below.
 
 
-# Cancellation
+## Cancellation
 
 `Lwt.Canceled: exn`  
 The `Canceled` exception is used by Lwt to handle promise cancellation.
@@ -162,7 +162,7 @@ wakeup r 0 ;;
 `cancel p` causes `p` to be rejected with `Canceled`.
 Except that sometimes it does not do that, and sometimes it does much more than that.
 
-## Cancelable, not cancelable
+### Cancelable, not cancelable
 
 Some promises are cancelable (calling `cancel` on them causes them to be rejected with `Canceled`) others are not (calling `cancel` on them is a no-op).
 For example, consider the difference between `task` and `wait`.
@@ -174,7 +174,7 @@ Calling `cancel` on the promise created by `wait` has no effect.
 There is no way to test whether a promise is cancelable – besides actually canceling it and observing a change of state.
 
 
-## The semantics of simple cancellation
+### The semantics of simple cancellation
 
 The specific semantics of cancellation (detailed below) are inherited from a way of thinking about threads rather than promises.
 Consider the following code with uninteresting details elided:
@@ -202,7 +202,7 @@ Either way, the `cancel` function works well on the “thread” `p`: it interru
 
 The correct, thread-less, description is that `cancel p` finds whichever of the intermediate promise of `p` is currently pending and rejects it with `Canceled`.
 
-## Set up for cancellation propagation
+### Set up for cancellation propagation
 
 In order to find the pending intermediate promise of `p`, Lwt stores additional information in pending promises.
 Specifically, it stores a list of promises to propagate the cancellation to.
@@ -260,7 +260,7 @@ let bind p f =
 
 And more complex combinators such as `choose` and `join` include multiple promises in their `Others` cancellation field.
 
-## Propagating cancellation
+### Propagating cancellation
 
 Using this additional information, Lwt can find the pending promises that a given promise depends on.
 
@@ -279,7 +279,7 @@ This is a mock implementation on the simplified model.
 In particular, the cancellation works in two separate phases: collect all promises that the cancellation affects, and then trigger all the cancellations.
 This is to avoid subtle bugs where some cancellation has side-effects that modify the state of some of the not yet traversed promises.
 
-## Cancellation-focused combinators
+### Cancellation-focused combinators
 
 As mentioned, the semantics of `cancel` are easy to grasp for simple examples such as promises daisy-chained in a simple flow control.
 On the other hand, the semantics of `cancel` on complex constructions can be difficult to understand.
@@ -299,7 +299,7 @@ However, when the cancellation propagation described above reaches `pp`, then no
 In our simplified model, this is achieved by setting `pp`'s `cancelation` field to `Others []`.
 
 
-# Pausing and scheduling
+## Pausing and scheduling
 
 As seen previously, Lwt's scheduling is eager.
 Specifically, when given an already resolved promise and a function that returns an already resolved promise, `bind` returns and already resolved promise.
@@ -335,7 +335,7 @@ Also note that the mock scheduler above is only for building a mental model.
 The specifics differ, but the core idea is there.
 
 
-# OS interactions
+## OS interactions
 
 The last part of Lwt that this tutorial covers is interaction with the operating system.
 Whilst it is possible to call functions from OCaml's `Unix` module, such functions are oblivious to Lwt and may cause issues.
@@ -357,7 +357,7 @@ Blocking system calls are maintained in their own global variable.
 The scheduler checks these calls at each iteration, causing the process to actually sleep if none of the calls are done and no paused promises can be found.
 
 
-# Part 3
+## Part 3
 
 The third and final part of this 2-part introduction/tutorial collects some miscellaneous remarks of little practical use.
 

@@ -12,7 +12,7 @@ ocamlc -o dixmille dixmille.ml
 ./dixmille
 ```
 
-or executed directly with the OCaml topleve (`ocaml`):
+or executed directly with the OCaml toplevel (`ocaml`):
 
 ```
 ocaml dixmille.ml

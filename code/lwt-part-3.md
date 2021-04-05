@@ -12,7 +12,7 @@ We also collect addenda:
 - [2020-07](#addendum-non-obvious-evaluation-order): a walkthrough of the execution of a small example program to demonstrate a potential source of bugs.
 
 
-# Historical baggage
+## Historical baggage
 
 The documentation of Lwt has evolved to consistently use a sound terminology: promise, resolution, pending, etc.
 This updated documentation gives a better description than the previous one.
@@ -94,7 +94,7 @@ val ( let* ): 'a t -> ('a -> 'b t) -> 'b t
 
 
 
-# The ecosystem
+## The ecosystem
 
 Lwt provides a useful abstraction for handling concurrency in OCaml.
 But further abstractions are sometimes necessary.
@@ -137,7 +137,7 @@ This is not surprising considering both projects are linked to the [Ocsigen](htt
 The package [`js_of_ocaml-lwt`](https://ocsigen.org/js_of_ocaml/3.1.0/manual/lwt) even provides primitives for interacting with browser events (mouse button clicks, keyboard key presses, elements focus change, etc.).
 
 
-# Warnings about this tutorial
+## Warnings about this tutorial
 
 It is important to realise that the simplified model of Part 2 is a simplified model.
 It does not include all the details of the real implementation.
@@ -151,7 +151,7 @@ So, whilst the model of Part 2 is useful to discuss the coarse semantics of Lwt,
 
 -----------------------------------
 
-# Addendum: non-obvious evaluation order
+## Addendum: non-obvious evaluation order
 
 Below is a simple example program.
 The program is interspersed with print statements (in the form of `print_endline`) to show the evaluation order.
@@ -343,7 +343,7 @@ If you observe "interleaving", you will need to find which function is responsib
 Once you have found this function, please consider contributing some documentation to the project it appears in.
 
 
-# Addendum: `let*`, `and*`, `let+`, `and+`
+## Addendum: `let*`, `and*`, `let+`, `and+`
 
 OCaml 4.08 introduced [binding operators](http://caml.inria.fr/pub/distrib/ocaml-4.08/ocaml-4.08-refman.html#s%3Abinding-operators): `let*`/`and*` syntax for monads.
 
@@ -362,7 +362,7 @@ let* () = print_lines lines in
 …
 ```
 
-# Addendum: other promise systems
+## Addendum: other promise systems
 
 Some other programming languages have concurrency systems that are roughly equivalent to OCaml's Lwt.
 This section lists some of them.

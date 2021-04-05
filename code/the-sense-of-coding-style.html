@@ -51,16 +51,16 @@
 <p>Explaining what made the alternatives more readable, I ended up paraphrasing Pinker’s The Sense of Style. And that got me thinking:<br />
 How much of the advice in The Sense of Style can be applied to code?</p>
 <hr />
-<h1 id="the-sense-of-coding-style">The Sense of Coding Style</h1>
+<h2 id="the-sense-of-coding-style">The Sense of Coding Style</h2>
 <p>Below is collected advice from The Sense of Style, adapted to writing source code. I also recommend reading the original: it is indirectly applicable to writing code (as shown below) and directly applicable to writing documentation and tutorials.</p>
-<h2 id="preliminaries">Preliminaries</h2>
+<h3 id="preliminaries">Preliminaries</h3>
 <p>A few things that need to be said beforehand.</p>
-<h3 id="what-this-is-not">What this is not</h3>
+<h4 id="what-this-is-not">What this is not</h4>
 <p>This is not a tutorial. You cannot learn to code by reading this page.</p>
 <p>This is not an exhaustive list of dos and donts about the minutia of styling. Instead, this is a collection of pieces of general advice on writing more readable code, each with an explanation of why the advice is helpful. As such, it stands somewhere between concrete advice about readability and non-specific discourse about what even is readability.</p>
 <p>This is not a list of pieces of advice that you can all apply in all situations. You will need to understand why each piece of advice makes sense and, in many cases, you will need to decide which piece of advice to prioritise.</p>
 <p>Note that all the code examples are given in OCaml. However, the advice is more general: it can be applied to programs written in other languages.</p>
-<h3 id="why-this-is-important">Why this is important</h3>
+<h4 id="why-this-is-important">Why this is important</h4>
 <p>Writing readable code is important for multiple reasons. First, it eases the life of the reviewer of your software. Making someone else’s life easy is nice.<br />
 Be nice.</p>
 <p>Second, writing readable code helps avoid bugs. This is a take on Hoare’s famous quote:</p>
@@ -69,9 +69,9 @@ Be nice.</p>
 </blockquote>
 <p>Whilst Hoare makes the distinction between simple and complicated code, the same distinction between readable and obscure code is just as valid.<br />
 Just like simplicity, readability is a mean to an end: correctness.</p>
-<h2 id="boilerplate-advice">Boilerplate advice</h2>
+<h3 id="boilerplate-advice">Boilerplate advice</h3>
 <p>Advice surrounding a software project.</p>
-<h3 id="avoid-metadiscourse">Avoid metadiscourse</h3>
+<h4 id="avoid-metadiscourse">Avoid metadiscourse</h4>
 <p>Metadiscourse is when you write about the structure of the writing (e.g., “Sections 1, 2 and 3 cover … and Sections 4 and 5 cover …”) or about the process of writing (e.g., “We started by researching … for which we attempted to interview … but we were unable to because …”).</p>
 <p>A programming equivalent to metadiscourse is the comment that plainly describe the code.</p>
 <pre><code>(* Sort the elements and remove duplicates *)
@@ -81,20 +81,20 @@ List.sort xs |&gt; List.deduplicate</code></pre>
    interface. Now it is hidden because … *)</code></pre>
 <p>Note that in this second example, a comment may be necessary. However, the comment should focus on the code as it is (<code>This function is hidden because …</code>) and not on the trivia of development history (<code>This function used to…</code>).</p>
 <p>Metadiscourse most often unnecessarily captures some of the limited attention of the reviewer. Avoid it.</p>
-<h3 id="build-narratives">Build narratives</h3>
+<h4 id="build-narratives">Build narratives</h4>
 <p>In a project, arrange code in an order that the reader can follow. It can be general-to-specific, or big-to-small, or network-to-disk, or high-level-to-low-level, or user-inputs-to-screen-updates, or database-to-webpage. The important thing is that the reader is able to latch onto a narrative in order to ease the reading.</p>
 <p>One way to achieve this is to include a reading guide for the whole project in your README or for a specific component in a relevant file(s). Simply add a short section explaining how that module there grabs the keyboard and translates the keycodes, then that other module there parses the keycodes into actions, etc.</p>
 <p>Another way that the code can be thought of as a narrative is to lean on the type of narratives that your programming language supports. In imperative languages such as C, procedure names should be active verbs because they act on the parameters. In declarative languages such as Haskell, function names should be nouns or past-tense verbs because they create new values that relate to parameters in a certain way. Compare <code>subtract(accumulator, delta)</code> (“actively subtract <code>delta</code> from the <code>accumulator</code>”) to <code>difference old_v new_v</code> (“this expression evaluates to the difference between <code>old_v</code> and <code>new_v</code>”).</p>
 <p>In languages that support multiple styles of programming, use different kinds of names for different kinds of functions. Compare Python’s <code>someList.sort()</code> and <code>sorted(someList)</code>.</p>
-<h3 id="balance">Balance</h3>
+<h4 id="balance">Balance</h4>
 <p>All the advice given on this page (above and below) should be applied only to the extent that it makes code more readable. Never apply the advice blindly, ask yourself: what does this piece of advice achieve with my code?</p>
 <p>Not sure about a specific case? Ask a colleague’s opinion.</p>
 <p>Ask for feedback.<br />
 Ask for reviews.<br />
 Ask for advice.</p>
-<h2 id="identifiers">Identifiers</h2>
+<h3 id="identifiers">Identifiers</h3>
 <p>Naming things is hard.</p>
-<h3 id="names">Names</h3>
+<h4 id="names">Names</h4>
 <p>Whilst many style guides insist on using long descriptive names for all variables, there are situations where short names are preferable.</p>
 <p>One such situation is with very abstract variables. For example, in a library implementing a collection, be it a list or an array or a tree, the elements of the collection are abstract. Because they are abstract, long descriptive names are very generic and abstract themselves: ‘element’, ‘item’, ‘member’, or some such. In this case, the long name does not carry more information than a single-letter name: <code>e</code>, <code>x</code>, <code>v</code>, or some such.</p>
 <p>You can also introduce the naming conventions of your module.</p>
@@ -113,7 +113,7 @@ Ask for advice.</p>
             if is_fatal error then exit 1);
     None</code></pre>
 <p>Because <code>v</code> is simply converted from a positive <code>result</code> to a positive <code>option</code>, there is no need to dwell on it. Sure, <code>successful_result</code> would be more descriptive, but it would need to be forgotten just as soon. On the other hand, <code>errors</code> deserves more attention because its scope is longer and because it is more consequential. Thus, <code>errors</code> is given a more descriptive name.</p>
-<h3 id="the-curse-of-knowledge">The curse of knowledge</h3>
+<h4 id="the-curse-of-knowledge">The curse of knowledge</h4>
 <p>When you write code, you over-estimate your reader’s familiarity with both the code and its context. When you over-estimate your reader you write more obscure code.</p>
 <p>Always consider that your reader is intelligent but unfamiliar with the libraries you are using, the concurrent processes that may be executing, the concurrency model of your scheduler, or any other such minute context.</p>
 <p><strong>Abbreviations</strong>:</p>
@@ -151,9 +151,9 @@ val ( &gt;&gt;= ): &#39;a list -&gt; (&#39;a -&gt; &#39;b list) -&gt; &#39;b lis
 <p>This helps in multiple ways. First, for the reviewer, who might not be familiar with the specific monad they are reviewing, it splits the work into two easier tasks: verify that the function’s implementation is correct (i.e., that its behaviour matches its name and documentation) and verify that the function combines with others according to the monadic laws. By merely exporting a more explicitly named function alongside the abstractly named function, you prepare this two-step work for the reviewer.</p>
 <p>Second, it helps users of your library to use your provided function in a non-monadic setting.</p>
 <p>This advice applies equally to abstractions other than a monad.</p>
-<h2 id="grammars">Grammars</h2>
+<h3 id="grammars">Grammars</h3>
 <p>Advice about trees.</p>
-<h3 id="the-graph-the-tree-and-the-string">The graph, the tree, and the string</h3>
+<h4 id="the-graph-the-tree-and-the-string">The graph, the tree, and the string</h4>
 <p>The Sense of Style goes to great lengths to explain how grammar is a way to encode parts of a graph of ideas into a string of words. Specifically, grammar allows a speaker/writer to represent a few ideas and the links between them (a graph) as a tree of grammatical constructs and then that tree as a string of words. In other words, grammar is a serialiser.</p>
 <p>Grammar is also a set of rules for retrieving the serialised graph of ideas from the string representation. Specifically, grammar allows a listener/reader to recover, from a string of words, a tree of grammatical constructs, and then, from that tree, the ideas and links it represents. In other words, grammar is also a parser.</p>
 <p>For example “the quick brown fox jumps over the lazy dog” is a serialisation of an idea that a certain animal with a certain coat and a certain aptitude performs a specific action in a specific location relative to another animal with a certain character flaw. The same idea can be serialised differently as “over the dog that is lazy, the fox that is fast and brown jumps” or other such variation. A human that understands English understands how to deserialise either of the sentences to recover the meaning.</p>
@@ -162,11 +162,11 @@ val ( &gt;&gt;= ): &#39;a list -&gt; (&#39;a -&gt; &#39;b list) -&gt; &#39;b lis
 <p>Another advantage of programming languages is that programmers have much more freedom in the serialising. For example, in most programming languages, programmers can add extraneous parentheses and break line freely. Even if these syntactic options are not available, then a programmer can associate additional names to a value or break a function in multiple parts.</p>
 <p>Finally, a big advantage of programming languages is that the tree has more importance than in prose. Reviewers have explicit knowledge of what the tree is; the tree even bears a name: the abstract syntax tree (AST). Reviewers attempt to first recover the tree, and then the process it describes.</p>
 <p>These are two things programmers can help reviewers with: recovering the tree and inferring what process it describes.</p>
-<h3 id="from-the-pixels-on-a-screen-to-the-ast">From the pixels on a screen to the AST</h3>
+<h4 id="from-the-pixels-on-a-screen-to-the-ast">From the pixels on a screen to the AST</h4>
 <p>A reviewer starts by parsing your code to build a mental representation of the abstract syntax tree. The first step a reviewer takes is parsing your code: reading the visual representation of a stream of bytes on the screen, and building an AST from that visual representation.</p>
 <p>A good exploration of this topic is available in the paper <a href="https://hal.inria.fr/file/index/docid/737414/filename/langViz-popl-submitted.pdf">“A visual perception account of programming languages: finding the natural science in the art” (by Stéphane Conversy)</a>.</p>
 <p>The paper explains how a reader reads code, what visual processes it involves, etc. It also explains how certain editor features (such as syntax colouring) or writing conventions (such as indentation) can be helpful to the reader. All in all, this paper gives a good framework for talking about the pixels-to-AST conversion.</p>
-<h4 id="indentation">Indentation</h4>
+<p><strong>Indentation</strong>:</p>
 <p>One way that the programmer can help the reviewer is to match the visual representation to the AST. For example, indenting the code gives an easy way for the reviewer to asses the general shape of the AST. The number of blank pixels on the left-hand-side of each line gives an indication of the shape of the program.</p>
 <p>However, matching the indentation to the AST depths only addresses half of the indentation issue. The other half of the issue is to shape the AST correctly. Shaping the AST correctly makes for a simpler indentation pattern (as shown in the example below). Additional (non indentation-related) advantages of shaping the AST correctly are explored later.</p>
 <p>In general, flat or end-heavy trees are easier to read because they minimise the distances that separate related things. Consider the three examples below which have equivalent but distinct ASTs.</p>
@@ -209,23 +209,23 @@ else if is_unknown_entry input then
 else
     update_entry input</code></pre>
 <p>Note that in many cases, end-heavy trees can be indented as flat trees. This last example is one such case. Sequences of binding are another.</p>
-<h4 id="syntactical-parallelism">Syntactical parallelism</h4>
+<p><strong>Syntactical parallelism</strong>:</p>
 <p>When two functions do similar things, they should have similar names. When two variables hold similar values, they should have similar names.</p>
 <p>For example, avoid mixing snake and camel case in a single project – or, if you do, do so to highlight fundamental differences between two kinds of values. But also avoid having a <code>filter_elements_out_of_list</code> (active verb) along with a <code>collection_filter</code> (noun-phrase): if the two have the same effect, their naming should follow similar conventions.</p>
 <p>In general, when things are alike, their textual representation should be similar. This is the syntactical pendant to structural parallelism (see below for details).</p>
-<h3 id="from-the-ast-to-groking-the-code">From the AST to groking the code</h3>
+<h4 id="from-the-ast-to-groking-the-code">From the AST to groking the code</h4>
 <p>After parsing the AST in their head, a reviewer then tries to understand what the AST means:<br />
 How does control flow from one place to another?<br />
 How does data flow from one place to another?<br />
 How does a given part of the tree transforms a given piece of data?<br />
 How does an error propagates through the tree?</p>
 <p>Whilst building an understanding of the program, the reviewer needs to maintain a working memory of the context of the code they are reviewing. For example, when reading a line, they need to have an idea of what variables are in scope and what their values represent, under what conditions can the program reach that line, etc. To ease the review, programmers can shape their trees in a way that reduces cognitive workload for the reviewers.</p>
-<h4 id="the-depth-and-width-of-trees">The depth and width of trees</h4>
+<p><strong>The depth and width of trees</strong>:</p>
 <p>In order to reduce the cognitive workload of reviewers, prefer flat-and-wide trees to deep-and-narrow trees. This is because, in general, the conditions necessary to reach a deep node of the AST are more intricate.</p>
 <p>(Remember that, as explained above, end-heavy trees are similar to flat-and-wide trees.)</p>
 <p>Look back at the indentation examples above and notice how the end-heavy tree is easier to parse. In particular, consider what information you need to keep in mind when reviewing this tree. The conditions necessary to reach a given line is a conjunction of simple boolean expressions that appear above it. That conjunction grows regularly as you read more and more lines.</p>
 <p>Conversely, the beginning-heavy version requires more effort. Whether you take a line-by-line approach (in which you must first build up a conjunction of expressions, and then unwind it carefully one after the other in LIFO order) or a condition-by-condition approach (in which you read a condition and immediately move your attention to the <code>else</code>-branch before coming back to the <code>then</code>-branch), you need to keep more context in mind.</p>
-<h4 id="the-order-of-branches">The order of branches</h4>
+<p><strong>The order of branches</strong>:</p>
 <p>If you do have to include some deep trees, then prefer <strong>end-heavy</strong> trees. The heaviness being at the end means that the reviewer can understand the beginning part, commit that understanding to memory, and then move on to understand the rest. By contrast, a tree that is middle-heavy requires a lot of stack unwinding from the reviewer.</p>
 <p>Refer back to the indentation examples above and work through how your focus has to move through the text whilst you attempt to understand them.</p>
 <p>For the same reason, if you find yourself with a branch that requires a comment (because it is too hard to understand without it), then this branch should be placed at the end.</p>
@@ -264,7 +264,7 @@ let lines_of_file file =
     with
     | Ok lines -&gt; lines
     | Error exc -&gt; log_exception exc; exit 1</code></pre>
-<h4 id="structural-parallelism">Structural parallelism</h4>
+<p><strong>Structural parallelism</strong>:</p>
 <p>When two functions do similar things, their AST should be shaped similarly. When two variables hold similar values, the AST of the expressions that initialises them should be shaped similarly.</p>
 <p>In many cases, avoiding repetitions is easy: two functions that do similar things can often be made into a single function that accepts an additional parameter. Even when factoring the two functions into one is not possible, parts of them can sometimes still be factored out into a third function. Because of the relative ease with which programmers can avoid repetition, they tend to try to always avoid repetition.</p>
 <p>However, repetition is fine – especially when it simplifies the code.</p>
@@ -285,14 +285,14 @@ let lines_of_file file =
     else
         sum / len</code></pre>
 <p>The similarity in the structure of the function’s tree point to the similarities in the meaning of the function. Understanding the second version becomes a simple game of “spot the difference”. And a reviewer can easily cheat at such a game using tools such as <code>diff</code>.</p>
-<h3 id="use-positives">Use positives</h3>
+<h4 id="use-positives">Use positives</h4>
 <p>Avoid <code>not</code> in your conditional. Prefer <code>length collection &gt; threshold</code> rather than <code>not (length collection &lt;= threshold)</code>. The former is simpler to parse than the latter.</p>
 <p>Applying this piece of advice is often impossible because libraries don’t always export the needed values. Indeed, it is common for collection libraries to export <code>is_empty</code> without <code>has_at_least_one_element</code>.</p>
 <p>Exporting multiple values without increasing the expressive power of a library is often frowned upon: it bloats the interface, it increases the footprint of the namespace, it requires additional maintenance.</p>
 <p>Apply this advice when you can, but do not fret when you cannot. In general, it is less important than ordering the branches of your conditional.</p>
 <hr />
 <p>Let’s look back at the examples from the introduction, the pieces of code that spun this whole thing. We can apply the advice above to make the code more readable.</p>
-<h3 id="chaining-options">Chaining options</h3>
+<p><strong>Chaining options</strong>:</p>
 <p>The original parsing of the directory option looked like this.</p>
 <pre><code>let dir =
     match conf_dir () with
@@ -324,11 +324,11 @@ let lines_of_file file =
 
     default_directory</code></pre>
 <p>An even more readable version uses an abstraction to remove the repetitive boilerplate.</p>
-<pre><code>(** [&gt;||&gt;] separates multiple optional values and returns
-    the left-most one (i.e., the first one) that is
-    not [None].
-    More formally: [None &gt;||&gt; f] is [f ()]
-    and [Some v &gt;||&gt; _] is [v]. *)
+<pre><code>(* [&gt;||&gt;] separates multiple optional values and returns
+   the left-most one (i.e., the first one) that is
+   not [None].
+   More formally: [None &gt;||&gt; f] is [f ()]
+   and [Some v &gt;||&gt; _] is [v]. *)
 let ( &gt;||&gt; ) o if_none = match o with
     | Some v -&gt; v
     | None -&gt; if_none ()
@@ -337,7 +337,7 @@ let dir =
     dir_from_configuration ()
     &gt;||&gt; fun () -&gt; dir_from_command_line_argument ()
     &gt;||&gt; fun () -&gt; default_dir</code></pre>
-<h3 id="initialisation">Initialisation</h3>
+<p><strong>Initialisation</strong>:</p>
 <p>The original code setting up the formatters was as follows.</p>
 <pre><code>List.iter
     (fun (formatter, channel) -&gt;

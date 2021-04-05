@@ -6,7 +6,7 @@ I recently lost my first character in a [Dungeons and Dragons (D&D)](https://www
 It was a sad time.
 But it also gave me time to think about character death both as a D&D æsthetics (in the sense of the [Mechanics-Dynamics-Æsthetics](http://www.cs.northwestern.edu/~hunicke/MDA.pdf) framework), and more practically about how to handle it as a Dungeon Master (DM).
 
-# Some background
+## Some background
 
 Several months ago, we started playing a new campaign: [The Tomb of Annihilation](http://dnd.wizards.com/products/tabletop-games/rpg-products/tomb-annihilation).
 (There are no spoilers below, feel free to read.)
@@ -23,7 +23,7 @@ In combat, she was running around enemies, never staying in the same place – w
 Eventually, she got paralysed during a fight and, unable to move, died.
 
 
-# Character death æsthetics
+## Character death æsthetics
 
 The hit-point/damage mechanic gives rise to the character death dynamic which supports several æsthetics[^names][^goofy]:
 
@@ -51,7 +51,7 @@ And repeated character death is the easiest way to break them down – as explor
 [^goofy]: Note that I assume a non-goofy style of play. Æsthetics in goofy play are entirely different.
 
 
-# Æsthetics breakdown
+## Æsthetics breakdown
 
 The issue of the character death dynamic is: what to do afterwards?
 In the most commonly used option, the player makes a new character, the DM whisks the new character into the story, and the player can come back to the table after this interruption – typically, in the next session.
@@ -67,7 +67,7 @@ However, repetition of this standard option – as experienced in deadly campaig
 - **Expression**: you don't grow as attached to the characters that dies.
 
 
-# What to do as a DM?
+## What to do as a DM?
 
 As a DM, you bring forward all these æsthetics[^players] and try not to spoil them.
 In order to achieve this, you must put the characters into dangers real enough that they may die, but dangers rare enough that they don't die too often.
@@ -83,7 +83,7 @@ Where difficulty is managed through a mix of tuning the challenge rating of enco
 [^players]: Arguably, the players are also involved into bringing these æsthetics forward, but here I'm focusing on DM advice.
 
 
-# Alternative character death handling
+## Alternative character death handling
 
 Maybe the solution to avoiding æsthetics breakdown is to handle character death differently.
 
