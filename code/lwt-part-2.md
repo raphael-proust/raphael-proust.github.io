@@ -137,7 +137,7 @@ let bind p f =
 ```
 
 There are other uses of callbacks (in `join`, `choose`, etc.), but studying them does not provide more insight into the inner workings of Lwt.
-One of the thing to take from this model, one of the things that this model is accurate enough to describe, is that Lwt does not maintain a full list of all the existing promises in a data-structure.
+One of the things to take from this model, one of the things that this model is accurate enough to describe, is that Lwt does not maintain a full list of all the existing promises in a data-structure.
 
 For example, in the `bind` above, the final promise `p''` is created, then a reference to it is kept by the callbacks attached to `p`, and then it is returned.
 Lwt does not keep `p''` in a list/table/map of promises.

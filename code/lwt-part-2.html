@@ -95,7 +95,7 @@ let wakeup_exn p exc =
     (fun exc -&gt; wakeup_exn r exc);
   (* return the final promise *)
   p&#39;&#39;</code></pre>
-<p>There are other uses of callbacks (in <code>join</code>, <code>choose</code>, etc.), but studying them does not provide more insight into the inner workings of Lwt. One of the thing to take from this model, one of the things that this model is accurate enough to describe, is that Lwt does not maintain a full list of all the existing promises in a data-structure.</p>
+<p>There are other uses of callbacks (in <code>join</code>, <code>choose</code>, etc.), but studying them does not provide more insight into the inner workings of Lwt. One of the things to take from this model, one of the things that this model is accurate enough to describe, is that Lwt does not maintain a full list of all the existing promises in a data-structure.</p>
 <p>For example, in the <code>bind</code> above, the final promise <code>p''</code> is created, then a reference to it is kept by the callbacks attached to <code>p</code>, and then it is returned. Lwt does not keep <code>p''</code> in a list/table/map of promises. There are some exceptions to this which we mention below.</p>
 <h2 id="cancellation">Cancellation</h2>
 <p><code>Lwt.Canceled: exn</code><br />
