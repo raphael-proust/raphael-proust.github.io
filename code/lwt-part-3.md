@@ -312,7 +312,7 @@ Avoid calling `wakeup` and other such functions: `wakeup_exn`, and even the some
 
 You can move the promise resolution either syntactically or programmatically.
 For the former case, simply move the call to `wakeup` to the end of your critical section.
-For the latter case, simply replace the call with `ignore (Lwt.pause () >>= fun () -> Lwt.wakeup wakey (); Lwt.return)`.
+For the latter case, simply replace the call with `ignore (Lwt.pause () >>= fun () -> Lwt.wakeup wakey (); Lwt.return ())`.
 
 An important caveat: some other functions may also resolve promises.
 For example, pushing a value into a stream may resolve a promise that is waiting for a value to appear on that stream.
