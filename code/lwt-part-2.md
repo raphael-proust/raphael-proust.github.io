@@ -181,17 +181,18 @@ Consider the following code with uninteresting details elided:
 
 ```
 let p =
-  .. >>= fun .. ->
-  .. >>= fun .. ->
+  let* .. = .. in
+  let* .. = .. in
   let .. = .. in
   let .. = .. in
-  .. >>= fun .. ->
-  .. >>= function
+  let* .. = .. in
+  let* .. = .. in
+  match .. with
   | .. -> return ..
   | .. ->
-    .. >>= fun .. ->
+    let* .. = .. in
     let .. = .. in
-    .. >>= fun .. ->
+    let* .. = .. in
     return ..
 ```
 

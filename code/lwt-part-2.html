@@ -113,17 +113,18 @@ wakeup r 0 ;;</code></pre>
 <h3 id="the-semantics-of-simple-cancellation">The semantics of simple cancellation</h3>
 <p>The specific semantics of cancellation (detailed below) are inherited from a way of thinking about threads rather than promises. Consider the following code with uninteresting details elided:</p>
 <pre><code>let p =
-  .. &gt;&gt;= fun .. -&gt;
-  .. &gt;&gt;= fun .. -&gt;
+  let* .. = .. in
+  let* .. = .. in
   let .. = .. in
   let .. = .. in
-  .. &gt;&gt;= fun .. -&gt;
-  .. &gt;&gt;= function
+  let* .. = .. in
+  let* .. = .. in
+  match .. with
   | .. -&gt; return ..
   | .. -&gt;
-    .. &gt;&gt;= fun .. -&gt;
+    let* .. = .. in
     let .. = .. in
-    .. &gt;&gt;= fun .. -&gt;
+    let* .. = .. in
     return ..</code></pre>
 <p>The control-flow within <code>p</code> is relatively simple: it mostly goes from line to line traversing bind operators and there is a single branching point. The control-flow is simple enough that it is easy to think about <code>p</code> as a “thread”: a series of instructions that execute in relative independence to the rest of the program. Or, slightly more but not entirely accurate, you can think of <code>p</code> as a promise and the expression that <code>p</code> is bound to as a thread which eventually resolves <code>p</code>. Either way, the <code>cancel</code> function works well on the “thread” <code>p</code>: it interrupts the thread at whatever point of its execution it currently is.</p>
 <p>The correct, thread-less, description is that <code>cancel p</code> finds whichever of the intermediate promise of <code>p</code> is currently pending and rejects it with <code>Canceled</code>.</p>

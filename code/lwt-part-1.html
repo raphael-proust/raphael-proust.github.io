@@ -22,6 +22,7 @@
 <div id="header">
 <h1 class="title">Lwt introduction/tutorial Part 1 of 2</h1>
 </div>
+<p>EDIT NOTICE (2021-10-19): This tutorial has been updated to introduce the binding operators of <code>Lwt.Syntax</code> early and to use them in the code fragments.</p>
 <p><a href="http://ocsigen.org/lwt">Lwt</a> (<a href="https://github.com/ocsigen/lwt/">code</a>) is a library for writing concurrent programs in OCaml. It is used in multiple OCaml projects including <a href="https://www.cis.upenn.edu/~bcpierce/unison/">Unison</a> (<a href="https://github.com/bcpierce00/unison">code</a>), <a href="https://ocsigen.org/home/intro.html">Ocsigen</a> (<a href="https://github.com/ocsigen/">code</a>), <a href="https://mirage.io/">Mirage</a> (<a href="https://github.com/mirage/">code</a>) and <a href="https://tezos.com/">Tezos</a> (<a href="https://gitlab.com/tezos/tezos/">code</a>).</p>
 <p>I recently ran some internal training at <a href="https://nomadic-labs.com/">Nomadic Labs</a> about Lwt: What it is? How to use it effectively? What to watch out for? Etc. Below is a write-up of that training. It covers: basic concepts (promises, states), simple use, description of the internals, and advanced use (cancellation and exception propagation).</p>
 <h2 id="prelude">Prelude</h2>
@@ -100,13 +101,23 @@ val state: &#39;a t -&gt; &#39;a state</code></pre>
 </ul></li>
 </ul>
 <p>Note that the notion of “becomes behaviourally identical to” is vague. We give more details in Part 2 of this tutorial. For now, it means that the promise resolves at the same time and with the same value/exception.</p>
-<p><code>Lwt.( &gt;&gt;= ) : 'a t -&gt; ('a -&gt; 'b t) -&gt; 'b t</code><br />
-The infix operator <code>&gt;&gt;=</code> is an alias for <code>bind</code>. It is provided to allow for the use of the monadic style.</p>
+<p><code>Lwt.Syntax.( let* ) : 'a t -&gt; ('a -&gt; 'b t) -&gt; 'b t</code><br />
+The binding operator <code>let*</code> is an alias for <code>bind</code>. It is provided to allow better syntax.</p>
+<pre><code>let open Lwt.Syntax in
+let* handle = open_file name in
+let* lines = read_lines handle in
+let* lines = keep_matches pattern lines in
+let* () = print_lines lines in
+…</code></pre>
+<p><code>Lwt.Infix.( &gt;&gt;= ) : 'a t -&gt; ('a -&gt; 'b t) -&gt; 'b t</code><br />
+<code>Lwt.( &gt;&gt;= ) : 'a t -&gt; ('a -&gt; 'b t) -&gt; 'b t</code><br />
+The infix operator <code>&gt;&gt;=</code> (available directly at the top-level of the module or in the <code>Infix</code> submodule) is also an alias for <code>bind</code>. It is provided to allow better syntax. Because binding operators are newer than infix operators, a lot of code that uses Lwt uses this form.</p>
 <pre><code>open_file name &gt;&gt;= fun handle -&gt;
 read_lines handle &gt;&gt;= fun lines -&gt;
 keep_matches pattern lines &gt;&gt;= fun lines -&gt;
 print_lines lines &gt;&gt;= fun () -&gt;
 …</code></pre>
+<p>The rest of this tutorial uses the <code>let*</code> form. In fact we consider the <code>Syntax</code> module to be open in all the code fragments. There are still a few occurrences of <code>&gt;&gt;=</code>, but only for “piping”, i.e., as an Lwt-aware form of <code>|&gt;</code>.</p>
 <p><code>Lwt.fail: exn -&gt; 'a t</code><br />
 <code>fail exc</code> evaluates immediately to a promise that is already rejected with the exception <code>exc</code>. Note that, as we discuss below, the use of <code>fail</code> should be reserved for populating data-structures (and other similar tasks) but that, within one of Lwt’s function, the use of <code>raise</code> is preferred.</p>
 <h3 id="resolvers">Resolvers</h3>
@@ -133,6 +144,17 @@ print_lines lines &gt;&gt;= fun () -&gt;
 <code>all ps</code> is a promise that resolves when all the promises in <code>ps</code> have done so. If all the promises of <code>ps</code> are already resolved when the call is made, then an already resolved promise is returned. Note that if any of the promises is rejected, then the <code>all</code>-promise is also rejected (after all the other promises are resolved). Otherwise, if all the promises are fulfilled, then the <code>all</code>-promise is also fulfilled. The value that <code>all ps</code> is fulfilled with is a list of the values that the promises of <code>ps</code> are fulfilled with. The order of the values is preserved.</p>
 <p><code>Lwt.both: 'a t -&gt; 'b t -&gt; ('a * 'b) t</code><br />
 <code>both p q</code> is a promise that resolves when both <code>p</code> and <code>q</code> have done so. If both <code>p</code> and <code>q</code> are already resolved when the call is made, then an already resolved promise is returned. Note that if either of <code>p</code> or <code>q</code> is rejected, then the <code>both</code>-promise is also rejected (after both <code>p</code> and <code>q</code> are resolved). Otherwise, if both <code>p</code> and <code>q</code> are fulfilled, then the <code>both</code>-promise is also fulfilled.</p>
+<p><code>Lwt.Syntax.( and* ) : 'a t -&gt; 'b t -&gt; ('a * 'b) t</code><br />
+The binding operator <code>and*</code> is an alias for <code>both</code>. It is provided for better syntax.</p>
+<pre><code>(* all writes happen concurrently *)
+let* b1 = write_to_disk data
+and* b2 = write_to_server site_A data
+and* b3 = write_to_server site_B data
+in
+if b1 &amp;&amp; b2 &amp;&amp; b3 then
+  return &quot;Data has been backed up&quot;
+else
+  return &quot;Data has _NOT_ been successfully backed up&quot;</code></pre>
 <p><code>Lwt.choose: 'a t list -&gt; 'a t</code><br />
 <code>choose ps</code> is a promise that resolves as soon as one of the promises in <code>ps</code> has done so. If one or more of the promises in <code>ps</code> are already resolved when the call is made, then an already promise is returned. Note that if the first promise to resolve is rejected, so is the choice promise. And vice-versa if the first promise to resolve is fulfilled, so is the choice promise. If multiple promises resolve at the same time (the condition for which we will discuss later), then a promise is chosen arbitrarily.</p>
 <h2 id="exception-catching">Exception catching</h2>
@@ -141,20 +163,20 @@ The function <code>catch</code> attaches a handler to a given promise. The handl
 <pre><code>let load_setting key =
   catch
     (fun () -&gt;
-      find_setting key &gt;&gt;= fun value -&gt;
+      let* value = find_setting key in
       let value = normalize value in
       if not (is_valid key value) then
         raise (Config_error &quot;Invalid value&quot;);
-      log &quot;CONF: %s-%s&quot; key value &gt;&gt;= fun () -&gt;
-      record_setting key value &gt;&gt;= fun () -&gt;
+      let* () = log &quot;CONF: %s-%s&quot; key value in
+      let* () = record_setting key value in
       return value
     )
     (function
       | Not_found -&gt;
-        log &quot;CONF: no value for %s&quot; key &gt;&gt;= fun () -&gt;
+        let* () = log &quot;CONF: no value for %s&quot; key in
         return (default_setting key)
       | Invalid_argument msg -&gt;
-        log &quot;CONF: invalid value for %s&quot; key &gt;&gt;= fun () -&gt;
+        let* () = log &quot;CONF: invalid value for %s&quot; key in
         raise (Config_error &quot;Cannot normalise value&quot;)
       | exc -&gt; raise exc)</code></pre>
 <p>In this expression, the promise simply loads some information and does some minor processing on the value. The handler treats different errors differently: It recovers from the <code>Not_found</code> exception by providing a default value. It transform <code>Invalid_argument</code> into a different exception. It reraises any other (unexpected) exception.</p>
@@ -174,25 +196,25 @@ The function <code>finalize</code> is similar to <code>try_bind</code> except it
 <code>pause ()</code> is a pending promise which is resolved after all the other promises have been given a chance to progress towards resolution. In Part 2 of this introduction/tutorial, we will talk in more details about the scheduling in Lwt, including the precise scheduling of <code>pause</code>. In the mean time, from a practical point of view, <code>pause</code> introduces explicit points in the program where a promise is kept pending for a short time. Consider the following program and the importance of <code>pause</code>: without it, the call to <code>count</code> loops forever consuming all the CPU and the value <code>counting</code> never evaluates to anything.</p>
 <pre><code>let r = ref 0 ;;
 let rec count () =
-  pause () &gt;&gt;= fun () -&gt;
+  let* () = pause () in
   incr r;
   count () ;;
 let rec exit_on n =
   if !r &gt;= n then
     raise Exit
   else begin
-    pause () &gt;&gt;= fun () -&gt;
+    let* () = pause () in
     exit_on n
   end ;;
 let main () =
   let counting = count () in
   let exiting = exit_on 10 in
   choose [ counting ; exiting ] ;;</code></pre>
-<p>Note that <code>return</code> and <code>bind</code> are no substitute for <code>pause</code>. Specifically, the below variant of the <code>count</code> function loops forever. This is because <code>Lwt.return ()</code> evaluates to an already resolved promise which causes <code>Lwt.( &gt;&gt;= )</code> to evaluates its right-hand side argument immediately.</p>
+<p>Note that <code>return</code> and <code>bind</code> are no substitute for <code>pause</code>. Specifically, the below variant of the <code>count</code> function loops forever. This is because <code>Lwt.return ()</code> evaluates to an already resolved promise which causes <code>Lwt.bind</code> (aliased by <code>Lwt.( let* )</code>) to evaluates its right-hand side argument immediately.</p>
 <pre><code>(* This is incorrect: it loops forever *)
 let rec count () =
   incr r;
-  Lwt.return () &gt;&gt;= fun () -&gt;
+  let* () = Lwt.return () in
   count () ;;</code></pre>
 <p><code>Lwt_main.yield: unit -&gt; unit t</code><br />
 The function <code>yield</code> is a synonym for <code>pause</code>. It exists for historical reasons: <code>pause</code> was added later as a backend-independent yielding mechanism. There are minor differences between <code>pause</code> and <code>yield</code>, but no difference that you should rely on.</p>

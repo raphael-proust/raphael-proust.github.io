@@ -88,8 +88,8 @@ val on_rejection: 'a t -> (exn -> unit) -> unit
 (* MONADIC INTERFACE *)
 
 val return: 'a -> 'a t
-val ( >>= ): 'a t -> ('a -> 'b t) -> 'b t
 val ( let* ): 'a t -> ('a -> 'b t) -> 'b t
+val ( >>= ): 'a t -> ('a -> 'b t) -> 'b t
 ```
 
 
@@ -173,11 +173,11 @@ let stop_point, wakey = Lwt.task ()
 
 let side_promise, wakey =
   print_endline "Side 1";
-  stop_point (* wait for event *) >>= fun () ->
+  let* () = stop_point (* wait for event *) in
   print_endline "Side 2";
-  Lwt.pause () (* wait one iteration *) >>= fun () ->
+  let* () = Lwt.pause () (* wait one iteration *) in
   print_endline "Side 3";
-  Lwt.pause () (* wait another iteration *) >>= fun () ->
+  let* () = Lwt.pause () (* wait another iteration *) in
   print_endline "Side 4";
   Lwt.return ()
 
@@ -185,7 +185,7 @@ let main_promise =
   print_endline "Main 1";
   Lwt.wakeup wakey () (* send event *);
   print_endline "Main 2";
-  Lwt.pause () (* wait one iteration *) >>= fun () ->
+  let* () = Lwt.pause () (* wait one iteration *) in
   print_endline "Main 3";
   Lwt.return ()
 
@@ -217,7 +217,7 @@ Scheduler ends
    The AST for `side_promise` starts with a sequence the left-hand side of which is executed.
    This produces the output `Side 1` as a side-effect.
 
-   The right-hand side of the sequence in `side_promise`'s AST is a call to `bind` (through the infix alias `>>=`).
+   The right-hand side of the sequence in `side_promise`'s AST is a call to `bind` (through the binding operator alias `let*`).
    The first argument of this bind is `stop_point`.
    Because this first argument is a pending promise, `bind` creates a pending promise and attaches a callback to `stop_point`.
    The callback is responsible for making the pending promise created by `bind` progress when `stop_point` becomes resolved.
@@ -312,7 +312,7 @@ Avoid calling `wakeup` and other such functions: `wakeup_exn`, and even the some
 
 You can move the promise resolution either syntactically or programmatically.
 For the former case, simply move the call to `wakeup` to the end of your critical section.
-For the latter case, simply replace the call with `ignore (Lwt.pause () >>= fun () -> Lwt.wakeup wakey (); Lwt.return ())`.
+For the latter case, simply replace the call with `ignore (let* () = Lwt.pause () in fun () -> Lwt.wakeup wakey (); Lwt.return ())`.
 
 An important caveat: some other functions may also resolve promises.
 For example, pushing a value into a stream may resolve a promise that is waiting for a value to appear on that stream.
@@ -322,19 +322,19 @@ It means that the following program might print an interrupted greeting.
 let (s, push) = Lwt_stream.create ()
 
 let p =
-  Lwt_stream.next s >>= fun () ->
+  let* () = Lwt_stream.next s in
   print_string "\nBANG\n!";
   Lwt.return ()
 
 let main_promise =
   …
-  Lwt.pause () >>= fun () ->
+  let* () = Lwt.pause () in
   (* critical section begins *)
   print_string "Hello ";
   push (Some ());
   print_string "World!";
   (* critical section ends *)
-  Lwt.pause () >>= fun () ->
+  let* () = Lwt.pause () in
   …
 ```
 
@@ -342,25 +342,6 @@ Unfortunately, the documentation of `Lwt_stream` and other Lwt-adjacent librarie
 If you observe "interleaving", you will need to find which function is responsible for it and this task might involve reading some source code.
 Once you have found this function, please consider contributing some documentation to the project it appears in.
 
-
-## Addendum: `let*`, `and*`, `let+`, `and+`
-
-OCaml 4.08 introduced [binding operators](http://caml.inria.fr/pub/distrib/ocaml-4.08/ocaml-4.08-refman.html#s%3Abinding-operators): `let*`/`and*` syntax for monads.
-
-This syntax is [available for Lwt starting with version 5.3.0](https://discuss.ocaml.org/t/lwt-now-has-let-syntax/5651).
-
-When using this syntax, you simply replace `e1 >>= fun v -> e2` by `let* v = e1 in e2`.
-Similarly, you replace `e1 >|= fun v -> e2` by `let+ v = e1 in e2`.
-
-These new forms resemble vanilla OCaml as illustrated by the following code, equivalent to an example from [part 1](/code/lwt-part-1.html).
-
-```
-let* handle = open_file name in
-let* lines = read_lines handle in
-let* lines = keep_matches pattern lines in
-let* () = print_lines lines in
-…
-```
 
 ## Addendum: other promise systems
 
@@ -403,7 +384,7 @@ Javascript Promises are similar to that of Lwt with the main differences being:
 - Javascript's flexibility in terms of typing allows for more overloading (e.g., see `then` in the table below).
 
 It is fairly easy to learn the basics of one system when you know the other.
-In fact, the monadic style adopted by Lwt maps well onto the method-chaining style used for Promises.
+In fact, the infix monadic style of Lwt maps well onto the method-chaining style used for Promises.
 This is demonstrated by the two following samples.
 
 ```
@@ -416,6 +397,24 @@ return (x+dx, y+dy)
 get_coordinates().then((x, y) => {
 get_input().then((dx, dy) => {
 return(x+dx, y+dy)})})
+```
+
+And the binding operator style of Lwt maps well onto the async/await style used for Promises.
+This is demonstrated by the two following samples.
+
+```
+let translate () =
+  let* (x, y) = get_coordinates () in
+  let* (dx, dy) = get_input () in
+  return (x+dx, y+dy)
+```
+
+```
+async function translate() {
+  let (x, y) = await get_coordinates();
+  let (dx, dy) = await get_input();
+  (x+dx, y+dy)
+}
 ```
 
 (Note that a lighter syntax is possible in Javascript through the use of the `await` keyword which is roughly similar to the `let*` binding from Lwt.)
@@ -448,5 +447,4 @@ A rough equivalence table for the `Promise` object:
 
 There are some subtle differences about error management and some not so subtle differences inherited from the distinct typing disciplines (e.g., `>>=` and `>|=` correspond to the same `.then` method).
 Despite those differences, the two systems are similar enough that familiarity with one helps to learn the other.
-
 

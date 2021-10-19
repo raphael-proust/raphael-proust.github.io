@@ -84,8 +84,8 @@ val on_rejection: &#39;a t -&gt; (exn -&gt; unit) -&gt; unit
 (* MONADIC INTERFACE *)
 
 val return: &#39;a -&gt; &#39;a t
-val ( &gt;&gt;= ): &#39;a t -&gt; (&#39;a -&gt; &#39;b t) -&gt; &#39;b t
-val ( let* ): &#39;a t -&gt; (&#39;a -&gt; &#39;b t) -&gt; &#39;b t</code></pre>
+val ( let* ): &#39;a t -&gt; (&#39;a -&gt; &#39;b t) -&gt; &#39;b t
+val ( &gt;&gt;= ): &#39;a t -&gt; (&#39;a -&gt; &#39;b t) -&gt; &#39;b t</code></pre>
 <h2 id="the-ecosystem">The ecosystem</h2>
 <p>Lwt provides a useful abstraction for handling concurrency in OCaml. But further abstractions are sometimes necessary. Some of these abstractions are distributed with Lwt:</p>
 <p><code>Lwt_unix</code> and the rest of the <code>lwt.unix</code> sub-library provide Lwt-aware interface to the operating system. The main role of this library is to provide wrappers around potentially blocking system calls. There is more details about it in.</p>
@@ -117,11 +117,11 @@ run p data</code></pre>
 
 let side_promise, wakey =
   print_endline &quot;Side 1&quot;;
-  stop_point (* wait for event *) &gt;&gt;= fun () -&gt;
+  let* () = stop_point (* wait for event *) in
   print_endline &quot;Side 2&quot;;
-  Lwt.pause () (* wait one iteration *) &gt;&gt;= fun () -&gt;
+  let* () = Lwt.pause () (* wait one iteration *) in
   print_endline &quot;Side 3&quot;;
-  Lwt.pause () (* wait another iteration *) &gt;&gt;= fun () -&gt;
+  let* () = Lwt.pause () (* wait another iteration *) in
   print_endline &quot;Side 4&quot;;
   Lwt.return ()
 
@@ -129,7 +129,7 @@ let main_promise =
   print_endline &quot;Main 1&quot;;
   Lwt.wakeup wakey () (* send event *);
   print_endline &quot;Main 2&quot;;
-  Lwt.pause () (* wait one iteration *) &gt;&gt;= fun () -&gt;
+  let* () = Lwt.pause () (* wait one iteration *) in
   print_endline &quot;Main 3&quot;;
   Lwt.return ()
 
@@ -151,7 +151,7 @@ Scheduler ends</code></pre>
 <li><p>The standard OCaml top-down execution starts with the first <code>let</code>-binding: <code>Lwt.task</code> is called, it creates a pending promise and a resolver, these are bound to <code>stop_point</code> and <code>wakey</code> respectively.</p></li>
 <li><p>The standard OCaml top-down execution continues with the evaluation of <code>side_promise</code>.</p>
 <p>The AST for <code>side_promise</code> starts with a sequence the left-hand side of which is executed. This produces the output <code>Side 1</code> as a side-effect.</p>
-<p>The right-hand side of the sequence in <code>side_promise</code>’s AST is a call to <code>bind</code> (through the infix alias <code>&gt;&gt;=</code>). The first argument of this bind is <code>stop_point</code>. Because this first argument is a pending promise, <code>bind</code> creates a pending promise and attaches a callback to <code>stop_point</code>. The callback is responsible for making the pending promise created by <code>bind</code> progress when <code>stop_point</code> becomes resolved. The pending promise created by <code>bind</code> is returned.</p>
+<p>The right-hand side of the sequence in <code>side_promise</code>’s AST is a call to <code>bind</code> (through the binding operator alias <code>let*</code>). The first argument of this bind is <code>stop_point</code>. Because this first argument is a pending promise, <code>bind</code> creates a pending promise and attaches a callback to <code>stop_point</code>. The callback is responsible for making the pending promise created by <code>bind</code> progress when <code>stop_point</code> becomes resolved. The pending promise created by <code>bind</code> is returned.</p>
 <p>The returned pending promise is now bound to the variable <code>side_promise</code>.</p></li>
 <li><p>The standard OCaml top-down execution continues: <code>main_promise</code> begins to be evaluated.</p>
 <p>The AST for <code>main_promise</code> is a (semi-colon-separated) sequence of three statements, followed by a call to <code>bind</code>. The sequence starts evaluating in order. The first statement produces the output <code>Main 1</code>.</p>
@@ -179,36 +179,26 @@ Scheduler ends</code></pre>
 <p>When you reason about promises as threads, this is unintuitive: it appears as a kind of context-switch without an explicit cooperation point between the cooperative threads. However, there are no threads and there isn’t even any “interleaving”: there are just callbacks attached and called in order to make progress towards resolution. And explicit yield points (the calls to <code>Lwt.pause</code> and <code>Lwt_unix.yield</code>) are mechanisms through which a promise’ own resolution is delayed in order to allow other promises to progress towards resolution on their own.</p>
 <p>What happens in the example above is actually that the code that makes the <code>main_promise</code> progress towards resolution (the expression that evaluates to <code>main_promise</code>) also makes the <code>side_promise</code> progress towards resolution. The call to <code>wakeup</code> in the code that makes <code>main_promise</code> progress also makes <code>side_promise</code> progress.</p>
 <p>In order to avoid this behaviour, this perceived interleaving, from happening, you merely need to not resolve other promises within your critical sections. Avoid calling <code>wakeup</code> and other such functions: <code>wakeup_exn</code>, and even the somewhat misleadingly named <code>wakeup_later</code>.</p>
-<p>You can move the promise resolution either syntactically or programmatically. For the former case, simply move the call to <code>wakeup</code> to the end of your critical section. For the latter case, simply replace the call with <code>ignore (Lwt.pause () &gt;&gt;= fun () -&gt; Lwt.wakeup wakey (); Lwt.return ())</code>.</p>
+<p>You can move the promise resolution either syntactically or programmatically. For the former case, simply move the call to <code>wakeup</code> to the end of your critical section. For the latter case, simply replace the call with <code>ignore (let* () = Lwt.pause () in fun () -&gt; Lwt.wakeup wakey (); Lwt.return ())</code>.</p>
 <p>An important caveat: some other functions may also resolve promises. For example, pushing a value into a stream may resolve a promise that is waiting for a value to appear on that stream. It means that the following program might print an interrupted greeting.</p>
 <pre><code>let (s, push) = Lwt_stream.create ()
 
 let p =
-  Lwt_stream.next s &gt;&gt;= fun () -&gt;
+  let* () = Lwt_stream.next s in
   print_string &quot;\nBANG\n!&quot;;
   Lwt.return ()
 
 let main_promise =
   …
-  Lwt.pause () &gt;&gt;= fun () -&gt;
+  let* () = Lwt.pause () in
   (* critical section begins *)
   print_string &quot;Hello &quot;;
   push (Some ());
   print_string &quot;World!&quot;;
   (* critical section ends *)
-  Lwt.pause () &gt;&gt;= fun () -&gt;
+  let* () = Lwt.pause () in
   …</code></pre>
 <p>Unfortunately, the documentation of <code>Lwt_stream</code> and other Lwt-adjacent libraries is often insufficient to understand which non-yielding function may lead to promise resolution and the corresponding execution of attached callbacks. If you observe “interleaving”, you will need to find which function is responsible for it and this task might involve reading some source code. Once you have found this function, please consider contributing some documentation to the project it appears in.</p>
-<h2 id="addendum-let-and-let-and">Addendum: <code>let*</code>, <code>and*</code>, <code>let+</code>, <code>and+</code></h2>
-<p>OCaml 4.08 introduced <a href="http://caml.inria.fr/pub/distrib/ocaml-4.08/ocaml-4.08-refman.html#s%3Abinding-operators">binding operators</a>: <code>let*</code>/<code>and*</code> syntax for monads.</p>
-<p>This syntax is <a href="https://discuss.ocaml.org/t/lwt-now-has-let-syntax/5651">available for Lwt starting with version 5.3.0</a>.</p>
-<p>When using this syntax, you simply replace <code>e1 &gt;&gt;= fun v -&gt; e2</code> by <code>let* v = e1 in e2</code>. Similarly, you replace <code>e1 &gt;|= fun v -&gt; e2</code> by <code>let+ v = e1 in e2</code>.</p>
-<p>These new forms resemble vanilla OCaml as illustrated by the following code, equivalent to an example from <a href="/code/lwt-part-1.html">part 1</a>.</p>
-<pre><code>let* handle = open_file name in
-let* lines = read_lines handle in
-let* lines = keep_matches pattern lines in
-let* () = print_lines lines in
-…</code></pre>
 <h2 id="addendum-other-promise-systems">Addendum: other promise systems</h2>
 <p>Some other programming languages have concurrency systems that are roughly equivalent to OCaml’s Lwt. This section lists some of them. It includes more links than details because the differences can be quite subtle and I am not proficient enough in each of the rough equivalents below.</p>
 <h3 id="ocamls-async">OCaml’s Async</h3>
@@ -226,13 +216,23 @@ let* () = print_lines lines in
 <li>the interface is smaller and focuses on providing the basic primitives, and</li>
 <li>Javascript’s flexibility in terms of typing allows for more overloading (e.g., see <code>then</code> in the table below).</li>
 </ul>
-<p>It is fairly easy to learn the basics of one system when you know the other. In fact, the monadic style adopted by Lwt maps well onto the method-chaining style used for Promises. This is demonstrated by the two following samples.</p>
+<p>It is fairly easy to learn the basics of one system when you know the other. In fact, the infix monadic style of Lwt maps well onto the method-chaining style used for Promises. This is demonstrated by the two following samples.</p>
 <pre><code>get_coordinates () &gt;&gt;= fun (x, y) -&gt;
 get_input () &gt;&gt;= fun (dx, dy) -&gt;
 return (x+dx, y+dy)</code></pre>
 <pre><code>get_coordinates().then((x, y) =&gt; {
 get_input().then((dx, dy) =&gt; {
 return(x+dx, y+dy)})})</code></pre>
+<p>And the binding operator style of Lwt maps well onto the async/await style used for Promises. This is demonstrated by the two following samples.</p>
+<pre><code>let translate () =
+  let* (x, y) = get_coordinates () in
+  let* (dx, dy) = get_input () in
+  return (x+dx, y+dy)</code></pre>
+<pre><code>async function translate() {
+  let (x, y) = await get_coordinates();
+  let (dx, dy) = await get_input();
+  (x+dx, y+dy)
+}</code></pre>
 <p>(Note that a lighter syntax is possible in Javascript through the use of the <code>await</code> keyword which is roughly similar to the <code>let*</code> binding from Lwt.)</p>
 <p>A rough equivalence table for the <code>Promise</code> object:</p>
 <table style="width:97%;">

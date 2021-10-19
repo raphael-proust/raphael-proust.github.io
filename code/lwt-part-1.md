@@ -2,6 +2,9 @@
 title: Lwt introduction/tutorial Part 1 of 2
 ...
 
+EDIT NOTICE (2021-10-19): This tutorial has been updated to introduce the binding operators of `Lwt.Syntax` early and to use them in the code fragments.
+
+
 [Lwt](http://ocsigen.org/lwt) ([code](https://github.com/ocsigen/lwt/)) is a library for writing concurrent programs in OCaml.
 It is used in multiple OCaml projects including
 [Unison](https://www.cis.upenn.edu/~bcpierce/unison/) ([code](https://github.com/bcpierce00/unison)),
@@ -131,9 +134,24 @@ Note that the notion of “becomes behaviourally identical to” is vague.
 We give more details in Part 2 of this tutorial.
 For now, it means that the promise resolves at the same time and with the same value/exception.
 
+`Lwt.Syntax.( let* ) : 'a t -> ('a -> 'b t) -> 'b t`  
+The binding operator `let*` is an alias for `bind`.
+It is provided to allow better syntax.
+
+```
+let open Lwt.Syntax in
+let* handle = open_file name in
+let* lines = read_lines handle in
+let* lines = keep_matches pattern lines in
+let* () = print_lines lines in
+…
+```
+
+`Lwt.Infix.( >>= ) : 'a t -> ('a -> 'b t) -> 'b t`  
 `Lwt.( >>= ) : 'a t -> ('a -> 'b t) -> 'b t`  
-The infix operator `>>=` is an alias for `bind`.
-It is provided to allow for the use of the monadic style.
+The infix operator `>>=` (available directly at the top-level of the module or in the `Infix` submodule) is also an alias for `bind`.
+It is provided to allow better syntax.
+Because binding operators are newer than infix operators, a lot of code that uses Lwt uses this form.
 
 ```
 open_file name >>= fun handle ->
@@ -142,6 +160,10 @@ keep_matches pattern lines >>= fun lines ->
 print_lines lines >>= fun () ->
 …
 ```
+
+The rest of this tutorial uses the `let*` form.
+In fact we consider the `Syntax` module to be open in all the code fragments.
+There are still a few occurrences of `>>=`, but only for "piping", i.e., as an Lwt-aware form of `|>`.
 
 `Lwt.fail: exn -> 'a t`  
 `fail exc` evaluates immediately to a promise that is already rejected with the exception `exc`.
@@ -202,6 +224,22 @@ If both `p` and `q` are already resolved when the call is made, then an already 
 Note that if either of `p` or `q` is rejected, then the `both`-promise is also rejected (after both `p` and `q` are resolved).
 Otherwise, if both `p` and `q` are fulfilled, then the `both`-promise is also fulfilled.
 
+`Lwt.Syntax.( and* ) : 'a t -> 'b t -> ('a * 'b) t`  
+The binding operator `and*` is an alias for `both`.
+It is provided for better syntax.
+
+```
+(* all writes happen concurrently *)
+let* b1 = write_to_disk data
+and* b2 = write_to_server site_A data
+and* b3 = write_to_server site_B data
+in
+if b1 && b2 && b3 then
+  return "Data has been backed up"
+else
+  return "Data has _NOT_ been successfully backed up"
+```
+
 `Lwt.choose: 'a t list -> 'a t`  
 `choose ps` is a promise that resolves as soon as one of the promises in `ps` has done so.
 If one or more of the promises in `ps` are already resolved when the call is made, then an already promise is returned.
@@ -222,20 +260,20 @@ Typical use is along the lines of:
 let load_setting key =
   catch
     (fun () ->
-      find_setting key >>= fun value ->
+      let* value = find_setting key in
       let value = normalize value in
       if not (is_valid key value) then
         raise (Config_error "Invalid value");
-      log "CONF: %s-%s" key value >>= fun () ->
-      record_setting key value >>= fun () ->
+      let* () = log "CONF: %s-%s" key value in
+      let* () = record_setting key value in
       return value
     )
     (function
       | Not_found ->
-        log "CONF: no value for %s" key >>= fun () ->
+        let* () = log "CONF: no value for %s" key in
         return (default_setting key)
       | Invalid_argument msg ->
-        log "CONF: invalid value for %s" key >>= fun () ->
+        let* () = log "CONF: invalid value for %s" key in
         raise (Config_error "Cannot normalise value")
       | exc -> raise exc)
 ```
@@ -288,14 +326,14 @@ Consider the following program and the importance of `pause`: without it, the ca
 ```
 let r = ref 0 ;;
 let rec count () =
-  pause () >>= fun () ->
+  let* () = pause () in
   incr r;
   count () ;;
 let rec exit_on n =
   if !r >= n then
     raise Exit
   else begin
-    pause () >>= fun () ->
+    let* () = pause () in
     exit_on n
   end ;;
 let main () =
@@ -306,13 +344,13 @@ let main () =
 
 Note that `return` and `bind` are no substitute for `pause`.
 Specifically, the below variant of the `count` function loops forever.
-This is because `Lwt.return ()` evaluates to an already resolved promise which causes `Lwt.( >>= )` to evaluates its right-hand side argument immediately.
+This is because `Lwt.return ()` evaluates to an already resolved promise which causes `Lwt.bind` (aliased by `Lwt.( let* )`) to evaluates its right-hand side argument immediately.
 
 ```
 (* This is incorrect: it loops forever *)
 let rec count () =
   incr r;
-  Lwt.return () >>= fun () ->
+  let* () = Lwt.return () in
   count () ;;
 ```
 
