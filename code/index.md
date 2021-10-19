@@ -18,6 +18,7 @@ Thoughts, articles, posts about code, programming languages, etc.
 
 [(2020-06-06) Lwt tutorial/introduction Part 1 of 2](/code/lwt-part-1.html)  
 [(2020-06-06) Lwt tutorial/introduction Part 2 of 2](/code/lwt-part-2.html)  
-[(2020-06-06) Lwt tutorial/introduction Part 3 of 2](/code/lwt-part-3.html)
+[(2020-06-06) Lwt tutorial/introduction Part 3 of 2](/code/lwt-part-3.html)  
+(Updated 2021-10-19)
 
 [(2020-07-15) The Sense of Coding Style](/code/the-sense-of-coding-style.html)
