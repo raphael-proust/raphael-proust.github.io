@@ -58,11 +58,14 @@
 let cell () = Random.State.bool state
 let cell5 a b c d e =
    let ( &lt;&lt; ) b i = (if b then 1 else 0) lsl i in
-   try Option.get @@ table.((e &lt;&lt; 0) lxor (d &lt;&lt; 1) lxor (c &lt;&lt; 2) lxor (b &lt;&lt; 3) lxor (a &lt;&lt; 4))
+   try
+      Option.get @@
+      table.((e&lt;&lt;0) lxor (d&lt;&lt;1) lxor (c&lt;&lt;2) lxor (b&lt;&lt;3) lxor (a&lt;&lt;4))
    with Invalid_argument _ -&gt; cell ()</code></pre>
 <p>Then the labyrinth is generated. The first line is hard-coded and a for-loop takes care of the other lines. Within this for-loop, each line is traversed and the cells are filled one after the other. The details for which indexes are read to feed into the procedural generator are detailed in the paper mentioned above.</p>
 <pre><code>let l = Array.init 17 (fun _ -&gt; Array.make 8 false)
-let () = l.(0) &lt;- [| false; false; true; true; false; false; false; true |]
+let () =
+   l.(0) &lt;- [| false; false; true; true; false; false; false; true |]
 let () =
    for y = 1 to 16 do for x = 0 to 7 do
       l.(y).(x) &lt;- (

@@ -61,7 +61,9 @@ let state = Random.State.make_self_init ()
 let cell () = Random.State.bool state
 let cell5 a b c d e =
    let ( << ) b i = (if b then 1 else 0) lsl i in
-   try Option.get @@ table.((e << 0) lxor (d << 1) lxor (c << 2) lxor (b << 3) lxor (a << 4))
+   try
+      Option.get @@
+      table.((e<<0) lxor (d<<1) lxor (c<<2) lxor (b<<3) lxor (a<<4))
    with Invalid_argument _ -> cell ()
 ```
 
@@ -72,7 +74,8 @@ The details for which indexes are read to feed into the procedural generator are
 
 ```
 let l = Array.init 17 (fun _ -> Array.make 8 false)
-let () = l.(0) <- [| false; false; true; true; false; false; false; true |]
+let () =
+   l.(0) <- [| false; false; true; true; false; false; false; true |]
 let () =
    for y = 1 to 16 do for x = 0 to 7 do
       l.(y).(x) <- (
