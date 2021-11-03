@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Raphaël Proust" />
+  <title>Dromedary and a half - Entombed</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+<header>
+<nav>
+	<a href="/code/index.html">On code</a> |
+	<a href="/games/index.html">On games</a> |
+	<a href="/misc/index.html">Miscellanées</a> |
+	<a href="/about.html">About</a>
+</nav>
+</header>
+<div id="content">
+<div id="header">
+<h1 class="title">Entombed</h1>
+</div>
+<p><a href="https://en.wikipedia.org/wiki/Entombed_(Atari_2600)">Entombed</a> is an Atari game from 1982. Entombed has been the subject of <a href="https://programming-journal.org/2019/3/4/">an exhaustive software-archæology study</a>. This study explains the inner-working of the game, with an important focus on the procedural generator for the game’s labyrinths.</p>
+<p>I have recreated this procedural generator in OCaml:<br />
+<a href="https://gitlab.com/raphael-proust/entombed">Gitlab repository</a> (under MIT license)</p>
+<h2 id="no-nonsense-variant">No-nonsense variant</h2>
+<p>A compact, single-file, zero-dependency version is available in the root of the repository. It can be executed directly by <code>ocaml</code>:</p>
+<pre><code>$ ocaml entombed.ml
+▓▓░░▓▓░░░▓▓░░░▓▓░░▓▓
+▓▓▓▓░░░▓▓░░▓▓░░░▓▓▓▓
+▓▓▓░░▓▓▓░░░░▓▓▓░░▓▓▓
+▓▓░░▓▓░░░▓▓░░░▓▓░░▓▓
+▓▓▓▓▓░░▓▓▓▓▓▓░░▓▓▓▓▓
+▓▓░░░░▓▓░░░░▓▓░░░░▓▓
+▓▓░▓▓░▓░░▓▓░░▓░▓▓░▓▓
+▓▓▓▓░░▓▓░▓▓░▓▓░░▓▓▓▓
+▓▓░▓▓░░░░▓▓░░░░▓▓░▓▓
+▓▓░░░░▓▓░▓▓░▓▓░░░░▓▓
+▓▓░▓▓░▓░░░░░░▓░▓▓░▓▓
+▓▓▓▓░░▓▓▓░░▓▓▓░░▓▓▓▓
+▓▓▓░░▓▓░░░░░░▓▓░░▓▓▓
+▓▓░░▓▓░░▓▓▓▓░░▓▓░░▓▓
+▓▓▓▓░░░▓▓░░▓▓░░░▓▓▓▓
+▓▓░░░▓▓░░░░░░▓▓░░░▓▓
+▓▓▓▓░░░░▓▓▓▓░░░░▓▓▓▓</code></pre>
+<p>The sources are short and to the point. They are straightforward to read once you have read the paper mentioned above.</p>
+<p>First, the table that determines the output of the procedural generator. The entries of these tables are either <code>wall</code> for when the procedural generator outputs a wall, <code>room</code> when it outputs a room, or <code>None</code> for when the procedural generator picks an output at random during generation. There are 32 entries in the table because the procedural generator determines the content of one cell of the labyrinth based on the content of 5 other cells.</p>
+<pre><code>let table =
+   let wall = Some true and room = Some false in
+   [| wall; wall; wall; None; room; room; None; None;
+      wall; wall; wall; wall; None; room; room; room;
+      wall; wall; wall; None; room; room; room; room;
+      None; room; wall; None; None; room; room; room; |]</code></pre>
+<p>Then the function that uses the procedural generator table is defined. This <code>cell5</code> function converts 5 distinct boolean into one number and reads the corresponding entry in the table. In case of <code>None</code>, it generates a random cell content instead.</p>
+<pre><code>let state = Random.State.make_self_init ()
+let cell () = Random.State.bool state
+let cell5 a b c d e =
+   let ( &lt;&lt; ) b i = (if b then 1 else 0) lsl i in
+   try Option.get @@ table.((e &lt;&lt; 0) lxor (d &lt;&lt; 1) lxor (c &lt;&lt; 2) lxor (b &lt;&lt; 3) lxor (a &lt;&lt; 4))
+   with Invalid_argument _ -&gt; cell ()</code></pre>
+<p>Then the labyrinth is generated. The first line is hard-coded and a for-loop takes care of the other lines. Within this for-loop, each line is traversed and the cells are filled one after the other. The details for which indexes are read to feed into the procedural generator are detailed in the paper mentioned above.</p>
+<pre><code>let l = Array.init 17 (fun _ -&gt; Array.make 8 false)
+let () = l.(0) &lt;- [| false; false; true; true; false; false; false; true |]
+let () =
+   for y = 1 to 16 do for x = 0 to 7 do
+      l.(y).(x) &lt;- (
+         if x = 0 then
+            cell5 true false (cell ()) l.(y-1).(x) l.(y-1).(x+1)
+         else if x = 1 then
+            cell5 false l.(y).(x-1) l.(y-1).(x-1) l.(y-1).(x) l.(y-1).(x+1)
+         else if x &lt; 7 then
+            cell5 l.(y).(x-2) l.(y).(x-1) l.(y-1).(x-1) l.(y-1).(x) l.(y-1).(x+1)
+         else (* x = 7 *)
+            cell5 l.(y).(x-2) l.(y).(x-1) l.(y-1).(x-1) l.(y-1).(x) (cell ()))
+   done done</code></pre>
+<p>Finally, the labyrinth is printed onto the standard output. Walls are represented by a dark-grey block and rooms by a light-grey block. Note that, in order to save on memory, the game generates a half labyrinth and extends it through symmetry. Full details are in the paper mentioned above.</p>
+<pre><code>let () =
+   let render wall = print_string (if wall then &quot;▓&quot; else &quot;░&quot;) in
+   for y = 0 to 16 do
+      render true; render true;
+      for x = 0 to 7 do render l.(y).(x) done;
+      for x = 7 downto 0 do render l.(y).(x) done;
+      render true; render true;
+      print_newline ()
+   done</code></pre>
+<h2 id="full-fat-variant">Full-fat variant</h2>
+<p>A more engineered variant of the program is written in the <code>src/</code> directory of the repository. It features:</p>
+<ul>
+<li>Documentation of both the implementation and the interfaces.</li>
+<li>Separate modules for separate parts of the program (generator, renderer, etc.).</li>
+<li>Command-line parameters to control many aspect of the generation and rendering process.</li>
+<li>Standard OCaml packaging (<code>dune</code> build file, and <code>opam</code> package file).</li>
+</ul>
+</div>
+</body>
+</html>
