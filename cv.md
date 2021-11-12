@@ -90,10 +90,13 @@ below are on-going. All items are written in past tense for consistency.
 
 - **Internal training**
 
-	I organised and ran a training session focused on the Lwt library: basic
-	uses, best practices, etc.
+	I organised and ran several training sessions focused on the common libraries
+	that are used within the Tezos project, most notably Lwt, and our in-house
+	error-management library.
 
-	(I expanded the slides into a [tutorial](/code/lwt-part-1.html).)
+	I produced slides and I organised and ran the training sessions. I also wrote
+	tutorials for [Lwt](/code/lwt-part-1.html) and
+	[the `Error_monad`](http://tezos.gitlab.io/developer/error_monad.html).
 
 - **Code review** and **merging**
 
@@ -144,7 +147,7 @@ below are on-going. All items are written in past tense for consistency.
 
 	Work at Nomadic Labs also included developing various features, fixing some
 	bugs, triaging issues, etc. I also developed some of the tooling used for
-	linting.
+	linting and testing.
 
 
 ## Projects at Cambridge Coding Academy and Cambridge Spark
