@@ -24,9 +24,11 @@
 </div>
 <p><a href="/code/lwt-part-1.html">← Back to part 1</a><br />
 <a href="/code/lwt-part-2.html">← Back to part 2</a></p>
-<p>In this part 3 of this 2-part introduction/tutorial to Lwt, we collect a few remarks that are of lesser interest to users of Lwt. Specifically, topics that are unimportant for building a mental model of Lwt. We also collect addenda:</p>
+Lwt. We also collect addenda:</p>
 <ul>
 <li><a href="#addendum-non-obvious-evaluation-order">2020-07</a>: a walkthrough of the execution of a small example program to demonstrate a potential source of bugs.</li>
+<li><a href="#addendum-other-promise-systems">2020-11</a>: a comparison with some other promise systems.</li>
+<li><a href="#addendum-global-promises-and-memory-leaks">2022-04</a>: a specific code pattern to look out for in your program.</li>
 </ul>
 <h2 id="historical-baggage">Historical baggage</h2>
 <p>The documentation of Lwt has evolved to consistently use a sound terminology: promise, resolution, pending, etc. This updated documentation gives a better description than the previous one. However, whilst the documentation has evolved, the effective signature of <code>Lwt</code> (the identifiers for values, types, etc.) has been left mostly untouched for backwards compatibility. This causes a dissonance in places such as the official documentation of <code>wakeup</code> (edited for brevity):</p>
@@ -281,6 +283,21 @@ return(x+dx, y+dy)})})</code></pre>
 </tbody>
 </table>
 <p>There are some subtle differences about error management and some not so subtle differences inherited from the distinct typing disciplines (e.g., <code>&gt;&gt;=</code> and <code>&gt;|=</code> correspond to the same <code>.then</code> method). Despite those differences, the two systems are similar enough that familiarity with one helps to learn the other.</p>
+<h2 id="addendum-global-promises-and-memory-leaks">Addendum: global promises and memory leaks</h2>
+<p>One specific pattern of code can lead to memory leaks.</p>
+<h3 id="what-is-the-issue">What is the issue</h3>
+<p>As noted previously, many of the primitives of Lwt register callbacks on promises. This includes the primitives to explicitly attach promises (<code>Lwt.on_any</code>, <code>Lwt.on_success</code>, etc.) as well as all the primitives what implicitly attach them. Notably, <code>bind</code>/<code>let*</code>/<code>&gt;&gt;=</code> as well as <code>map</code>/<code>let+</code>/<code>&gt;|=</code> both implicitly attach callbacks.</p>
+<p>Most promises eventually resolve. When that happens, the attached callbacks are called and then released: they are not held by the promise any more, the GC can collect them.</p>
+<p>In some other cases, the promises themselves stop being referenced. This can happen when using <code>Lwt.choose</code>: multiple promises are referenced in the list, until one of them resolves.</p>
+<p>However, there are a few cases when a promise may never resolve and may never become collectable: a never-resolving global promise. With a never-resolving global promise all attached callback accumulate in memory and can never be collected by the GC. In other words: a memory leak.</p>
+<h3 id="when-does-the-issue-arise">When does the issue arise</h3>
+<p>A global promise may be useful to represent some stateful part of the process. E.g., you may monitor the different phases of your program with promises such as <code>initialisation_starts</code>, <code>main_processing_starts</code>, and <code>exit_sequence_starts</code>. In such a context, attaching a callback to <code>exit_sequence_starts</code> is comparable to calling <code>Stdlib.at_exit</code>.</p>
+<p>Some of these global promises may stay unresolved for all or most of the lifetime of the program. Typically, the <code>exit_sequence_starts</code> from the example above would be such a promise. If your main processing sequence (or, your main loop if you are in a daemon/server application) repeatedly attaches callbacks to such a promise, you have a memory leak.</p>
+<p>(Note that the same can happen if you <a href="https://github.com/project-everest/hacl-star/issues/353">keep attaching callbacks to <code>Stdlib.at_exit</code></a>.)</p>
+<h3 id="how-to-avoid-the-issue">How to avoid the issue</h3>
+<p>The most obvious thing you can do is avoid global promises: avoid exposing them in your library APIs, avoid referencing them in your applications.</p>
+<p>This is not always an option. In that case, make sure to document your libraries to point out global promises and warn users about them. You may even replace the promise with an explicit callback registering system (à la <code>Stdlib.at_exit</code>) because <code>register_exit_callback_in_global_table</code> is more explicit than the implicit memory effects of binding to <code>exit_sequence_starts</code>. And on the application side you should comment the use of global promises so that they are less likely to be copy-pasted into some loop.</p>
+<p>In some cases, you can replace one single global promise with a function that returns fresh promises. This happens <a href="https://gitlab.com/tezos/tezos/-/commit/ce926e575aef7d965895e4443abbf9c13918ebc4">in the Tezos project, specifically to provide never-ending promises</a>.</p>
 </div>
 </body>
 </html>
