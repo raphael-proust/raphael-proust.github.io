@@ -61,8 +61,7 @@ local to the main binary.</p>
 <p>A simple test checks that the parser returns the expected result.</p>
 <p>Another test checks that the <code>eval</code> function performs the
 expected effects and returns the expected result. This test does not use
-randomness at all: instead it logs the requested die and returns the
-maximum result.</p>
+randomness at all: instead the test uses pre-rolled dice.</p>
 <h3 id="effects">Effects</h3>
 <p>Effects simplified the code of Odds/<code>roll</code> significantly.
 Instead of threading a random state through an expression made of

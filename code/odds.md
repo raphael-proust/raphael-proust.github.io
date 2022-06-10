@@ -42,7 +42,7 @@ This architecture showcases the use of effects to keep the state local to the ma
 A simple test checks that the parser returns the expected result.
 
 Another test checks that the `eval` function performs the expected effects and returns the expected result.
-This test does not use randomness at all: instead it logs the requested die and returns the maximum result.
+This test does not use randomness at all: instead the test uses pre-rolled dice.
 
 
 ### Effects
