@@ -6,7 +6,7 @@ Thoughts, articles, posts about code, programming languages, etc.
 
 [(2017-07-05) Vi as a programming language](/code/vi-as-a-programming-language.html)
 
-[(2017-07-15) Odds (OCaml Dice Dice Something)](/code/odds.html)
+~~[(2017-07-15) Odds (OCaml Dice Dice Something)](/code/odds.html)~~ Rewritten entirely after major code change
 
 [(2017-09-15) Natural languages in programming languages](/code/natural-languages-and-programming-languages.html)
 
@@ -24,3 +24,5 @@ Thoughts, articles, posts about code, programming languages, etc.
 [(2020-07-15) The Sense of Coding Style](/code/the-sense-of-coding-style.html)
 
 [(2021-11-03) Entombed](/code/entombed.html)
+
+[(2022-06-10) Odds (OCaml Dice Dice Something)](/code/odds.html)
