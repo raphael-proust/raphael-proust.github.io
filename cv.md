@@ -10,7 +10,7 @@ Raphaël Proust
 
 I am a software developer and a technical writer.
 
-I work primarily with OCaml but also in a variety of programming languages —including Python, Javascript, Scala— on various types of software —such as blockchains, document processors, web servers, libraries.
+I work primarily with OCaml but also in a variety of programming languages on various types of software.
 
 I write, edit and review courses, tutorials, manuals and rulebooks in French and English.
 
@@ -91,12 +91,17 @@ below are on-going. All items are written in past tense for consistency.
 - **Internal training**
 
 	I organised and ran several training sessions focused on the common libraries
-	that are used within the Tezos project, most notably Lwt, and our in-house
-	error-management library.
+	that are used within the Tezos project, most notably
+	Lwt,
+	the ocamldoc documentation markup language,
+	our in-house error-management library, and
+	our in-house data de/serialisation library.
 
 	I produced slides and I organised and ran the training sessions. I also wrote
-	tutorials for [Lwt](/code/lwt-part-1.html) and
-	[the `Error_monad`](http://tezos.gitlab.io/developer/error_monad.html).
+	tutorials for
+	[Lwt](/code/lwt-part-1.html),
+	[our `Error_monad` library](http://tezos.gitlab.io/developer/error_monad.html), and
+	[our `data-encoding` library](https://nomadic-labs.gitlab.io/data-encoding/data-encoding/tutorial.html).
 
 - **Code review** and **merging**
 
@@ -142,6 +147,25 @@ below are on-going. All items are written in past tense for consistency.
 	repository (with continuous integration), setting up the packaging
 	boilerplate, and modifying the code of Tezos to use the external libraries
 	rather than the embedded version.
+
+- **Modernising the Error Management library**
+
+	The in-house Error Monad library dates back to the very start of the Tezos
+	project. Over the course of the project's lifetime it had accumulated many
+	helper functions of different uses.
+
+	I led the effort of cleaning up the interface, organising the code into
+	separate components, bringing in a newer syntax (based on OCaml's binding
+	operators) and developing an error-related supplement to the OCaml Stdlib.
+
+- **OCaml 5 readiness**
+
+	I led the effort into investigating the issues that prevented the Tezos
+	project from upgrading to the newer major release of OCaml: OCaml 5. The main
+	issues were related to API compatibility and packaging.
+
+	I also led the effort into the long-term planning of using the new
+	features of OCaml 5 whilst accommodating our existing code-base.
 
 - **Other miscellaneous**
 
