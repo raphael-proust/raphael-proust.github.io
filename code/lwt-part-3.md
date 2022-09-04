@@ -10,6 +10,8 @@ Specifically, topics that are unimportant for building a mental model of Lwt.
 We also collect addenda:
 
 - [2020-07](#addendum-non-obvious-evaluation-order): a walkthrough of the execution of a small example program to demonstrate a potential source of bugs.
+- [2020-11](#addendum-other-promise-systems): a comparison with some other promise systems.
+- [2022-04](#addendum-global-promises-and-memory-leaks): a specific code pattern to look out for in your program.
 
 
 ## Historical baggage
@@ -448,3 +450,48 @@ A rough equivalence table for the `Promise` object:
 There are some subtle differences about error management and some not so subtle differences inherited from the distinct typing disciplines (e.g., `>>=` and `>|=` correspond to the same `.then` method).
 Despite those differences, the two systems are similar enough that familiarity with one helps to learn the other.
 
+
+
+## Addendum: global promises and memory leaks
+
+One specific pattern of code can lead to memory leaks.
+
+### What is the issue
+
+As noted previously, many of the primitives of Lwt register callbacks on promises.
+This includes the primitives to explicitly attach promises (`Lwt.on_any`, `Lwt.on_success`, etc.) as well as all the primitives what implicitly attach them.
+Notably, `bind`/`let*`/`>>=` as well as `map`/`let+`/`>|=` both implicitly attach callbacks.
+
+Most promises eventually resolve.
+When that happens, the attached callbacks are called and then released: they are not held by the promise any more, the GC can collect them.
+
+In some other cases, the promises themselves stop being referenced.
+This can happen when using `Lwt.choose`: multiple promises are referenced in the list, until one of them resolves.
+
+However, there are a few cases when a promise may never resolve and may never become collectable: a never-resolving global promise.
+With a never-resolving global promise all attached callback accumulate in memory and can never be collected by the GC.
+In other words: a memory leak.
+
+### When does the issue arise
+
+A global promise may be useful to represent some stateful part of the process.
+E.g., you may monitor the different phases of your program with promises such as `initialisation_starts`, `main_processing_starts`, and `exit_sequence_starts`.
+In such a context, attaching a callback to `exit_sequence_starts` is comparable to calling `Stdlib.at_exit`.
+
+Some of these global promises may stay unresolved for all or most of the lifetime of the program.
+Typically, the `exit_sequence_starts` from the example above would be such a promise.
+If your main processing sequence (or, your main loop if you are in a daemon/server application) repeatedly attaches callbacks to such a promise, you have a memory leak.
+
+(Note that the same can happen if you [keep attaching callbacks to `Stdlib.at_exit`](https://github.com/project-everest/hacl-star/issues/353).)
+
+### How to avoid the issue
+
+The most obvious thing you can do is avoid global promises: avoid exposing them in your library APIs, avoid referencing them in your applications.
+
+This is not always an option.
+In that case, make sure to document your libraries to point out global promises and warn users about them.
+You may even replace the promise with an explicit callback registering system (à la `Stdlib.at_exit`) because `register_exit_callback_in_global_table` is more explicit than the implicit memory effects of binding to `exit_sequence_starts`.
+And on the application side you should comment the use of global promises so that they are less likely to be copy-pasted into some loop.
+
+In some cases, you can replace one single global promise with a function that returns fresh promises.
+This happens [in the Tezos project, specifically to provide never-ending promises](https://gitlab.com/tezos/tezos/-/commit/ce926e575aef7d965895e4443abbf9c13918ebc4).

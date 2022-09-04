@@ -2,11 +2,14 @@
 title: Odds
 ...
 
+EDIT 2022-06-10: I have rewrote the code using Effects, I have rewritten this page accordingly.
+
 [Odds (OCaml Dice Dice Something)](https://github.com/raphael-proust/odds) is a library for rolling dice.
-It provides deterministic rolls and combinators for common operations.
+It provides deterministic rolls.
+It uses effects to push all randomness in the control of the caller.
 
 [Github repository](https://github.com/raphael-proust/odds)  
-[Documentation](/code/odds/index.html)  
+[Documentation](./odds/index.html)  
 
 
 Odds is distributed with the companion program `roll` which interprets command line arguments as a dice expression, evaluates it and prints the result.
@@ -15,112 +18,39 @@ Odds is distributed with the companion program `roll` which interprets command l
 roll 3d6 + 1d8 + 2
 ```
 
-Mostly, Odds/`roll` is an excuse to freshen up on my OCaml, and especially on the packaging aspect.
+Originally, Odds/`roll` was an excuse to freshen up on my OCaml, and especially on the packaging aspect.
+More recently, it has turned into a personal and professional experiment with Effects.
 
 ## Code overview
 
-The code is relatively simple: a dice expression is a function that expects a PRNG state (`Random.State.t`) and produces a value.
-The combinators that operate on these simply create new closures that dispatch the PRNG state as needed.
+The code is relatively simple: a [`formula`](./odds/Dice/index.html#type-formula) is a simple algebraic data type.
+It can be built by-hand or parsed from a string.
 
-```
-type 'a t = Random.State.t -> 'a
-let lift2 f x y = fun state ->
-   let x = roll state x in
-   let y = roll state y in
-   f x y
-```
+The [`eval`](./odds/Dice/index.html#val-eval) function evaluates formulas.
+When doing so it performs the [`Roll`](./odds/Dice/index.html##extension-decl-Roll) effect for every dice it needs to roll.
+The binary using the Odds library is responsible for installing their choice of appropriate handler.
 
-The expressions are evaluated by applying the function to a PRNG state.
-If no state is provided, one is created for the whole of the expression.
+The [`roll.ml`](https://github.com/raphael-proust/odds/blob/master/src/roll.ml) file shows a simple example of a binary using the Odds library.
+It installs a simple handler using OCaml's `Random` module.
+Command-line flags for verbosity and PRNG seed affect solely the effect handler.
 
-```
-let roll ?state t =
-   let state = match state with
-      | None -> Random.State.make_self_init ()
-      | Some state -> state
-   in
-   t state
-```
-
-Finally, two modules are provided: a monad and a lifting of all of [`Pervasives`](http://caml.inria.fr/pub/docs/manual-ocaml/libref/Pervasives.html) integer functions.
-
-```
-module Monad: sig
-   val return: 'a -> 'a t
-   val bind: 'a t -> ('a -> 'b t) -> 'b t
-   val ( >>= ): 'a t -> ('a -> 'b t) -> 'b t
-   val map: 'a t -> ('a -> 'b) -> 'b t
-   val ( >|= ): 'a t -> ('a -> 'b) -> 'b t
-end
-module Algebra: sig
-   val ( ! ): int -> int t
-   val ( + ): int t -> int t -> int t
-   val ( - ): int t -> int t -> int t
-   …
-end
-```
-
-### Folding through rolls
-
-The version above is a simplification: the library also provides a way to fold through all the dice rolls that happen when an expression is evaluated.
-There is a `roll_fold` function:
-
-```
-val roll_fold:
-   ?state: Random.State.t ->
-   folder: ('acc -> int -> int -> 'acc) ->
-   init: 'acc ->
-   'a t ->
-   ('a * 'acc)
-```
-
-To implement this, the dice expressions take an additional argument:
-
-```
-type 'a t = Random.State.t -> (int -> int -> unit) -> 'a
-```
-
-And the `roll_fold` function creates a reference to hold the accumulator, then wraps the folding function into an imperative version that updates the reference:
-
-```
-let roll_fold ?state ~folder ~init t =
-   let state = match state with
-      | None -> Random.State.make_self_init ()
-      | Some state -> state
-   in
-   let folded = ref init in
-   let folder x y = folded := folder !folded x y in
-   let result = roll state folder t in
-   (result, !folded)
-```
-
-This is somewhat inelegant.
+This architecture showcases the use of effects to keep the state local to the main binary.
 
 
-### roll
+### Tests
 
-The `roll` companion program simply parses its arguments as a dice expression and calls the library.
-To parse the arguments, it uses the library parser.
-Currently, the parser only supports a handful of operators: dice, addition, subtraction, multiplication and division.
+A simple test checks that the parser returns the expected result.
 
-A seed can be passed as an additional argument to initialise the PRNG state.
-
-A verbose flag prints all intermediate rolls.
+Another test checks that the `eval` function performs the expected effects and returns the expected result.
+This test does not use randomness at all: instead the test uses pre-rolled dice.
 
 
+### Effects
 
-## Packaging
+Effects simplified the code of Odds/`roll` significantly.
+Instead of threading a random state through an expression made of lambdas, the evaluation function simply delegates the randomness to the binary.
+This improves the code by making it
 
-The main reason to start the project was to refresh on the packaging (and release, etc.) part of OCaml development.
-This aspect of the OCaml ecosystem has evolved a lot.
-
-[Topkg](http://erratique.ch/software/topkg) is a packaging tool written by Daniel Bünzli.
-It takes care of pretty much everything packaging wise.
-I encountered minor issues, mostly due to inexperience.
-(I had to force-push to my Github repository because I had forgotten dome files.)
-
-For the release part, I was unable to automatically push to opam because of a missing dependency (`opam-publish`).
-I was then unable to install it explicitly because of an unrelated error (I need to unpin Lwt).
-For now, I simply made a pull request on opam-repository manually.
-
-
+- simple: the code of the library is more readable and more concise, monads are not needed,
+- agnostic: the library does not enforce the use a specific backend for randomness, instead the application chooses which to use, and
+- testable: the test binary can install a dedicated effect handler to observe the behaviour of the library.
