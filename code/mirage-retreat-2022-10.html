@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Raphaël Proust" />
+  <title>Dromedary and a half - Mirage OS retreat (October 2022)</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+<header>
+<nav>
+	<a href="/code/index.html">On code</a> |
+	<a href="/games/index.html">On games</a> |
+	<a href="/misc/index.html">Miscellanées</a> |
+	<a href="/about.html">About</a>
+</nav>
+</header>
+<div id="content">
+<div id="header">
+<h1 class="title">Mirage OS retreat (October 2022)</h1>
+</div>
+<p>I went to the 11th Mirage OS retreat, a more or less yearly event
+gathering developers actively participating in, wanting to participate
+in, or curious about the <a href="https://mirage.io/">Mirage OS</a>
+project — or adjacent projects.</p>
+<p>Mirage OS is a framework for programming infrastructure/system/etc.
+applications: proxies, firewalls, web-servers, etc. The application can
+be compiled to a variety of targets including stand-alone <a
+href="https://en.wikipedia.org/wiki/Unikernel">unikernels</a>.</p>
+<p>Disclaimer: my employer paid for my participation and my transport
+to/from the retreat.</p>
+<h2 id="what-i-worked-on">What I worked on</h2>
+<p><strong>Lwt exception management:</strong><br />
+I had a discussion with another participant. I tried to explain why we
+couldn’t keep track of exception backtraces in Lwt. They kept asking how
+does <a href="https://ocaml.org/p/lwt_ppx/2.1.0">the ppx extension</a>
+manages it, and why can’t vanilla Lwt do something similar. This
+discussion backed me into a corner where I mulled over the current
+exception management recommendation until I eventually realised that
+actually yes, it can be done in vanilla Lwt, with just one primitive and
+a little bit of discipline. After this discussion I gave a short talk at
+the retreat centered around advice to best use Lwt — with respect to
+exception management and otherwise. And after that I opened <a
+href="https://github.com/ocsigen/lwt/pull/963">a pull-request</a> on the
+Lwt repository to propose the corresponding changes.</p>
+<p><strong>Seq but with monad:</strong><br />
+I had planned on working on a monad-friendly <a
+href="https://v2.ocaml.org/api/Seq.html"><code>Seq</code></a>-like
+library. The Octez project uses <a
+href="https://ocaml.org/p/tezos-lwt-result-stdlib/14.0">something along
+these lines</a> but the maintenance is too cumbersome — e.g., <a
+href="https://gitlab.com/tezos/tezos/-/merge_requests/6464">this
+maintenance merge-request</a> adds support for OCaml 4.14 additions to
+the <code>Seq</code> module.</p>
+<p>I was intending to work on this as a filler task: something to do in
+short spans of free time now and then. I ended up spending a lot of time
+on it because I’d bounce ideas off of other participants and work on
+those ideas immediately. I have opened a <a
+href="https://gitlab.com/raphael-proust/seqes">repository for the
+project</a> and I hope to get it to a point where it can be released
+quickly.</p>
+<p>Generally, the retreat is full of distractions, but the kind of
+distractions that makes you do stuff.</p>
+<p><strong>First mirage application:</strong><br />
+I built my first mirage application. I had used some libraries from the
+mirage ecosystem before. And I knew about some of the basic building
+blocks such as <code>functoria</code>. But I had never built a binary
+using the mirage tool-chain before.</p>
+<p>In retrospect, I should have done so before the retreat. It would
+have given me a better understanding of the scope of the project and the
+coding discipline that it imposes. This in turn would have helped me
+pick a couple of ideas to work on during the retreat.</p>
+<p>If you have never built a mirage application before, I’d recommend
+following the <a href="https://mirage.io/docs/hello-world">Hello World
+tutorial</a> which covers much more than the name would suggest.</p>
+<h2 id="what-else-i-did">What else I did</h2>
+<p>In addition to the items listed above, I did a myriad other things
+that, whilst less tangible, are also important. The retreat’s
+organisation lends itself to a lot of productive discussions. More
+accurately: the minimality of the organisation (what would in other
+situation be considered a <em>lack</em> of organisation) lends itself to
+spurious productive exchange of ideas.</p>
+<p>Topics that I had interesting conversation about include:</p>
+<ul>
+<li>Some finer points of Lwt semantics.</li>
+<li>What could Lwt evolve to.</li>
+<li>The ocaml-ci and the opam-ci.</li>
+<li>The opam-repository maintenance process.</li>
+<li>NixOS.</li>
+<li>Getting an open-source project adopted by a wider audience.</li>
+<li>How to efficiently work from home.</li>
+</ul>
+<h2 id="what-i-did-besides-work">What I did besides work</h2>
+<p>I ate very well. The food was simply delicious and healthy and
+varried.</p>
+<p>I learned some basic German vocabulary from a quadrilingual 4 year
+old.</p>
+<p>I met some new people and I met back with people I hadn’t seen for
+years.</p>
+<h2 id="so-you-want-to-go-to-a-mirage-os-retreat">So you want to go to a
+Mirage OS retreat?</h2>
+<p>Do it!</p>
+<p>I don’t think two of these retreats are the same. So the next one
+might be different. But I have no doubt it’ll still be a fun and
+productive time.</p>
+<ul>
+<li>Start to think about what you can use Mirage OS for.</li>
+<li>Watch out for announcements on <a
+href="https://discuss.ocaml.org/">discuss.ocaml.org</a> and register as
+instructed.</li>
+<li>Ask the organiser whatever organisational question you need to know
+the answer to.</li>
+</ul>
+</div>
+</body>
+</html>

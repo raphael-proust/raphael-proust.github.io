@@ -26,3 +26,5 @@ Thoughts, articles, posts about code, programming languages, etc.
 [(2021-11-03) Entombed](/code/entombed.html)
 
 [(2022-06-10) Odds (OCaml Dice Dice Something)](/code/odds.html)
+
+[(2022-10-11) Mirage OS retreat](/code/mirage-retreat-2022-10.html)
