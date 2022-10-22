@@ -13,13 +13,14 @@ For example, [Buffy the Vampire Slayer](https://en.wikipedia.org/wiki/Buffy_the_
 The setting is unchanged – the fit of singing is caused by a demon – but the genre undoubtedly is.
 
 The [Laundry Files](https://en.wikipedia.org/wiki/Laundry_files) book series by Charles Stross has a Lovecraftian horror setting.
-However, different books in the series adopt different genres – including a James Bond-like spy thriller.
+However, different books in the series adopt different genres – including, for example, a James Bond-like spy thriller.
 
 -------------------------------------------
 
 
 Another place where genre and setting are at odds is in unusual, one-shot role-playing games.
-In these stories, unlike the epic, you do not get to save the world, free an entire population from a tyrant, cast out the darkness.
+For example, if you have an epic-fantasy role-playing game à la D&D, you usually play to save the world, get rid of a tyrant, or cast out the darkness.
+In an unusual one-shot you would play a different genre of story.
 As noted below, these scenarii often require some alterations to the rules.
 (These necessary alterations hint at the fact that the rule systems of role-playing games are linked to both genre and setting.)
 
@@ -63,4 +64,7 @@ As noted below, these scenarii often require some alterations to the rules.
 --------------------------------------
 
 Unusual pairings of genre and setting can provide a refreshing break in otherwise somewhat repetitive media (TV series, role-playing games): they pit tropes against one another, they force the creators out of their comfort zone, they extend the realm of possibilities.
+
+But they also require some work from the creators involved.
+You cannot simply use a rule system or an established story-telling device used for a given genre/setting pair and use it on a different one.
 

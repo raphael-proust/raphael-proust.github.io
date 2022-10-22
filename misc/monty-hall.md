@@ -80,11 +80,11 @@ The game follows this script:
 3. The game is already over: you win if either of the doors you really picked hides the prize.
    In other words, you win if either of the doors you didn't pretend to pick hides the prize.
 
-   But before giving you the prize or not, there is some pageantry to make it more captivating to the TV audience:
+   But before giving you the prize or not, there is some pageantry to make it more captivating to the TV audience:  
    the game host opens one of the two doors you really picked (for example door B),  
    the game host asks a scripted question: “do you want to switch to that other door?” (door A in this example),  
    you give the game host a scripted answer: “yes”,  
-   the game host opens the other door you picked (door B),  
+   the game host opens the other door you picked (door A),  
    the game host gives you the prize if you guess correctly in step 2.
 
 Note that in step 3, the game has already ended, the whole thing is scripted: you do not make a choice, the question-answer is part of the game's pageantry, you must answer “yes”.
@@ -110,7 +110,7 @@ Indeed, in the 1-door Monty Hall game, if the host opened a door that hid the pr
 And conversely, in the 2-door Monty Hall game, if the host opened a door that hid the prize, then the audience would know that the participant had won.
 In both cases, the audience would switch channel and the advertisers would be disappointed.
 
-Note however that this trick to captivate audience is unimportant for the core of either of the two games.
+Note however that this trick to captivate the audience is unimportant for the core of either of the two games.
 Specifically, in the 1-door Monty Hall game, whether the host opens a door that hides the prize or not does not affect the victory condition: you win if the single door you picked had been hiding the prize all along.
 Similarly, in the 2-door Monty Hall game, whether the host opens a door that hides the prize or not does not affect the victory condition: you win if either of the two doors that you really picked had been hiding the prize all along.
 The trick in the pageantry is just for show.
