@@ -38,28 +38,32 @@
 
 *)
 
-(* # Part 0: Preparation *)
+(* # Part 0: Miscellaneous preparation
 
-module Utils = struct
-  module List = struct
-    let rotate l = (List.tl l) @ [List.hd l]
-    let map_head f l = f (List.hd l) :: List.tl l
-  end
+   This part simply defines a few functions which are used later. No explanation
+   is given because no useful information is gained by reading this.
+
+*)
+
+module List = struct
+  include Stdlib.List
+  let rotate l = (List.tl l) @ [List.hd l]
+  let map_head f l = f (List.hd l) :: List.tl l
 end
 
 
-(* # Part 1: Domain modeling
+(* # Part 1: Domain modelling
 
    Dix-mille is a dice game: during the course of the game, players roll
    (six-sided) dice. This first part of the implementation is intended to make
    it easy for the rest of the code to work with dice.
 
-   This is called *domain modeling*, in which you create abstractions
+   This is called *domain modelling*, in which you create abstractions
    corresponding to the concepts that you handle in the program. If you make a
    dice game, the program handles (an abstraction of) dice, and if you make
    accounting software, the program handles monies, accounts, and balances.
 
-   An important part of domain modeling in OCaml, and other similar languages,
+   An important part of domain modelling in OCaml, and other similar languages,
    is to define *types*. The type system is a useful tool for the programmer. It
    takes some practice to use effectively, and practice often comes in the form
    of the compiler shouting at you, but it is worth the time spent.
@@ -100,9 +104,9 @@ module D6 : sig
 
   (* The type `t` is for values that represent a rolled, six-sided die.
 
-     (From outside the module it is refered to as `D6.t` (as per the discussion
+     (From outside the module it is referred to as `D6.t` (as per the discussion
      on namespaces above), but inside the module (including in the comments
-     within the module) it is simply refered to as `t`.)
+     within the module) it is simply referred to as `t`.)
 
      The type `t` is a sum type (also known as a variant type, akin to a union).
      In this case, a rolled dice can take one of the following six values:
@@ -192,7 +196,7 @@ module D6s : sig
   (* The type `t` is for values representing a dice roll: a set of 6-sided dice
      that have been rolled.
 
-     This is still part of the domain modeling. In fact, rolls of 6-sided dice
+     This is still part of the domain modelling. In fact, rolls of 6-sided dice
      are more important than an individual rolled 6-sided die for our purpose.
      The former is central to the game mechanics, the latter could be skipped
      although it would make some of the code later harder to read.
@@ -304,7 +308,16 @@ end = struct
      element that indicates the number of D6 that have been rolled with the side
      matching the index.
 
-     INVARIANT: These arrays are always of length 6. *)
+     E.g., the dice roll ⚀⚀⚃⚄ is represented by
+     `[| 2; 0; 0; 1; 1; 0 |].
+
+     INVARIANT: These arrays are always of length 6. (Because dices have six
+     faces and each array entry represents a number of dice having fallen on
+     that face.)
+
+     INVARIANT: These arrays have positive values only. (Because each value in
+     the array represent the number of dice having fallen on a specific face and
+     we can't have a negative amount of dice.) *)
   type t = int array
 
   (* NOTE: Beware of off-by-one errors: the face `One` is at index `0`, etc. *)
@@ -344,7 +357,7 @@ end = struct
     end
 
   let make ds =
-    (* initialises an new empty `t` *)
+    (* initialises a new empty `t` *)
     let acc = init_empty () in
     List.iter
       (* For each element of `ds` .. *)
@@ -365,21 +378,46 @@ end = struct
   let fives t = t.(4)
   let sixes t = t.(5)
 
-  let unsafe_diff a b = Array.map2 (-) a b
-  let subset ~small ~big = Array.for_all (fun x -> 0 <= x) (unsafe_diff big small)
-  let diff a b =
-    let r = unsafe_diff a b in
-    if Array.exists (fun x -> x < 0) r then
-      raise (Invalid_argument "D6s.diff")
-    else
-      r
+  (* `unsafe_diff` produces a new array where the value at each index is the
+     difference of the values at each index for the arrays given as argument.
+     This represents removing the rolls of the second parameter from the rolls
+     of the first parameter.
 
+     E.g., `unsafe_diff (make [D6.One; make D6.Two]) (make [D6.One])` is equal
+     to `make [D6.Tow]`.
+
+     This function's name has the "unsafe" prefix because it may return an
+     invalid array. Specifically it may return an array with negative values.
+     These would not represent a valid amount of dice and thus it would not be a
+     valid `t`. *)
+  let unsafe_diff a b = Array.map2 (-) a b
+
+  (* `subset` checks that a `t` is a subset of another `t`. It does so by
+     performing an unsafe difference and checking that all values are positive. *)
+  let subset ~small ~big =
+     let delta = unsafe_diff big small in
+     Array.for_all (fun x -> 0 <= x) delta
+
+  (* `diff` produces a new `t` where the value at each index is the difference
+     of the values at each index of the `t`s given as argument. Unlike
+     `unsafe_diff`, the `diff` function checks that the result is valid. *)
+  let diff a b =
+    let delta = unsafe_diff a b in
+    if Array.for_all (fun x -> 0 <= x) delta then
+      delta
+    else
+      raise (Invalid_argument "D6s.diff")
+
+  (* The infix functions defined in this module help make code more compact
+     later. *)
   module Algebra = struct
     let (<=) small big = subset ~small ~big
     let (-) = diff
   end
 
-  let cardinal = Array.fold_left (+) 0
+  (* `cardinal` counts the number of dice in a `t`. It does so by simply summing
+     all the values at all the indexes. *)
+  let cardinal t = Array.fold_left (+) 0 t
 
   (* pretty printing *)
   let pp_n_times fmt n f =
@@ -401,7 +439,7 @@ end
 (* Part 2: points and counting them
 
    This section is still about building foundations for the game. It can still
-   be considered domain modeling, although there are more advanced functions
+   be considered domain modelling, although there are more advanced functions
    written here: it is not only about the basic primitives and abstractions but
    also about some of the peculiarities of this specific game rather than the
    domain of dice game in general.
@@ -425,12 +463,20 @@ module Points : sig
      your score down from the target score. Your final score is the target score
      minus 150 points: 10000 - 150 = 9850 points.
 
+     ```
+     ..  9750  9800 9850 9900 9950 10000
+           |-------------------------\    250 (gain)
+                      |<-------------/    150 (lost)
+                                          400 (total)
+     ```
+
      To minimise the number of possible bugs, it is better to implement such
      logic once and for all, and let all other parts of the code use the one
      reference implementation. This is enforced by the use of the private type:
-     the other parts of the code can use the scores as ints, but they cannot
-     construct the scores except by using the reference implementation, the
-     function `add` provided in this here module.
+     the other parts of the code can use the scores as ints (e.g., they can
+     compare scores together), but they cannot construct the scores except by
+     using the reference implementation: the function `add` provided in this
+     here module.
 
   *)
   type t = private int
@@ -439,7 +485,9 @@ module Points : sig
   val zero : t
 
   (* `add t i` adds `i` points to `t`, it implements the game rule discussed
-     above: the score bounces back from the target score. *)
+     above: the score bounces back from the target score.
+
+     Raises `Invalid_argument` if `i` is negative. *)
   val add : t -> int -> t
 
   (* `target` is `10_000` as a `t`. Providing `target` as an explicit value
@@ -460,6 +508,7 @@ end = struct
   let zero = 0
 
   let add t n =
+    if n < 0 then raise (Invalid_argument "Points.add");
     let sum = t + n in
     if sum <= target then
       sum
@@ -476,7 +525,7 @@ end
    The names in this module are more abstract. This is because the game is
    normally taught by showing (rather than naming) things. As a result,
    different players use different names for the same concepts depending on who
-   taught them the game. Some rules are also expressed in a hand-wavy langauge
+   taught them the game. Some rules are also expressed in a hand-wavy language
    that computers do not understand.
 
 *)
@@ -529,42 +578,47 @@ end = struct
   type atom = D6s.t
   type t = atom list
 
+  (* `scorer` is a collection of atoms with their score. That is, each entry in
+     the `scorer` collection is a pair `atom * int` where the atom represents
+     some set of dice and the integer represents the score of this atom. *)
   let scorer : (atom * int) list =
     let open D6 in (* for `One`, `Two`, etc. *)
-    let open D6s in (* for `make: D6.t list -> D6s.t` *)
     [
       (* GAME RULE: One is worth 100 points on its own *)
-      make [One], 100;
+      D6s.make [One], 100;
       (* GAME RULE: Repetitions of Ones are worth points as follows: 1000 for
          three Ones, 10 times more for each additional One. *)
-      make [One; One; One], 1_000;
-      make [One; One; One; One], 10_000;
-      make [One; One; One; One; One], 100_000;
+      D6s.make [One; One; One], 1_000;
+      D6s.make [One; One; One; One], 10_000;
+      D6s.make [One; One; One; One; One], 100_000;
       (* GAME RULE: Repetitions of all other numbers are worth points as
          follows: Dx100 for three Ds, 10 times more for each additional D.  *)
-      make [Two; Two; Two], 200;
-      make [Two; Two; Two; Two], 2_000;
-      make [Two; Two; Two; Two; Two], 20_000;
-      make [Three; Three; Three], 300;
-      make [Three; Three; Three; Three], 3_000;
-      make [Three; Three; Three; Three; Three], 30_000;
-      make [Four; Four; Four], 400;
-      make [Four; Four; Four; Four], 4_000;
-      make [Four; Four; Four; Four; Four], 40_000;
+      D6s.make [Two; Two; Two], 200;
+      D6s.make [Two; Two; Two; Two], 2_000;
+      D6s.make [Two; Two; Two; Two; Two], 20_000;
+      D6s.make [Three; Three; Three], 300;
+      D6s.make [Three; Three; Three; Three], 3_000;
+      D6s.make [Three; Three; Three; Three; Three], 30_000;
+      D6s.make [Four; Four; Four], 400;
+      D6s.make [Four; Four; Four; Four], 4_000;
+      D6s.make [Four; Four; Four; Four; Four], 40_000;
       (* GAME RULE: Five is worth 50 points on its own. *)
-      make [Five], 50;
-      make [Five; Five; Five], 500;
-      make [Five; Five; Five; Five], 5_000;
-      make [Five; Five; Five; Five; Five], 50_000;
-      make [Six; Six; Six], 600;
-      make [Six; Six; Six; Six], 6_000;
-      make [Six; Six; Six; Six; Six], 60_000;
+      D6s.make [Five], 50;
+      D6s.make [Five; Five; Five], 500;
+      D6s.make [Five; Five; Five; Five], 5_000;
+      D6s.make [Five; Five; Five; Five; Five], 50_000;
+      D6s.make [Six; Six; Six], 600;
+      D6s.make [Six; Six; Six; Six], 6_000;
+      D6s.make [Six; Six; Six; Six; Six], 60_000;
     ]
 
+  (* `v` is the list of all valid atoms, which is obtained here by taking the
+     first part of each pair in the `scorer` collection. *)
   let v = List.map fst scorer
 
   (* Score an atom by looking it up in the list `scorer` *)
   let score_atom c = List.assoc c scorer
+
   (* Score a `t` by summing the scores of all its atoms *)
   let score c = List.fold_left (fun acc c -> acc + score_atom c) 0 c
 
@@ -605,19 +659,24 @@ end = struct
   (* `choices d6s v` is a list of all the possible `t` that are valid subsets of
      `d6s`. *)
   let rec choices t v =
-    let open D6s.Algebra in
+    let open D6s.Algebra in (* opening this module to use `-` and `<=` *)
     v (* Take all scoring atoms *)
     |> List.filter (fun pick -> pick <= t) (* Find those that appear in [t]*)
     |> List.map (fun pick ->
-        (* each of those is a valid pick *)
-        [pick] ::
-        (* and so is
-           this valid pick followed (`pick :: _`)
-           by picks (`choices`)
-           from the leftover (`t - pick`) *)
-        List.map
-          (fun further_choice -> pick :: further_choice)
-          (choices (t - pick) (after v pick))
+        let leftover =
+          (* the dice left after picking out the dice in `pick` *)
+          t - pick
+        in
+        let v =
+          (* the atoms but only the ones starting from the picked one,
+             to avoid duplicates *)
+          after v pick
+        in
+        let leftoverpicks =
+          (* all the possible picks from the leftover dice *)
+          choices leftover v
+        in
+        [pick] :: List.map (fun leftoverpick -> pick :: leftoverpick) leftoverpicks
       )
     |> List.flatten (* cleaning up *)
 
@@ -641,7 +700,7 @@ end
 
 (* Part 3: The game engine
 
-   With all the domain fully modeled, the next part of the code is about running
+   With all the domain fully modelled, the next part of the code is about running
    the game. The code that follows handles players making decisions, turns
    following turns, points being accumulated, and checking for victory.
 
@@ -667,8 +726,8 @@ module Strategy : sig
      In a way, the type `t` and the type `Game.t` are mutually recursive (i.e.,
      the type of strategies depends on the type of games, and vice versa as seen
      below). There are multiple ways to break that mutual dependency, here we
-     parameterise the earlier type by the later type. As a consequence, it is
-     not possible to instantiate the deisred strategies yet, this is done later
+     parametrise the earlier type by the later type. As a consequence, it is
+     not possible to instantiate the desired strategies yet, this is done later
      (see module `Strategies` once the module `Game` is defined.
   *)
   type 'game t = {
@@ -811,7 +870,7 @@ end = struct
 
   (* When a player finishes its turn, the list of players is rotated so that the
      new player is the first in the list. *)
-  let next_player game = { game with players = Utils.List.rotate game.players; }
+  let next_player game = { game with players = List.rotate game.players; }
 
   (* When certain conditions in the game are reached (see below), the dice count
      and running total are reset. *)
@@ -822,7 +881,7 @@ end = struct
   let bank game =
     { game with
       players =
-        Utils.List.map_head (fun p -> Player.bank p game.running) game.players;
+        List.map_head (fun p -> Player.bank p game.running) game.players;
     }
 
   (* `play_turn` plays until the current player finishes its turn. This can
@@ -883,7 +942,7 @@ end
 
 (* Part 4: decisions and I/O *)
 
-(* Now that the type `Game.t` is defined, we can implement differnet strategies.
+(* Now that the type `Game.t` is defined, we can implement different strategies.
 *)
 module Strategies : sig
 
@@ -1068,10 +1127,10 @@ end = struct
 
 end
 
-(* Miscelaneous: we initialise the Pseudo-Random Number Generator *)
+(* Miscellaneous: we initialise the Pseudo-Random Number Generator *)
 let () = Random.self_init ()
 
-(* Conclusion: pluging it all *)
+(* Conclusion: plugging it all *)
 
 (* We create a game with multiple players. Note that here we put several players
    with the same strategy but different names. This can be used to study the
@@ -1083,7 +1142,7 @@ let g = Game.make [
     Player.make "bank_all_2" Strategies.always_bank_never_keep;
     Player.make "bank_low_dice_1" Strategies.bank_when_one_dice;
     Player.make "bank_low_dice_2" Strategies.bank_when_one_dice;
-    (* Uncommon the following line to put a human player in the loop *)
+    (* Uncomment the following line to put a human player in the loop *)
     (* Player.make "ask" Strategies.ask; *)
   ]
 
