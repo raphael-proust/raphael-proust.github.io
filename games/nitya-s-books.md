@@ -19,35 +19,35 @@ The first of the two books, Nitya's Notes, includes many character options:
 There is too much content to summarise it all here.
 So instead, here are a few excerpts:
 
-The Transmuted is a character that used to be a pet, but their carer was also a caster who decided to make them a person.
+The Awakened Pet is a character that used to be a pet, but their carer was also a caster who decided to make them a person.
 
-> ### Transmuted
+> ### Awakened Pet
 > 
-> Transmuted are so rare that very few people, even the better traveled, have ever seen one.
-> However, Transmuted are not a mere legend from a far away kingdom and they are not the recollection of confused travelers.
-> Transmuted are the result of experiments by Erkole `lead-into-gold' Heavyberry and a few other wizards that attempted to follow in her magical footsteps.
-> It is not clear whether she was trying to give more personality to her pets or was researching ways to reverse a lycanthropy curse, what is known is that she created this new form of life.
+> Awakened pets are so rare that very few people, even the better traveled, have ever seen one.
+> However, awakened pets are not a mere legend from a far away kingdom and they are not the recollection of confused travelers.
+> Awakened pets are the result of experiments by Erkole `lead-into-gold' Heavyberry and a few other wizards that attempted to follow in her magical footsteps.
+> It is not clear whether she was trying to give more personality to her pets or was researching ways to reverse a lycanthropy curse, what is known is that she made her dogs as wise as she was.
 > 
 > You used to be a pet.
 > Someone's pet.
-> But your keeper, either by choice or by accident, transmuted you into a new self: with limbs like theirs and self-awareness like theirs.
+> But your keeper, either by choice or by accident, magicked you into a new self: with limbs like theirs and self-awareness like theirs.
 > 
-> ### Transmuted traits
+> ### Awakened pets traits
 > 
-> Your transmuted character has a variety of abilities, some from your pet nature and others imparted by the magic that made you.
+> Your awakened pets character has a variety of abilities, some from your pet nature and others imparted by the magic that made you.
 > 
 > **Ability Scores Increase** Your Constitution score increases by 2.<br/>
-> **Age** Once transmuted, you mature at a slow rate and can live for up to 200 years.<br/>
-> **Alignment** Transmuted generally have a similar good-neutral-evil alignment as their transmuter. Their lawful-neutral-chaotic alignment depends more on the instinct of their original pets: Cats tend to be more chaotic, Dogs tend to be more lawful.<br/>
-> **Size** Transmuted have a wide range of height (from 4 feet to 7 feet) and weights (from 80 to 250 pounds). Regardless, your size is Medium.<br/>
+> **Age** Once awakened, you mature at a slow rate and can live for up to 200 years.<br/>
+> **Alignment** awakened pets generally have a similar good-neutral-evil alignment as their carer. Their lawful-neutral-chaotic alignment depends more on the instinct of their original pets: Cats tend to be more chaotic, Dogs tend to be more lawful.<br/>
+> **Size** Awakened pets have a wide range of height (from 4 feet to 7 feet) and weights (from 80 to 250 pounds). Regardless, your size is Medium.<br/>
 > **Speed** Your base walking speed is 30 feet.<br/>
 > **Magically stable shape** Because of the magic that gave you your new shape, other shape-changing magic is less likely to successfully affect you.
 > You have advantage on saving throws against spells and other magical effects that would alter your form.
 > Additionally, you are immune to the lycanthropy curse.<br/>
 > **Beast origin** You are proficient in the Animal Handling skill.<br/>
 > **Magical origin** You learn one cantrip of your choice from the Bard, Druid, Cleric, Sorcerer, or Wizard spell list. Your spellcasting ability for this cantrip is determined by which class's spell list the cantrip is chosen from: Wisdom for Druid or Cleric, Charisma for Bard or Sorcerer, and Intelligence for Wizard.<br/>
-> **Language** You can speak, read, and write Common and one other language of your choice that your transmuter speaks.<br/>
-> **Subrace** Depending on which pet you used to be before the transmuting, you belong to one of the subraces. \[The book includes the following subraces: Bunny, Cat, Dog, Rat, and Turtle.\]
+> **Language** You can speak, read, and write Common and one other language of your choice that your keeper speaks.<br/>
+> **Subrace** Depending on which pet you used to be before the awakened, you belong to one of the following subraces: Bunny, Cat, Dog, Rat, Turtle.<br/>
 
 The Symbiotic Magic is a Sorcerous Origin that is onset by a small organism that lives in the Sorcerer's brain.
 
