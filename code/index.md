@@ -28,3 +28,5 @@ Thoughts, articles, posts about code, programming languages, etc.
 [(2022-06-10) Odds (OCaml Dice Dice Something)](/code/odds.html)
 
 [(2022-10-11) Mirage OS retreat](/code/mirage-retreat-2022-10.html)
+
+[(2022-12-16) Testing Seqes](/code/testing-seqes.html)
