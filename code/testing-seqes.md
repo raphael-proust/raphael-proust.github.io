@@ -231,7 +231,7 @@ and (_, _, _, _) params =
 
 The type constructor `ty` carries two type parameters for the two sides of the property being checked: the Stdlib side and the monadic side.
 The Stdlib side parameters use `v` as a prefix (for *vanilla*), and the monadic side parameters use `m`.
-E.g., the type descriptor `Option (MonT Char)` has the type `(unit option, unit Identity.t option) ty`.
+E.g., the type descriptor `Option (MonT Char)` has the type `(char option, char Identity.t option) ty`.
 
 The `Lambda` constructor has one argument for parameters (of type `params`) and one for return.
 The argument for parameters describes the lambda's parameters, using the `params` type.
