@@ -24,21 +24,22 @@
 </div>
 <h2 id="seqes">Seqes</h2>
 <p>The <a href="https://gitlab.com/nomadic-labs/seqes">Seqes library</a>
-aims to provide monadic traversors for the <a
+provides monadic traversors for the <a
 href="https://v2.ocaml.org/api/Seq.html"><code>Seq</code></a> module of
 the OCaml Stdlib. Specifically, the Seqes library provides functors
 parametrised over a monad, returning monad-friendly
-<code>Seq</code>-like modules.</p>
+<code>Seq</code>-like modules and monad-friendly
+<code>Seq</code>-compatible modules.</p>
 <pre><code>module IO = struct
   type &#39;a t = …
   let return x = …
   let bind x f = …
 end
-module SeqIO = Seqes.Monadic.Make1(IO)
+module SeqWithIO = Seqes.Standard.Make1(IO)
 let dump strings =
   lines
-  |&gt; SeqIO.filter (fun string -&gt; string &lt;&gt; &quot;&quot;)
-  |&gt; SeqIO.M.iter
+  |&gt; Seq.filter (fun string -&gt; string &lt;&gt; &quot;&quot;)
+  |&gt; SeqWithIO.iter
       (fun line -&gt;
         IO.bind
           (write_string line)
@@ -60,7 +61,7 @@ href="https://ocaml.org/p/tezos-lwt-result-stdlib/15.1/doc/Tezos_lwt_result_stdl
 <a
 href="https://ocaml.org/p/tezos-lwt-result-stdlib/15.1/doc/Tezos_lwt_result_stdlib/Lwtreslib/Bare/Hashtbl/index.html"><code>Hashtbl</code></a>,
 etc. These modules provide the normal functionality from the Stdlib as
-well as monadic traversors. Think a generalisation of <a
+well as monadic traversors. A generalisation of <a
 href="https://ocsigen.org/lwt/latest/api/Lwt_list"><code>Lwt_list</code></a>.</p>
 <p>There is also a <a
 href="https://ocaml.org/p/tezos-lwt-result-stdlib/15.1/doc/Tezos_lwt_result_stdlib/Lwtreslib/Bare/Seq/index.html"><code>Seq</code></a>
@@ -73,11 +74,31 @@ href="https://ocaml.org/p/tezos-lwt-result-stdlib/15.1/doc/Tezos_lwt_result_stdl
 and <a
 href="https://ocaml.org/p/tezos-lwt-result-stdlib/15.1/doc/Tezos_lwt_result_stdlib/Lwtreslib/Bare/Seq_es/index.html"><code>Seq_es</code></a>.
 Each one is a module similar to <code>Seq</code>, but with monads baked
-directly into the type. For example, in <code>Seq_s</code>:</p>
-<pre><code>type &#39;a t = unit -&gt; &#39;a node Lwt.t
+directly into the type. For example:</p>
+<table>
+<colgroup>
+<col style="width: 48%" />
+<col style="width: 51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><code>Stdlib.Seq</code>:</th>
+<th><code>Seq_s</code>:</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><pre><code>type &#39;a t = unit -&gt; &#39;a node
 and &#39;a node =
   | Nil
-  | Cons of &#39;a * &#39;a t</code></pre>
+  | Cons of &#39;a * &#39;a t</code></pre></td>
+<td><pre><code>type &#39;a t = unit -&gt; &#39;a node Lwt.t
+and &#39;a node =
+  | Nil
+  | Cons of &#39;a * &#39;a t</code></pre></td>
+</tr>
+</tbody>
+</table>
 <p>These <code>Seq*</code> modules were added at the time of OCaml
 version 4.13, when the <code>Seq</code> module was relatively small. The
 code was written out entirely by hand — or, rather, by the use of
@@ -97,36 +118,33 @@ Stdlib’s <code>Seq</code> but with the added monad.</p>
 <p>There are several functors because there are different kinds of
 monads and you might want different things from them. This is explained
 in more details in the documentation of the library. But all the
-functors produce modules that are identical to the whole or a subset of
-the <code>Seq</code> module with some monad in it.</p>
+functors produce modules that are identical to the whole or to a subset
+of the <code>Seq</code> module with some monad in it.</p>
 <p>There are a few cool tricks in the implementation of this library.
 But this post is focused on a different matter: the tests.</p>
 <h2 id="testing-the-implementation">Testing the implementation</h2>
 <p>As mentioned above, discussions during the mirage-os retreat
-contributed to the library. Some of the most important conversations
+contributed to the library. Some of the most important discussions
 happened with <a href="https://github.com/jmid">Jan Midtgaard</a> who
 knows a lot about randomised testing. He encouraged me to base the tests
-on a formal description of the library’s API and he helped me get a
-better understanding of the <a
-href="https://github.com/c-cube/qcheck">QCheck</a> property-based
-testing library.</p>
-<h3 id="property-based-testing-what-property">Property-based testing:
-what property</h3>
+on a formal description of the library’s API (something he has done for
+other projects), very much shaping the tests of Seqes.</p>
+<h3 id="what-to-test">What to test?</h3>
 <p>As mentioned above the Seqes library produces modules which are
 similar to the Stdlib <code>Seq</code> module, with a light peppering of
 monad. This is true of the signatures of the modules: they contain
 exactly the same function types as the Stdlib <code>Seq</code> module
-with some monadic types here and there. This is also true of the
-implementation of the modules: they contain exactly the same function
-definitions as the Stdlib <code>Seq</code> with some monadic
+with some monad type constructors here and there. This is also true of
+the implementation of the modules: they contain exactly the same
+function definitions as the Stdlib <code>Seq</code> with some monadic
 <code>bind</code> and <code>return</code> here and there.</p>
 <p>(The library is released under the LGPL license because the bulk of
-the content of the functor is just the code from the Stdlib
+the content of the functors is based on the code from the Stdlib
 <code>Seq</code> module, with the added monadifications.)</p>
 <p>In other words, the modules produced by the library’s functors are
 supposed to be equivalent to the Stdlib <code>Seq</code> module, modulo
-the monad parameter. This property is easy to test, provided we choose
-our monad carefully:</p>
+the monad parameter. This property is easy to test, provided the monad
+is simple:</p>
 <pre><code>module Identity = struct
   type &#39;a t = &#39;a
   let return x = x
@@ -138,58 +156,68 @@ indistinguishable from the Stdlib’s. In other words,</p>
 <li><p>given a module produced by the library</p>
 <pre><code>module SeqId = Seqes.Monadic1.Make(Identity)</code></pre></li>
 <li><p>given a function that appears in this module</p>
-<pre><code>Seq.find : &#39;a t -&gt; (&#39;a -&gt; bool) -&gt; &#39;a option
-SeqId.find : &#39;a t -&gt; (&#39;a -&gt; bool) -&gt; &#39;a option Identity.t</code></pre></li>
+<pre><code>Seq.find : &#39;a Seq.t -&gt; (&#39;a -&gt; bool) -&gt; &#39;a option
+SeqId.find : &#39;a SeqId.t -&gt; (&#39;a -&gt; bool) -&gt; &#39;a option Identity.t</code></pre>
+<p>(Note: the type <code>'a option Identity.t</code> is an alias for the
+type <code>'a option</code>.)</p></li>
 <li><p>and given inputs that are the equivalent modulo the monad</p>
 <pre><code>s_stdlib : &#39;a Seq.t
-s_identity : &#39;a SeqId.t
+s_seqid : &#39;a SeqId.t
 f : &#39;a -&gt; bool</code></pre></li>
 <li><p>the applications in <code>Seq</code> and <code>SeqId</code>
 should lead to the same result modulo the monad:</p>
-<pre><code>Seq.find f s ≈ SeqId.find f s</code></pre></li>
+<pre><code>Seq.find f s_stdlib = SeqId.find f s_seqid</code></pre></li>
 </ul>
 <p>The “modulo the monad” wording is somewhat hand-wavy here. But in
-practice it’s easy to write the exact property for any given function of
-the interface.</p>
+practice it’s easy to write down the exact property for any given
+function of the interface.</p>
+<p>All in all, the Seqes library lends itself to property-based
+testing.</p>
 <h3 id="property-based-testing-how">Property-based testing: how</h3>
-<p>There are several libraries in OCaml to write property-based
-tests.</p>
+<p>The first time I encountered property-based testing in OCaml was when
+<a href="https://gallium.inria.fr/~scherer/">Gabriel Scherer</a> wrote
+tests for a library I maintain: <a
+href="https://gitlab.com/nomadic-labs/data-encoding">data-encoding</a>.
+I was impressed with the amount of testing that could be done from so
+little code and I have been using this kind of tests a lot since
+then.</p>
+<p>In OCaml there are several libraries dedicated to writing
+property-based tests.</p>
 <ul>
-<li><a href="https://github.com/stedolan/crowbar">Crowbar</a></li>
-<li><a
-href="https://gitlab.inria.fr/fpottier/monolith">Monolith</a></li>
-<li><a href="https://github.com/c-cube/qcheck">QCheck</a></li>
+<li><a href="https://github.com/stedolan/crowbar">Crowbar</a>: a solid
+library with support for the <a
+href="https://lcamtuf.coredump.cx/afl/">AFL</a> fuzzer.</li>
+<li><a href="https://gitlab.inria.fr/fpottier/monolith">Monolith</a>: a
+library specialised in testing functions against a reference
+implementation.</li>
+<li><a href="https://github.com/c-cube/qcheck">QCheck</a>: a generic
+property-based testing library with good tooling integration and a large
+set of value generators.</li>
 </ul>
-<p>I went for QCheck because I’m already familiar this library, it has
-good integration with <a
-href="https://github.com/mirage/alcotest">Alcotest</a>, it has quite a
-complete set of value generators (including function generators), and I
-had an expert on hands from the very start (the aforementioned Jan).</p>
-<p>The Monolith library may have been a better choice because it is
-specifically intended to compare some code to a reference
-implementation. On the other hand, the lack of support for generating
-functions may have proven difficult to work with: many of the functions
-being tested take a function as argument.</p>
-<p>The Crowbar library also does not support generating arbitrary
-functions.</p>
-<p>So I went for QCheck. In QCheck, a test is fully described by</p>
+<p>I went for QCheck because it supports generators for functions, I was
+already familiar with this library, it has good integration with <a
+href="https://github.com/mirage/alcotest">Alcotest</a>, and I had an
+expert on hands from the very start (the aforementioned Jan).</p>
+<p>In QCheck, a test is fully described by</p>
 <ul>
 <li>a generator for input values,</li>
-<li>a function that uses those input values and returns a boolean,</li>
+<li>a property over the inputs (i.e., a function from the inputs to a
+boolean),</li>
 <li>some optional parameters for tweaking the test,</li>
 <li>some optional metadata for making the test report readable.</li>
 </ul>
 <pre><code>QCheck2.Test.make :
   (* some optional parameters here *)
-  &#39;a QCheck2.Gen.t
-  -&gt; (&#39;a -&gt; bool)
+  &#39;a QCheck2.Gen.t    (* generator *)
+  -&gt; (&#39;a -&gt; bool)      (* property *)
   -&gt; QCheck2.Test.t</code></pre>
-<h3 id="a-formal-description-of-the-librarys-api">A formal description
-of the library’s API</h3>
-<p>The property mentioned above is easy to describe in QCheck. However,
-the property is only one of many: one for each function of the
-signature. And the whole suite of properties must be checked for each
-functor of the library.</p>
+<h3 id="a-formal-description-of-the-api">A formal description of the
+API</h3>
+<p>The property mentioned above (equivalence of <code>Seq.find</code>
+and <code>SeqId.find</code>) is easy to describe in QCheck. However, the
+property is only one of many: one for each function of the signature.
+And the whole suite of properties must be checked for each functor of
+the library.</p>
 <p>Writing this test suite by hand is unreasonably verbose. This
 verbosity would impact maintainability. But it could also hide some
 issues with the code: it makes it harder to check that the test suite is
@@ -197,12 +225,12 @@ complete and correct.</p>
 <p>Thankfully, it is possible to minimise boilerplate by the clever
 application of <a
 href="https://v2.ocaml.org/manual/gadts.html">GADTs</a>. More
-concretely, consider the signature of the <code>Seq</code> module. A
-handful of types and type constructors are used. We can describe these
-types with a data-type of our own.</p>
+concretely, consider the signature of the <code>Seq</code> module: only
+a handful of types and type constructors are used; they can be described
+by a data-type.</p>
 <p>E.g., for the function</p>
 <pre><code>find_map : (&#39;a -&gt; &#39;b option) -&gt; &#39;a Seq.t -&gt; &#39;b option</code></pre>
-<p>We need the type-description data-type to include the following
+<p>The type-description data-type needs to include the following
 constructors:</p>
 <pre><code>type ty =
   | Option of ty
@@ -210,22 +238,23 @@ constructors:</p>
   | Lambda of ty * ty
   (* … *)</code></pre>
 <p>Type parameters (the <code>'a</code> and <code>'b</code>) are
-somewhat difficult to handle and so we simplify the problem by
+somewhat difficult to handle and so I simplified the problem by
 considering that all the polymorphic parts of the interface are
-instantiated with the <code>char</code> type. (We chose
-<code>char</code> because it doesn’t appear in the interface of
-<code>Seq</code> at all and because it is simple without being
-trivial.)</p>
+instantiated with the <code>char</code> type. (I chose <code>char</code>
+because it doesn’t appear in the interface of <code>Seq</code> at all
+and because it is simple without being trivial.)</p>
 <pre><code>type ty =
   (* … *)
   | Char
   (* … *)</code></pre>
-<p>As is, this <code>ty</code> is not very usable. That’s because we
+<p>As is, this <code>ty</code> is not very usable. That’s because I
 cannot write functions that consume values of this type to return
-interestingly typed values. For example, we want to generate equality
+interestingly typed values. For example, I want to generate equality
 functions based on those type descriptions. Such an equality function
-should have a type that matches the values being checked. And so we need
-to keep track of the type of the values the type of which is being
+should have a type that matches the values being checked. E.g.,
+<code>eq_of_ty (Option Char)</code> should have type
+<code>char option -&gt; char option -&gt; bool</code>. And so I need to
+keep track of the type of the values the type of which is being
 described.</p>
 <p>After some experimentation the following type ended up covering all
 the testing needs:</p>
@@ -242,19 +271,24 @@ the testing needs:</p>
       ((&#39;va, &#39;vb) Either.t, (&#39;ma, &#39;mb) Either.t) ty
   | Lambda : (&#39;vk, &#39;vr, &#39;mk, &#39;mr) params * (&#39;vr, &#39;mr) ty -&gt;
       (&#39;vk, &#39;mk) ty
-  | SeqT : (&#39;va, &#39;ma) ty -&gt; (&#39;va Seq.t, &#39;ma SeqId.t) ty
-  | MonT : (&#39;va, &#39;ma) ty -&gt; (&#39;va, &#39;ma Identity.t) ty
+  | Seq : (&#39;va, &#39;ma) ty -&gt; (&#39;va Seq.t, &#39;ma SeqId.t) ty
+  | Monad : (&#39;va, &#39;ma) ty -&gt; (&#39;va, &#39;ma) ty
 and (_, _, _, _) params =
   | [] : (&#39;vr, &#39;vr, &#39;mr, &#39;mr) params
   | ( :: ) : (&#39;vp, &#39;mp) ty * (&#39;vk, &#39;vr, &#39;mk, &#39;mr) params -&gt;
       (&#39;vp -&gt; &#39;vk, &#39;vr, &#39;mp -&gt; &#39;mk, &#39;mr) params</code></pre>
 <p>The type constructor <code>ty</code> carries two type parameters for
 the two sides of the property being checked: the Stdlib side and the
-monadic side. The Stdlib side parameters use <code>v</code> as a prefix
-(for <em>vanilla</em>), and the monadic side parameters use
-<code>m</code>. E.g., the type descriptor
-<code>Option (MonT Char)</code> has the type
-<code>(char option, char Identity.t option) ty</code>.</p>
+Seqes side. The Stdlib side parameters use <code>v</code> as a prefix
+(for <em>vanilla</em>), and the Seqes side parameters use <code>m</code>
+(for <em>monadic</em>). E.g., the type descriptor
+<code>Option (Monad Char)</code> has the type
+<code>(char option, char option) ty</code>.</p>
+<p>Note that the with the <code>Identity</code> monad, the
+<code>Identity.t</code> type constructor can be omitted. And, in fact,
+the <code>Monad</code> constructor could be removed altogether. It is
+left because of future plans to test against monads other than
+<code>Identity</code>. (Stay tuned for a future post about that.)</p>
 <p>The <code>Lambda</code> constructor has one argument for parameters
 (of type <code>params</code>) and one for return. The argument for
 parameters describes the lambda’s parameters, using the
@@ -263,73 +297,89 @@ parameters because it needs to keep track of both the parameters types
 as well as the return types, for both the Stdlib side and the monadic
 side. For example,</p>
 <pre><code>let params
-  : ( (char -&gt; char -&gt; int)
-    , int
-    , (char -&gt; char -&gt; int Identity.t)
-    , int Identity.t
+  : ( (char -&gt; char -&gt; int Seq.t)
+    , int Seq.t
+    , (char -&gt; char -&gt; int SeqId.t)
+    , int SeqId.t
     ) params
   = [Char; Char]
 in
-Lambda (params, Monad Int)
-  : ( (char -&gt; char -&gt; int)
-    , (char -&gt; char -&gt; int Indentity.t)
+Lambda (params, Seq Int)
+  : ( (char -&gt; char -&gt; int Seq.t)
+    , (char -&gt; char -&gt; int SeqId.t)
     ) ty</code></pre>
 <h3 id="from-the-formal-description-to-the-tests">From the formal
 description to the tests</h3>
-<p>Equipped with this formal type-description type, we can extract all
-we need for QCheck tests, namely an input generator and a comparison
-function. Specifically, we can write
-<code>eq_of_ty : ('v, 'm) ty -&gt; ('v -&gt; 'm -&gt; bool)</code> and
-<code>gen_of_ty : ('v, 'm) ty -&gt; (v * m) QCheck2.Gen.t</code>. For
-both functions, the ground type cases are trivial</p>
+<p>Equipped with this formal type-description type, it is possible to
+extract the building blocks of a QCheck tests, namely an equality
+function and an input generator. The equality function
+(<code>eq_of_ty : ('v, 'm) ty -&gt; ('v -&gt; 'm -&gt; bool)</code>) has
+trivial ground types, simple type constructors, trivial lambdas, and
+interesting sequences.</p>
 <pre><code>let eq_of_ty =
-  (* … *)
+  | Unit -&gt; fun () () -&gt; true
   | Int -&gt; fun a b -&gt; a = b
-  (* … *)
-let gen_of_ty =
-  (* … *)
-  | Int -&gt; QCheck2.Gen.map (fun x -&gt; (x, x)) QCheck2.Gen.int
-  (* … *)</code></pre>
-<p>The type constructors cases are simple:</p>
-<pre><code>let eq_of_ty =
-  (* … *)
+  (* … more ground types *)
   | Option ty -&gt; (fun a b -&gt; match a, b with
       | Some a, Some b -&gt; eq_of_ty ty a b
       | None, None -&gt; true
       | Some _, None -&gt; false
       | None, Some _ -&gt; false
   )
-  (* … *)
-let gen_of_ty =
-  (* … *)
+  (* … more type constructors *)
+  | Lambda _ -&gt; invalig_arg &quot;eq_of_ty.Lambda&quot;
+  | Seq ty -&gt; (fun v m -&gt;
+      let eq = eq_of_ty ty in
+      let rec loop n v m =
+        if v &lt; 0 then
+          true (* only compare to a certain length *)
+        else
+          match v (), m () with
+          | Seq.Nil, SeqId.Nil -&gt; true
+          | Seq.Cons (x, v), SeqId.Cons (y, m) -&gt;
+              eq x v &amp;&amp; loop (n-1) v m
+          | _ -&gt; false
+      in
+      loop 100 v m)
+  | Monad ty -&gt; eq_of_ty ty</code></pre>
+<p>The input generator function
+(<code>gen_of_ty : ('v, 'm) ty -&gt; (v * m) QCheck2.Gen.t</code>)
+generates a pair of equivalent-modulo-the-monad values. It has trivial
+ground types, simple type constructor, complex lambdas, and simple
+sequences.</p>
+<pre><code>let gen_of_ty =
+  | Unit -&gt; QCheck2.Gen.map (fun x -&gt; (x, x)) QCheck2.Gen.unit
+  | Int -&gt; QCheck2.Gen.map (fun x -&gt; (x, x)) QCheck2.Gen.int
+  (* … more group types *)
   | Option ty -&gt;
       QCheck2.Gen.oneof [
         QCheck2.Gen.return (None, None);
         QCheck2.Gen.map (fun (v, m) -&gt; (Some v, Some m)) (gen_of_ty ty);
       ]
-  (* … *)</code></pre>
-<p>The lambdas are trivial for <code>eq_of_ty</code> (raising
-<code>Invalid_argument</code>) but complex for <code>gen_of_ty</code>.
-This is because we need to generate a pair of functions which are
-equivalent modulo the identity monad. We do this by generating one
-vanilla function and then monadifying the parameters and the return
-type.</p>
-<p>This part is fiddly and it took several attempt to get right. It’s
-also complicated to generalise based on the arity of the functions. As a
-result, this part of the test helpers is somewhat verbose and it is
+  (* … more type constructors *)</code></pre>
+<p>For the sequence, the function generates a list of values and then
+converts it to a pair of the different sequence types — <a
+href="https://gitlab.com/nomadic-labs/seqes/-/blob/daa277e2f7bdcec5af48bef962acc8a6c876e7d5/test/pbt/helpers.ml#L54">see
+code</a>. For the lambdas, the function generates a single vanilla
+function, and then patches it by monadifying the parameters and return
+value — <a
+href="https://gitlab.com/nomadic-labs/seqes/-/blob/daa277e2f7bdcec5af48bef962acc8a6c876e7d5/test/pbt/helpers.ml#L324">see
+code</a>. This part is fiddly and it took several attempt to get right.
+It’s also complicated to generalise based on the arity of the functions.
+As a result, this part of the test helpers is somewhat verbose and it is
 hard-coded to support only the arities actually used in the
 <code>Seq</code> interface.</p>
-<p>Equipped with these two function, we can write
+<p>Equipped with these two function, I can write
 <code>test_of_ty</code>:</p>
 <pre><code>let test_of_ty
 : type vk vr mk mr.
-     string                  (* name of test *)
-  -&gt; (vk, vr, mk, mr) params (* description of arguments *)
-  -&gt; (vr, mr) ty             (* description of return values *)
-  -&gt; vk                      (* stdlib function *)
-  -&gt; mk                      (* monadic function *)
+     string                    (* name of test *)
+  -&gt; ( (vk, vr, mk, mr) params (* description of arguments *)
+     * (vr, mr) ty )           (* description of return values *)
+  -&gt; vk                        (* stdlib function *)
+  -&gt; mk                        (* monadic function *)
   -&gt; QCheck2.Test.t
-= fun name params tyr vf mf -&gt;
+= fun name (params, tyr) vf mf -&gt;
   match params with
   | [] -&gt; assert false (* no parameterless functions *)
   | [tya] -&gt;
@@ -344,7 +394,7 @@ hard-coded to support only the arities actually used in the
   (* … support for more arities *)</code></pre>
 <h3 id="actually-writing-the-tests-down">Actually writing the tests
 down</h3>
-<p>To avoid some verbosity, we define a small DSL:</p>
+<p>To avoid some verbosity, I define a small DSL:</p>
 <pre><code>module DSL = struct
   let unit = Unit
   let data = Char
@@ -352,16 +402,22 @@ down</h3>
   let ( * ) a b = Tup2 (a, b)
   (* … more type constructors *)
   let ( @-&gt; ) p r =
-    (* used for inner lambda *)
+    (* used for inner lambdas *)
     Lambda (p, r)
-  (* … special [( --&gt; )] for top-level lambdas *)
+  let ( --&gt; ) p r =
+    (* used for top-level lambdas *)
+    let _ =
+      (* force type constraints *)
+      Lambda (p, r)
+    in
+    (p, r)
 end</code></pre>
 <p>This makes test declarations easy:</p>
 <pre><code>let test_fold_left =
   test_of_ty &quot;fold_left&quot;
     DSL.([ [data; data] @-&gt; data; data; seq data ] --&gt; monad data)
     Seq.fold_left
-    SeqM.fold_left</code></pre>
+    SeqId.fold_left</code></pre>
 <h2 id="testing-the-test-suite">Testing the test suite</h2>
 <p>The test-suite is built on robust foundations which ensure some level
 of correctness. For example, a failure of a test cannot be due to a
@@ -369,19 +425,19 @@ mismatch between the inputs generator and the function being
 checked.</p>
 <p>Moreover, the <code>ty</code>-based construction allows to separate
 the tests into different components: the inputs generator, the equality
-checker, the test declarations. We can review one of these component
-(say the inputs generator) and be confident that the component has some
-desired property (say that it generates sufficiently random values).
-Compare to a test suite without <code>ty</code> where a separate
-generator is declared for each test, making a review difficult.</p>
+checker, the test declarations. Reviewing the test suite can be done one
+component at a time. This is much easier than revieweing a test suite
+without <code>ty</code>: each test has its own generator which needs to
+be reviewed.</p>
 <p>Nonetheless, there could easily be issues in the test suite. The
 simplest issue could be a missing test (say forgetting to test
 <code>iter</code>). Another issue would be to test the library function
 (say <code>exists</code>) against a different yet type-compatible
 reference function (say <code>for_all</code>); such an issue could hide
-an implementation bug. A further issue would be that we do not test on a
-good range of values (say we never generate empty sequences).</p>
-<p>So we want to test the test suite!</p>
+an implementation bug. A further issue would be that the tests would not
+cover a good range of input values (say never generating empty
+sequences).</p>
+<p>So I wanted to test the test suite!</p>
 <p>In another conversation with Jan he mentioned <a
 href="https://github.com/jmid/mutaml">mutaml</a>: a mutation testing
 tool for OCaml.</p>
@@ -391,11 +447,11 @@ check that the tests catch the modification. For example, you change
 <code>if n = 0 then …</code> into <code>if n &lt;&gt; 0 then …</code>,
 you run your test suite, and you check that the tests fail.</p>
 <p>If a mutation goes undetected by your test suite, then the test suite
-is likely incomplete. (Alternatively, some of the code could need
-improvement.)</p>
+is likely incomplete. (Alternatively, some of the code is
+dead-code.)</p>
 <p>With a large enough set of mutations, we can increase confidence in
-the test suite. Because we want a large set of mutations, we really want
-to automate the process of mutating and running the test suite. This is
+the test suite. In order to obtain a large set of mutations, we need to
+automate the process of mutating and running the test suite. This is
 what mutaml provides.</p>
 <h3 id="mutaml">mutaml</h3>
 <p>The mutaml project provides multiple tools which, taken together, let
@@ -405,16 +461,16 @@ code.</p>
 <pre><code>dune build --instrument-with mutaml</code></pre>
 <p>This will generate environment-based conditional mutations: something
 akin to
-<code>if (if env_has "MUTATION_XX" then n &lt;&gt; 0 else n = 0) …</code>.
-This approach allows the next tool to check many mutations without the
+<code>if (if env_has "MUTATION_XX" then n &lt;&gt; 0 else n = 0) then …</code>.
+This approach allows the second tool to check many mutations without the
 need to recompile each time.</p>
 <pre><code>mutaml-runner &quot;dune exec --no-build test/pbt/test_monadic1.exe&quot;</code></pre>
-<p>The third tool analyses a report generated by
-<code>mutaml-runner</code>. It shows a summary of the findings
-(essentially an estimate of the coverage of the test suite) as well as
-each of the mutations that went undetected (if any). These mutations are
-presented as a simple diff, eliminating the noisy environment-based
-approach that helps the runner:</p>
+<p>This <code>mutaml-runner</code> generates a report: listing the test
+status for each mutation. The third tool analyses this report. It shows
+a summary of the findings (essentially an estimate of the coverage of
+the test suite) as well as each of the mutations that went undetected
+(if any). These mutations are presented as a simple diff, eliminating
+the noisy environment-based approach that helps the runner:</p>
 <p>E.g.,</p>
 <pre><code>Mutation &quot;lib/standard.ml-mutant6&quot; passed
 
@@ -429,7 +485,7 @@ approach that helps the runner:</p>
                return true
              else
                exists2 f xs ys</code></pre>
-<h3 id="advice">Advice</h3>
+<h3 id="miscellaneous-advice">Miscellaneous advice</h3>
 <ul>
 <li><p>Make sure to disable your dune-cache when running the commands
 above to avoid interferences with previous work.</p></li>
@@ -442,10 +498,10 @@ to only run through a subset of the mutations.</p></li>
 <h3 id="status-of-mutaml">Status of mutaml</h3>
 <p>The mutaml project is in alpha. It needs some more work (on the UX
 side most notably) but it is already very useful.</p>
-<p>Using mutaml, I had a similar feeling as when I first used Crowbar:
-that of having found a very useful and practical tool that can change my
-programming habits significantly and for the better. I fully intend to
-use mutaml in more and more projects.</p>
+<p>Using mutaml, I had a similar feeling as when I first started using
+property-based testing: that of having found a very useful and practical
+tool that can change my programming habits significantly and for the
+better. I fully intend to use mutaml in more and more projects.</p>
 <p>I would recommend you give it a try.</p>
 </div>
 </body>
