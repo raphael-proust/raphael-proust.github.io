@@ -30,7 +30,7 @@ I write, edit and review courses, tutorials, manuals and rulebooks in French and
 
  Sep 2016–Aug 2017       Software developer and technical writer at
                          Cambridge Coding Academy
-                         ([wayback machine link](http://web.archive.org/web/20200921170235/https://cambridgecoding.com/))
+                         ([via wayback machine](http://web.archive.org/web/20200921170235/https://cambridgecoding.com/))
                          and [Cambridge Spark](https://cambridgespark.com/).
 
  Sep 2012–Jul 2016       PhD student at the
@@ -79,173 +79,130 @@ I write, edit and review courses, tutorials, manuals and rulebooks in French and
 
 ## Projects at Nomadic Labs
 
-[Nomadic Labs](https://nomadic-labs.com/) is a company that provides research
-and development in formal verification, distributed systems and programming
-languages.
+[Nomadic Labs](https://nomadic-labs.com/) is a company that provides research and development in formal verification, distributed systems and programming languages.
 
-I joined Nomadic Labs in March 2018 as the company was expending to handle the
-development requirements of the [Tezos](https://tezos.com/) project. I am still
-working at Nomadic Labs, on Tezos and other related projects. Some of the items
-below are on-going. All items are written in past tense for consistency.
+I joined Nomadic Labs in March 2018 as the company was expanding to handle the development requirements of the [Tezos](https://tezos.com/) project.
+I am still working at Nomadic Labs, on Tezos and other related projects.
+Some of the items below are on-going.
+All items are written in past tense for consistency.
 
 - **Internal training**
 
-	I organised and ran several training sessions focused on the common libraries
-	that are used within the Tezos project, most notably
+	I organised and ran several training sessions focused on the common libraries that are used within the Tezos project, most notably
 	Lwt,
 	the ocamldoc documentation markup language,
 	our in-house error-management library, and
 	our in-house data de/serialisation library.
 
-	I produced slides and I organised and ran the training sessions. I also wrote
-	tutorials for
+	I produced slides and I organised and ran the training sessions.
+	I also wrote tutorials for
 	[Lwt](/code/lwt-part-1.html),
 	[our `Error_monad` library](http://tezos.gitlab.io/developer/error_monad.html), and
 	[our `data-encoding` library](https://nomadic-labs.gitlab.io/data-encoding/data-encoding/tutorial.html).
 
 - **Code review** and **merging**
 
-	I reviewed merge requests (MRs): inspecting changes to the code before giving
-	a greenlight for merging, or requesting changes, or discussing specific
-	points with the original developers.
+	I reviewed merge requests (MRs): inspecting changes to the code before giving a greenlight for merging, or requesting changes, or discussing specific points with the original developers.
 
 	I rebased and merged MRs that had been greenlit by other reviewers.
 
-	I participated and, for a time, ran weekly meetings to discuss and triage
-	open MRs.
+	I participated and, for a time, ran weekly meetings to discuss and triage open MRs.
 
 - **Overhauling the Tezos mempool**
 
-	The mempool is a component of the Tezos project responsible for receiving
-	information from the P2P gossip, folding the received information into the
-	local state, and, based on state changes, handing over some more information
-	to the P2P layer to be gossiped. A few colleagues and myself rewrote a new
-	mempool from scratch to fix some issues and improve performance.
+	The mempool is a component of the Tezos project responsible for receiving information from the P2P gossip, folding the received information into the local state, and, based on state changes, handing over some more information to the P2P layer to be gossiped.
+	A few colleagues and myself rewrote a new mempool from scratch to fix some issues and improve performance.
 
-	This software component involves concurrency (information is received from
-	different peers at unpredictable times, but operations must be applied to the
-	state sequentially) and more specifically defensive scheduling: it must
-	protect against potential denial of service attacks whereby
-	malicious peers saturate a node to the point that it ignores other,
-	non-malicous nodes. It also involves a high level of abstraction because the
-	nature of the state and the way information is folded into it depends on
-	another software component (the economic protocol) that can change
-	dynamically.
+	This software component involves concurrency and more specifically defensive scheduling: it must be resilient against potential denial of service attacks.
+	It also involves a high level of abstraction because the nature of the state and the way information is folded into it depends on another software component (the economic protocol) that can change dynamically.
 
-	The development of this new mempool led to the release of
-	[`lwt-pipeline`](https://gitlab.com/nomadic-labs/lwt_pipeline) and the
-	extension of [`ringo`](https://gitlab.com/nomadic-labs/ringo).
+	The development of this new mempool led to the release of [`lwt-pipeline`](https://gitlab.com/nomadic-labs/lwt_pipeline) and the extension of [`ringo`](https://gitlab.com/nomadic-labs/ringo).
 
 - **Releasing internal libraries** and **upstreaming changes to vendored libraries**
 
-	The Tezos project was originally built as a set of libraries and binaries all
-	placed within the same repository. After a while, some parts of the code had
-	matured into stable components with well-defined interfaces. These parts
-	could be released.
+	The Tezos project was originally built as a set of libraries and binaries all placed within the same repository.
+	After a while, some parts of the code had matured into stable components with well-defined interfaces.
+	These parts could be released.
 
-	I took the lead in releasing libraries. This involved setting up their own
-	repository (with continuous integration), setting up the packaging
-	boilerplate, and modifying the code of Tezos to use the external libraries
-	rather than the embedded version.
+	I took the lead in releasing libraries.
+	This involved improving their documentation, setting up their own repository (with continuous integration), setting up the packaging boilerplate, and modifying the code of Tezos to use the external libraries rather than the embedded version.
 
 - **Modernising the Error Management library**
 
-	The in-house Error Monad library dates back to the very start of the Tezos
-	project. Over the course of the project's lifetime it had accumulated many
-	helper functions of different uses.
+	The in-house Error Monad library dates back to the very start of the Tezos project.
+	Over the course of the project's lifetime it had accumulated many helper functions for different uses.
 
-	I led the effort of cleaning up the interface, organising the code into
-	separate components, bringing in a newer syntax (based on OCaml's binding
-	operators) and developing an error-related supplement to the OCaml Stdlib.
+	I led the effort of cleaning up the interface, organising the code into separate components, bringing in a newer syntax (based on OCaml's binding operators) and developing an error-related supplement to the OCaml Stdlib.
+	This task involved some changes to the library itself as well as corresponding changes throughout the rest of the project.
+	Because changes to the rest of the code were large, it also involved carefully preparing the git history of the merge requests.
 
 - **OCaml 5 readiness**
 
-	I led the effort into investigating the issues that prevented the Tezos
-	project from upgrading to the newer major release of OCaml: OCaml 5. The main
-	issues were related to API compatibility and packaging.
+	I led the effort into investigating the issues that prevented the Tezos project from upgrading to the newer major release of OCaml: OCaml 5.
+	The main issues were related to API compatibility and packaging.
 
-	I also led the effort into the long-term planning of using the new
-	features of OCaml 5 whilst accommodating our existing code-base.
+	I also led the effort into the long-term planning of using the new features of OCaml 5 whilst accommodating our existing code-base.
 
 - **Other miscellaneous**
 
-	Work at Nomadic Labs also included developing various features, fixing some
-	bugs, triaging issues, etc. I also developed some of the tooling used for
-	linting and testing.
+	Work at Nomadic Labs also included developing various features, fixing some bugs, triaging issues, etc.
+	I also developed some of the tooling used for linting and testing.
 
 
 ## Projects at Cambridge Coding Academy and Cambridge Spark
 
-[Cambridge Coding Academy](https://cambridgecoding.com/) and
-[Cambridge Spark](https://cambridgespark.com/) are twin companies that provide
-teaching and training in programming, data analysis, machine learning, etc.
+Cambridge Coding Academy ([via wayback machine](http://web.archive.org/web/20200921170235/https://cambridgecoding.com/)) and [Cambridge Spark](https://cambridgespark.com/) are twin companies that provide teaching and training in programming, data analysis, machine learning, etc.
 The former organises courses for teenagers; the latter for professionals.
 
-I started working for the companies as they were set up. When I finished my
-PhD, I started full time employment for these companies and worked on the
-projects listed below.
+I started working for the companies as they were set up.
+When I finished my PhD, I started full time employment for these companies and worked on the projects listed below.
 
 - **Student evaluation system**
 
-	I participated in the creation, maintenance and improvement of a system to
-	automatically evaluate students. I also participated in the
-	system-administration for the machines that hosted the system.
+	I participated in the creation, maintenance and improvement of a system to automatically evaluate students.
+	I also participated in the system-administration for the machines that hosted the system.
 
-	The system analysed submitted code, recorded complete results for later
-	review by the teachers and gave immediate summarised feedback to the students.
+	The system analysed submitted code, recorded complete results for later review by the teachers and gave immediate summarised feedback to the students.
 
-	The system involved a self-hosted Gitlab instance, the Gitlab
-	API, Python, continuous integration, linting libraries, unit testing, Docker
-	images (both building and running), and Amazon Web Services.
+	The system involved a self-hosted Gitlab instance, the Gitlab API, Python, continuous integration, linting libraries, unit testing, Docker images (both building and running), and Amazon Web Services.
 
 
 - **Course writing**
 
-	I wrote, reviewed, and edited
-	[courses for Cambridge Coding Academy](http://cambridgecoding.com/summerschool).
-	These courses, aimed at teenagers, covered basic programming, making web
-	pages, building games, programmatically generating music, and creating
-	artificial intelligences.
+	I wrote, reviewed, and edited courses for Cambridge Coding Academy.
+	These courses, aimed at teenagers, covered basic programming, making web pages, building games, programmatically generating music, and creating artificial intelligences.
 
-	I wrote, reviewed, and edited
-	[courses for Cambridge Spark](https://cambridgespark.com/training). These
-	courses, aimed at professionals, covered basic programming, data-analysis,
-	and quantitative finance.
+	I wrote, reviewed, and edited courses for Cambridge Spark.
+	These courses, aimed at professionals, covered basic programming, data-analysis, and quantitative finance.
 
 
 - **Publication pipeline**
 
-	I wrote and maintained a publication pipeline for content created by
-	Cambridge Spark. The pipeline let authors submit content, make edits,
-	and compile the files locally. It let reviewers make minor changes and
-	request bigger changes. It automatically compiled the files as they were
-	submitted and let project managers publish them online on demand.
+	I wrote and maintained a publication pipeline for content created by Cambridge Spark.
+	The pipeline let authors submit content, make edits, and compile the files locally.
+	It let reviewers make minor changes and request bigger changes.
+	It automatically compiled the files as they were submitted and let project managers publish them online on demand.
 
-	The system used Pandoc, custom LaTeX templates, custom HTML templates with
-	CSS, Makefiles, integration tests, and continuous integrations.
+	The system used Pandoc, custom LaTeX templates, custom HTML templates with CSS, Makefiles, integration tests, and continuous integrations.
 
 
 - **Web development**
 
-	I contributed to the implementation of the online learning platform of
-	Cambridge Coding Academy. The program was written in Scala and Javascript
-	and managed users through an SQL database. The User Interface included an
-	online editor, and rendered user-edited HTML/Javascript/CSS in the browser.
+	I contributed to the implementation of the online learning platform of Cambridge Coding Academy.
+	The program was written in Scala and Javascript and managed users through an SQL database.
+	The User Interface included an online editor, and rendered user-edited HTML/Javascript/CSS in the browser.
 
-	I contributed to two consecutive versions of the
-	[Cambridge Spark website](https://cambridgespark.com/). The website, coded
-	in Scala, used the Play and Bootstrap frameworks, an SQL database, and
-	custom Javascript.
+	I contributed to two consecutive versions of the Cambridge Spark website.
+	The website, coded in Scala, used the Play and Bootstrap frameworks, an SQL database, and custom Javascript.
 
-	I also assisted with the system administration. The website was hosted on
-	Amazon Web Services.
+	I also assisted with the system administration.
+	The website was hosted on Amazon Web Services.
 
 
 - **Teaching**
 
-	I taught numerous courses for both teenagers (with Cambridge Coding
-	Academy) and professionals (with Cambridge Spark) about several aspects of
-	computer science and programming. I also trained teachers and tutors.
+	I taught numerous courses for both teenagers (with Cambridge Coding Academy) and professionals (with Cambridge Spark) about several aspects of computer science and programming.
+	I also trained teachers and tutors.
 
 
 ## Projects at the University of Cambridge
@@ -254,48 +211,32 @@ I completed a PhD at the Computer Laboratory of the University of Cambridge.
 
 - **PhD**
 
-	The topic of my PhD is the use of compile-time memory management (to
-	replace execution-time garbage collection) in the context of system
-	programming.
+	The topic of my PhD is the use of compile-time memory management (to replace execution-time garbage collection) in the context of system programming.
 
-	I wrote the
-	[dissertation](http://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-908.html) in
-	LaTeX, used `mk` to drive the compilation into pdf, and managed the source
-	files with Git.
+	I wrote the [dissertation](http://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-908.html) in LaTeX, used `mk` to drive the compilation into pdf, and managed the source files with Git.
 
-	I wrote a prototype in OCaml, used `make` to drive the compilation as
-	well as the tests and the benchmarks, and managed the source files with
-	Git.
+	I wrote a prototype in OCaml, used `make` to drive the compilation as well as the tests and the benchmarks, and managed the source files with Git.
 
 - **Computer Science Laboratory** (additional work)
 
-	I supervised undergraduate students, both in tutoring sessions and for
-	longer projects. I organised
-	[a series of talks](http://talks.cam.ac.uk/user/show/25917) for my research
-	team. I contributed to the early setup of the
-	[Computer Science Admission Test](https://www.cl.cam.ac.uk/admissions/undergraduate/admissions-test/)
-	which is used to evaluate candidates to the University of Cambridge
-	Computer Science undergraduate program.
+	I supervised undergraduate students, both in tutoring sessions and for longer projects.
+	I organised [a series of talks](http://talks.cam.ac.uk/user/show/25917) for my research team.
+	I contributed to the early setup of the [Computer Science Admission Test](https://www.cl.cam.ac.uk/admissions/undergraduate/admissions-test/) which is used to evaluate candidates to the University of Cambridge Computer Science undergraduate program.
 
-	I was awarded the
-	[Wiseman Award](https://www.cl.cam.ac.uk/local/wiseman.html) for these
-	contributions to the Computer Science Laboratory.
+	I was awarded the [Wiseman Award](https://www.cl.cam.ac.uk/local/wiseman.html) for these contributions to the Computer Science Laboratory.
 
 - **Magdalene College MCR Committee member**
 	(MCR: the body of graduate students)
 
-	I was Secretary, President and then IT officer of the
-	[MCR](http://mcr.magd.cam.ac.uk/) committee of
-	[Magdalene College](https://www.magd.cam.ac.uk/). I organised events for
-	around 100 people, represented students in College matters, and organised
-	committee elections.
+	I was Secretary, President and then IT officer of the [MCR](http://mcr.magd.cam.ac.uk/) committee of [Magdalene College](https://www.magd.cam.ac.uk/).
+	I organised events for around 100 people, represented students in College matters, and organised committee elections.
 
 
 
 ## Miscellaneous
 
 - Natural languages: French (native), English (fluent), Spanish (intermediate), Chinese (beginner), Toki Pona (beginner).
-- Programming languages: OCaml (native), make (fluent), shell (intermediate), Javascript (rusty), Python (rusty), Scala (rusty), Scheme (beginner), Haskell (beginner), C (beginner).
-- Markup languages: Markdown (native), HTML (fluent), LaTeX (intermediate).
-- Environment: Archlinux, `vi`/`nvim`, `git`, `acme`, `make`, `mk`, `opam`, `sh`/`zsh`, `rc`, `pandoc`, etc.
+- Programming languages: OCaml (native), make (fluent), shell (intermediate), Javascript (rusty), Python (rusty), Scala (rusty), rust (beginner), Scheme (beginner), Haskell (beginner), C (beginner).
+- Markup languages: Markdown (native), HTML (fluent), LaTeX (rusty).
+- Environment: Archlinux, `vi`(`nvim`), `git`, `acme`, `make`, `mk`, `opam`, `dune`, `sh`/`zsh`, `rc`, `pandoc`, etc.
 - Other: driver's license, PADI Advanced Open Water Diver, fire warden training, skilled punter and skater.

@@ -6,9 +6,10 @@ In my free time, I occasionally play (both as player and game master) [Dungeons 
 I also enjoy the [Pokémon](http://www.pokemon.com/us/) franchise, the [Zelda](https://www.zelda.com) series, most things made by [Introversion Software](http://introversion.co.uk/introversion/), [Smash Up](https://www.alderacsite.com/smash-up-home/), [Minecraft](http://minecraft.net/), and some other games.
 
 After babbling BASIC on my CASIO graph 65, I learned [OCaml](https://ocaml.org/).
-I consider it my main programming language.
-I am also proficient, if rusty, in Python, Javascript, and Scala.
+It is my go-to programming language for personal projects.
+I am rusty in Python, Javascript, and Scala.
 I have also been in contact with Scheme, Haskell and C.
+I am slowly learning rust.
 Most of my public software contributions are on [Gitlab](https://gitlab.com/raphael-proust) and on [Github](http://github.com/raphael-proust/).
 
 I speak French, English and some Spanish.
@@ -38,7 +39,7 @@ I wrote software to write, review, edit, publish, and deliver courses; I wrote, 
 I was a Ph.D. student at the [Computer Laboratory](http://www.cl.cam.ac.uk/) of the [University of Cambridge](http://www.cam.ac.uk/) under supervision of [Alan Mycroft](http://www.cl.cam.ac.uk/~am21/).
 [My thesis](http://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-908.html) explored the use of compile-time memory management in the context of system programming: replacing garbage collectors by a compilation pass in order to be friendly to system programmers.
 
-I was a student of [Magdalene College](http://www.magd.cam.ac.uk/) and was involved in the MCR committee (first as Social officer, then as Secretary, then as President and finally as Consultant).
+I was a student of [Magdalene College](http://www.magd.cam.ac.uk/) and was involved in the MCR committee (first as Social officer, then as Secretary, then as President).
 
 ------------------------------------------------------------------------
 
@@ -46,5 +47,7 @@ I was a student of [Magdalene College](http://www.magd.cam.ac.uk/) and was invol
 
 I use [Archlinux](https://www.archlinux.org), [suckless tools](http://suckless.org), [neovim](http://neovim.io), [acme](http://acme.cat-v.org), and other things.
 
-I have [a Gitlab account](https://gitlab.com/raphael-proust) and [a Github account](http://github.com/raphael-proust/).
+I have [a Gitlab account](https://gitlab.com/raphael-proust),
+[a Github account](https://github.com/raphael-proust/),
+and [a mastodon account](https://types.pl/@raphaelp).
 I have homonyms – but no accounts – on Twitter, Facebook, Linkedin, and probably more such websites.

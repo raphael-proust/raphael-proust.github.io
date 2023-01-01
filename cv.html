@@ -59,8 +59,8 @@ technical writer</td>
 <td style="text-align: center;">Sep 2016–Aug 2017</td>
 <td style="text-align: left;">Software developer and technical writer at
 Cambridge Coding Academy (<a
-href="http://web.archive.org/web/20200921170235/https://cambridgecoding.com/">wayback
-machine link</a>) and <a href="https://cambridgespark.com/">Cambridge
+href="http://web.archive.org/web/20200921170235/https://cambridgecoding.com/">via
+wayback machine</a>) and <a href="https://cambridgespark.com/">Cambridge
 Spark</a>.</td>
 </tr>
 <tr class="odd">
@@ -132,7 +132,7 @@ school)</td>
 <p><a href="https://nomadic-labs.com/">Nomadic Labs</a> is a company
 that provides research and development in formal verification,
 distributed systems and programming languages.</p>
-<p>I joined Nomadic Labs in March 2018 as the company was expending to
+<p>I joined Nomadic Labs in March 2018 as the company was expanding to
 handle the development requirements of the <a
 href="https://tezos.com/">Tezos</a> project. I am still working at
 Nomadic Labs, on Tezos and other related projects. Some of the items
@@ -165,15 +165,12 @@ information into the local state, and, based on state changes, handing
 over some more information to the P2P layer to be gossiped. A few
 colleagues and myself rewrote a new mempool from scratch to fix some
 issues and improve performance.</p>
-<p>This software component involves concurrency (information is received
-from different peers at unpredictable times, but operations must be
-applied to the state sequentially) and more specifically defensive
-scheduling: it must protect against potential denial of service attacks
-whereby malicious peers saturate a node to the point that it ignores
-other, non-malicous nodes. It also involves a high level of abstraction
-because the nature of the state and the way information is folded into
-it depends on another software component (the economic protocol) that
-can change dynamically.</p>
+<p>This software component involves concurrency and more specifically
+defensive scheduling: it must be resilient against potential denial of
+service attacks. It also involves a high level of abstraction because
+the nature of the state and the way information is folded into it
+depends on another software component (the economic protocol) that can
+change dynamically.</p>
 <p>The development of this new mempool led to the release of <a
 href="https://gitlab.com/nomadic-labs/lwt_pipeline"><code>lwt-pipeline</code></a>
 and the extension of <a
@@ -184,18 +181,22 @@ href="https://gitlab.com/nomadic-labs/ringo"><code>ringo</code></a>.</p></li>
 binaries all placed within the same repository. After a while, some
 parts of the code had matured into stable components with well-defined
 interfaces. These parts could be released.</p>
-<p>I took the lead in releasing libraries. This involved setting up
-their own repository (with continuous integration), setting up the
-packaging boilerplate, and modifying the code of Tezos to use the
-external libraries rather than the embedded version.</p></li>
+<p>I took the lead in releasing libraries. This involved improving their
+documentation, setting up their own repository (with continuous
+integration), setting up the packaging boilerplate, and modifying the
+code of Tezos to use the external libraries rather than the embedded
+version.</p></li>
 <li><p><strong>Modernising the Error Management library</strong></p>
 <p>The in-house Error Monad library dates back to the very start of the
 Tezos project. Over the course of the project’s lifetime it had
-accumulated many helper functions of different uses.</p>
+accumulated many helper functions for different uses.</p>
 <p>I led the effort of cleaning up the interface, organising the code
 into separate components, bringing in a newer syntax (based on OCaml’s
 binding operators) and developing an error-related supplement to the
-OCaml Stdlib.</p></li>
+OCaml Stdlib. This task involved some changes to the library itself as
+well as corresponding changes throughout the rest of the project.
+Because changes to the rest of the code were large, it also involved
+carefully preparing the git history of the merge requests.</p></li>
 <li><p><strong>OCaml 5 readiness</strong></p>
 <p>I led the effort into investigating the issues that prevented the
 Tezos project from upgrading to the newer major release of OCaml: OCaml
@@ -211,11 +212,12 @@ tooling used for linting and testing.</p></li>
 <h2
 id="projects-at-cambridge-coding-academy-and-cambridge-spark">Projects
 at Cambridge Coding Academy and Cambridge Spark</h2>
-<p><a href="https://cambridgecoding.com/">Cambridge Coding Academy</a>
-and <a href="https://cambridgespark.com/">Cambridge Spark</a> are twin
-companies that provide teaching and training in programming, data
-analysis, machine learning, etc. The former organises courses for
-teenagers; the latter for professionals.</p>
+<p>Cambridge Coding Academy (<a
+href="http://web.archive.org/web/20200921170235/https://cambridgecoding.com/">via
+wayback machine</a>) and <a href="https://cambridgespark.com/">Cambridge
+Spark</a> are twin companies that provide teaching and training in
+programming, data analysis, machine learning, etc. The former organises
+courses for teenagers; the latter for professionals.</p>
 <p>I started working for the companies as they were set up. When I
 finished my PhD, I started full time employment for these companies and
 worked on the projects listed below.</p>
@@ -231,15 +233,13 @@ the students.</p>
 Python, continuous integration, linting libraries, unit testing, Docker
 images (both building and running), and Amazon Web Services.</p></li>
 <li><p><strong>Course writing</strong></p>
-<p>I wrote, reviewed, and edited <a
-href="http://cambridgecoding.com/summerschool">courses for Cambridge
-Coding Academy</a>. These courses, aimed at teenagers, covered basic
-programming, making web pages, building games, programmatically
-generating music, and creating artificial intelligences.</p>
-<p>I wrote, reviewed, and edited <a
-href="https://cambridgespark.com/training">courses for Cambridge
-Spark</a>. These courses, aimed at professionals, covered basic
-programming, data-analysis, and quantitative finance.</p></li>
+<p>I wrote, reviewed, and edited courses for Cambridge Coding Academy.
+These courses, aimed at teenagers, covered basic programming, making web
+pages, building games, programmatically generating music, and creating
+artificial intelligences.</p>
+<p>I wrote, reviewed, and edited courses for Cambridge Spark. These
+courses, aimed at professionals, covered basic programming,
+data-analysis, and quantitative finance.</p></li>
 <li><p><strong>Publication pipeline</strong></p>
 <p>I wrote and maintained a publication pipeline for content created by
 Cambridge Spark. The pipeline let authors submit content, make edits,
@@ -255,10 +255,9 @@ of Cambridge Coding Academy. The program was written in Scala and
 Javascript and managed users through an SQL database. The User Interface
 included an online editor, and rendered user-edited HTML/Javascript/CSS
 in the browser.</p>
-<p>I contributed to two consecutive versions of the <a
-href="https://cambridgespark.com/">Cambridge Spark website</a>. The
-website, coded in Scala, used the Play and Bootstrap frameworks, an SQL
-database, and custom Javascript.</p>
+<p>I contributed to two consecutive versions of the Cambridge Spark
+website. The website, coded in Scala, used the Play and Bootstrap
+frameworks, an SQL database, and custom Javascript.</p>
 <p>I also assisted with the system administration. The website was
 hosted on Amazon Web Services.</p></li>
 <li><p><strong>Teaching</strong></p>
@@ -308,14 +307,14 @@ and organised committee elections.</p></li>
 <li>Natural languages: French (native), English (fluent), Spanish
 (intermediate), Chinese (beginner), Toki Pona (beginner).</li>
 <li>Programming languages: OCaml (native), make (fluent), shell
-(intermediate), Javascript (rusty), Python (rusty), Scala (rusty),
-Scheme (beginner), Haskell (beginner), C (beginner).</li>
+(intermediate), Javascript (rusty), Python (rusty), Scala (rusty), rust
+(beginner), Scheme (beginner), Haskell (beginner), C (beginner).</li>
 <li>Markup languages: Markdown (native), HTML (fluent), LaTeX
-(intermediate).</li>
-<li>Environment: Archlinux, <code>vi</code>/<code>nvim</code>,
+(rusty).</li>
+<li>Environment: Archlinux, <code>vi</code>(<code>nvim</code>),
 <code>git</code>, <code>acme</code>, <code>make</code>, <code>mk</code>,
-<code>opam</code>, <code>sh</code>/<code>zsh</code>, <code>rc</code>,
-<code>pandoc</code>, etc.</li>
+<code>opam</code>, <code>dune</code>, <code>sh</code>/<code>zsh</code>,
+<code>rc</code>, <code>pandoc</code>, etc.</li>
 <li>Other: driver’s license, PADI Advanced Open Water Diver, fire warden
 training, skilled punter and skater.</li>
 </ul>
