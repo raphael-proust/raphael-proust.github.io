@@ -20,42 +20,129 @@
 </header>
 <div id="content">
 <div id="header">
-<h1 class="title">Deck-building/Hand-management mechanics for TTRPGs</h1>
+<h1 class="title">Deck-building/Hand-management mechanics for
+TTRPGs</h1>
 </div>
-<p>I recently played Slay the Spire. I played because I knew I would like the game: it mixes deck-building/hand-management mechanics and rogue-like mechanics, both of which I like a lot. I also played it because I’m interested in RPGesque combat based on deck-building/hand-management mechanics – see <a href="/games/dice-mda.html">these</a> <a href="/games/dice-choice.html">previous</a> <a href="/games/rpg-in-cards.html">posts</a>.</p>
-<p>The game is good, and the mechanics are interesting. It made me reflect on the use of deck-building/hand-management for RPG combat. Below are some roughly-ordered thoughts.</p>
+<p>I recently played Slay the Spire. I played because I knew I would
+like the game: it mixes deck-building/hand-management mechanics and
+rogue-like mechanics, both of which I like a lot. I also played it
+because I’m interested in RPGesque combat based on
+deck-building/hand-management mechanics – see <a
+href="/games/dice-mda.html">these</a> <a
+href="/games/dice-choice.html">previous</a> <a
+href="/games/rpg-in-cards.html">posts</a>.</p>
+<p>The game is good, and the mechanics are interesting. It made me
+reflect on the use of deck-building/hand-management for RPG combat.
+Below are some roughly-ordered thoughts.</p>
 <h2 id="monsters-without-agency">Monsters without agency</h2>
-<p>One issue with using deck-building/hand-management mechanics for a TTRPG is the burden it puts on the GM. The GM acting on behalf of the monsters needs to manage multiple hands of cards.</p>
-<p>One solution is to delegate this hard work to a computer program, an AI that plays the game. In practice, this requires a big investment because different monsters would have different cards which would work differently, which means that different AIs are needed. In addition, “going electronic” is not what I play TTRPGs for.</p>
-<p>A more analogue solution, which curiously is inspired by the video game Slay the Spire, is to remove the agency of monsters. With this solution, a monster (or a group of monsters) is represented by a deck of cards. The GM designs a monster by assembling a deck of cards and then pre-shuffling it before the game. The GM runs the encounter by playing the top card of the deck of each monster on each turn.</p>
-<p>That is, the GM doesn’t manage a hand of card per monster, they simply play the top of the deck of each monster.</p>
+<p>One issue with using deck-building/hand-management mechanics for a
+TTRPG is the burden it puts on the GM. The GM acting on behalf of the
+monsters needs to manage multiple hands of cards.</p>
+<p>One solution is to delegate this hard work to a computer program, an
+AI that plays the game. In practice, this requires a big investment
+because different monsters would have different cards which would work
+differently, which means that different AIs are needed. In addition,
+“going electronic” is not what I play TTRPGs for.</p>
+<p>A more analogue solution, which curiously is inspired by the video
+game Slay the Spire, is to remove the agency of monsters. With this
+solution, a monster (or a group of monsters) is represented by a deck of
+cards. The GM designs a monster by assembling a deck of cards and then
+pre-shuffling it before the game. The GM runs the encounter by playing
+the top card of the deck of each monster on each turn.</p>
+<p>That is, the GM doesn’t manage a hand of card per monster, they
+simply play the top of the deck of each monster.</p>
 <p>Many variants around this core concept are possible:</p>
 <ul>
-<li>A slow monster has differently coloured card sleeves for different types of cards (attacks, blocks/dodges, environmental actions, etc.) so that players know what is coming. (Or, more generically, the GM peeks at the top card and tells the players what kind of card it is.)</li>
-<li>A fast monster may play more than one card per turn. (Or, almost equivalently, some of their cards has the mention “play one more card after resolving this one”.)</li>
-<li>A monster is represented by multiple decks that are played “in parallel”. E.g., an offensive deck containing attacks and defensive deck containing blocks/dodges: the GM plays one card from each.</li>
-<li>The encounter space has its own deck for, say, slipping, tripping, etc.</li>
-<li>Dynamic encounter spaces (e.g., a sinking boat, a burning house, a maze full of traps, etc.) have their own deck for one-time events and for progression of general conditions.</li>
+<li>A slow monster has differently coloured card sleeves for different
+types of cards (attacks, blocks/dodges, environmental actions, etc.) so
+that players know what is coming. (Or, more generically, the GM peeks at
+the top card and tells the players what kind of card it is.)</li>
+<li>A fast monster may play more than one card per turn. (Or, almost
+equivalently, some of their cards has the mention “play one more card
+after resolving this one”.)</li>
+<li>A monster is represented by multiple decks that are played “in
+parallel”. E.g., an offensive deck containing attacks and defensive deck
+containing blocks/dodges: the GM plays one card from each.</li>
+<li>The encounter space has its own deck for, say, slipping, tripping,
+etc.</li>
+<li>Dynamic encounter spaces (e.g., a sinking boat, a burning house, a
+maze full of traps, etc.) have their own deck for one-time events and
+for progression of general conditions.</li>
 <li>Etc.</li>
 </ul>
-<p>One important consideration for monster design is that, because they play their cards in a non-optimal order, their attacks and blocks/dodges must be more powerful than the player-characters’. The difficulty for the players is to play smart to compensate for the raw-power imbalance.</p>
+<p>One important consideration for monster design is that, because they
+play their cards in a non-optimal order, their attacks and blocks/dodges
+must be more powerful than the player-characters’. The difficulty for
+the players is to play smart to compensate for the raw-power
+imbalance.</p>
 <h2 id="a-little-intelligence">A little intelligence</h2>
-<p>It is possible to add a little bit of intelligence to the monsters. This can be achieved without adding too much complexity for the GM.</p>
-<p>One straight-forward method to do so is to include cards that have ‘or’-clauses. E.g., “deal 10 damage to the nearest enemy or knock the nearest enemy prone.” With such a card, the GM would chose the former option by default but the latter if the monster can gain some tactical advantage by having the enemy prone. These cards let the GM make decisions on behalf of the monster, but these decisions are small and localised: there is little forward planning and little keeping track of intent.</p>
-<p>Another method is to have different decks for different situations. E.g., one deck for when enemies are within reach of the monster (it contains powerful attacks) and one deck for when enemies are out of reach (it contains moving-in-attacks: get closer and get a free attack if you reach an enemy). Note that the description of the two decks in this example are just that: an example. There could be many different decks, and different monsters could have different sets of decks. E.g., a pack-hunting animal, such as a wolf, has a deck for when they are isolated and one for when they are with allies.</p>
-<p>Note that these two methods (‘or’-clauses and situational decks) can only take you so far. There is a point of diminishing return where you add more complexity for the GM (what situation is the monster in? what deck do I draw from in this situation? which deck is which? what would the monster do with these options?) without making the monster feel more intelligent. In order to get a fully realised NPC with agency, it might be necessary to have more than one GM at the table. Or it might be a limitation of the system that there are no smart NPCs with overarching goals and strong personality.</p>
+<p>It is possible to add a little bit of intelligence to the monsters.
+This can be achieved without adding too much complexity for the GM.</p>
+<p>One straight-forward method to do so is to include cards that have
+‘or’-clauses. E.g., “deal 10 damage to the nearest enemy or knock the
+nearest enemy prone.” With such a card, the GM would chose the former
+option by default but the latter if the monster can gain some tactical
+advantage by having the enemy prone. These cards let the GM make
+decisions on behalf of the monster, but these decisions are small and
+localised: there is little forward planning and little keeping track of
+intent.</p>
+<p>Another method is to have different decks for different situations.
+E.g., one deck for when enemies are within reach of the monster (it
+contains powerful attacks) and one deck for when enemies are out of
+reach (it contains moving-in-attacks: get closer and get a free attack
+if you reach an enemy). Note that the description of the two decks in
+this example are just that: an example. There could be many different
+decks, and different monsters could have different sets of decks. E.g.,
+a pack-hunting animal, such as a wolf, has a deck for when they are
+isolated and one for when they are with allies.</p>
+<p>Note that these two methods (‘or’-clauses and situational decks) can
+only take you so far. There is a point of diminishing return where you
+add more complexity for the GM (what situation is the monster in? what
+deck do I draw from in this situation? which deck is which? what would
+the monster do with these options?) without making the monster feel more
+intelligent. In order to get a fully realised NPC with agency, it might
+be necessary to have more than one GM at the table. Or it might be a
+limitation of the system that there are no smart NPCs with overarching
+goals and strong personality.</p>
 <h2 id="two-classes-of-creatures">Two classes of creatures?</h2>
-<p>Some rules cannot apply the same way to a classic deck-building setup as to a no-agency monster deck. E.g., it is common in deck-building to force other players to discard cards from their hand, to reveal their hands, etc. but no-agency monster decks do not even have a notion of “hand” to start with.</p>
-<p>In the case of no-agency monsters, this is not a problem because some cards are meant to affect monsters and other cards are meant to affect players. Specifically, negative player cards (typically attacks) affect monsters and positive player cards (typically buffs and blocks/dodges) affect players (and conversely for monster cards). Designing cards to specifically affect one class of creature or another brings a few design limitations. E.g., it is difficult to design a monster that can play an opponent’s own card against them.</p>
-<p>In the case of mixed opponents (no-agency monsters and with-agency NPCs possibly played by additional GMs), the problem needs to be addressed. One solution is to find different mechanics that apply to the different classes of decks but produce similar dynamics. E.g., the two following rules have a similar effect: “the target NPC discards half of their hand” and “for its next turn the monster reveals two cards, you chose one to discard, the other is played”. In both case it leads to a less optimal play by the opponent.</p>
+<p>Some rules cannot apply the same way to a classic deck-building setup
+as to a no-agency monster deck. E.g., it is common in deck-building to
+force other players to discard cards from their hand, to reveal their
+hands, etc. but no-agency monster decks do not even have a notion of
+“hand” to start with.</p>
+<p>In the case of no-agency monsters, this is not a problem because some
+cards are meant to affect monsters and other cards are meant to affect
+players. Specifically, negative player cards (typically attacks) affect
+monsters and positive player cards (typically buffs and blocks/dodges)
+affect players (and conversely for monster cards). Designing cards to
+specifically affect one class of creature or another brings a few design
+limitations. E.g., it is difficult to design a monster that can play an
+opponent’s own card against them.</p>
+<p>In the case of mixed opponents (no-agency monsters and with-agency
+NPCs possibly played by additional GMs), the problem needs to be
+addressed. One solution is to find different mechanics that apply to the
+different classes of decks but produce similar dynamics. E.g., the two
+following rules have a similar effect: “the target NPC discards half of
+their hand” and “for its next turn the monster reveals two cards, you
+chose one to discard, the other is played”. In both case it leads to a
+less optimal play by the opponent.</p>
 <h2 id="building-a-player-deck">Building a player deck</h2>
 <p>Gaining a level in a class gives you cards.<br />
 Wielding a weapon gives you cards.<br />
 Wielding a shield gives you cards.<br />
 Having the favour of a god may give you cards.<br />
 Etc.</p>
-<p>Basically, all character-building options give you cards to build your deck with. There are also non-character-building options that may give you cards. E.g., the D&amp;D5E inspiration/bardic-inspiration mechanics can be emulated by a card you add to your deck. E.g., a serious injury may give you a card that you cannot remove from your deck and just clutters your hand – similar to curses in Slay the Spire.</p>
-<p>And some character-building options can give you more than just cards. For example levels may increase the number of cards you draw per turn, or the number of cards you can play per turn. In other words, character-building options can change the way you use cards, letting you use your cards more optimally.</p>
+<p>Basically, all character-building options give you cards to build
+your deck with. There are also non-character-building options that may
+give you cards. E.g., the D&amp;D5E inspiration/bardic-inspiration
+mechanics can be emulated by a card you add to your deck. E.g., a
+serious injury may give you a card that you cannot remove from your deck
+and just clutters your hand – similar to curses in Slay the Spire.</p>
+<p>And some character-building options can give you more than just
+cards. For example levels may increase the number of cards you draw per
+turn, or the number of cards you can play per turn. In other words,
+character-building options can change the way you use cards, letting you
+use your cards more optimally.</p>
 </div>
 </body>
 </html>

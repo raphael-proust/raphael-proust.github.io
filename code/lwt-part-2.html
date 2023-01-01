@@ -23,36 +23,64 @@
 <h1 class="title">Lwt introduction/tutorial Part 2 of 2</h1>
 </div>
 <p><a href="/code/lwt-part-1.html">← Back to part 1</a></p>
-<p>In order to understand the advanced features of Lwt, it is necessary to understand the internals of Lwt: how promises are created, stored, resolved, etc. This page delves into those details. It assumes familiarity with the basic concepts of Lwt covered in <a href="/code/lwt-part-1.html">Part 1</a>.</p>
-<p>To be more precise, this part of the tutorial gives an acceptably precise working model of Lwt, but not an exact one. In particular, we do not mention any parts that are not necessary for the understanding of the user-facing features.</p>
+<p>In order to understand the advanced features of Lwt, it is necessary
+to understand the internals of Lwt: how promises are created, stored,
+resolved, etc. This page delves into those details. It assumes
+familiarity with the basic concepts of Lwt covered in <a
+href="/code/lwt-part-1.html">Part 1</a>.</p>
+<p>To be more precise, this part of the tutorial gives an acceptably
+precise working model of Lwt, but not an exact one. In particular, we do
+not mention any parts that are not necessary for the understanding of
+the user-facing features.</p>
 <h2 id="a-simple-model-of-a-promise">A simple model of a promise</h2>
-<p>To start with, consider that a promise is simply a cell for a value. The cell can take different values that map almost exactly on the <code>state</code> type. The actual type of promises in our only-slightly-simplified model is as follows:</p>
+<p>To start with, consider that a promise is simply a cell for a value.
+The cell can take different values that map almost exactly on the
+<code>state</code> type. The actual type of promises in our
+only-slightly-simplified model is as follows:</p>
 <pre><code>type &#39;a internal_state =
   | Fulfilled of &#39;a
   | Rejected of exn
   | Pending of &#39;a pending
 
 type &#39;a t = { mutable state : internal_state }</code></pre>
-<p>Basically, internally, Lwt maintains its promise similar to a <code>state</code> cell, but with added information for the pending promises. We give more details on the added information on a by-need basis below. For now suffice to say that <code>pending</code> contains the information that Lwt needs in order to handle all that can happen to a still-to-be-resolved promise.</p>
-<p>We can already think of some of the simpler primitives as code over this simplified model:</p>
+<p>Basically, internally, Lwt maintains its promise similar to a
+<code>state</code> cell, but with added information for the pending
+promises. We give more details on the added information on a by-need
+basis below. For now suffice to say that <code>pending</code> contains
+the information that Lwt needs in order to handle all that can happen to
+a still-to-be-resolved promise.</p>
+<p>We can already think of some of the simpler primitives as code over
+this simplified model:</p>
 <pre><code>let return v = { state = Fulfilled v }
 let fail exc = { state = Rejected exc }
 let state p = match p.state with
   | Fulfilled v -&gt; Return v
   | Rejected exc -&gt; Fail exc
   | Pending _ -&gt; Sleep</code></pre>
-<p>But we cannot write much more at this point. So we refine the model and expand on the definition of <code>pending</code>.</p>
+<p>But we cannot write much more at this point. So we refine the model
+and expand on the definition of <code>pending</code>.</p>
 <h2 id="callbacks">Callbacks</h2>
 <p><code>Lwt.on_any: 'a t -&gt; ('a -&gt; unit) -&gt; (exn -&gt; unit) -&gt; unit</code><br />
-If <code>p</code> is pending, it attaches the callbacks to <code>p</code>; consequently, when <code>p</code> resolves, either of <code>hf</code> or <code>hr</code> is called depending if the promise is fulfilled or rejected. If <code>p</code> is already resolved, <code>on_any p hf hr</code> calls either <code>hf</code> or <code>hr</code> immediately.</p>
+If <code>p</code> is pending, it attaches the callbacks to
+<code>p</code>; consequently, when <code>p</code> resolves, either of
+<code>hf</code> or <code>hr</code> is called depending if the promise is
+fulfilled or rejected. If <code>p</code> is already resolved,
+<code>on_any p hf hr</code> calls either <code>hf</code> or
+<code>hr</code> immediately.</p>
 <h3 id="internal-representation">Internal representation</h3>
-<p>This is achieved by attaching callbacks to pending promises. When Lwt modifies the internal state of a promise from <code>Pending</code> to either <code>Fulfilled</code> or <code>Rejected</code>, Lwt also calls all of the attached callbacks. As a first approximation, we simply declare:</p>
+<p>This is achieved by attaching callbacks to pending promises. When Lwt
+modifies the internal state of a promise from <code>Pending</code> to
+either <code>Fulfilled</code> or <code>Rejected</code>, Lwt also calls
+all of the attached callbacks. As a first approximation, we simply
+declare:</p>
 <pre><code>type &#39;a pending = {
   mutable when_fulfils: (&#39;a -&gt; unit) list;
   mutable when_rejects: (exc -&gt; unit) list;
   ..
 }</code></pre>
-<p>And Lwt calls the callbacks when it changes the state of the promise. For example, here is the implementation of <code>task</code> and <code>wakeup</code> in our simplified model.</p>
+<p>And Lwt calls the callbacks when it changes the state of the promise.
+For example, here is the implementation of <code>task</code> and
+<code>wakeup</code> in our simplified model.</p>
 <pre><code>type &#39;a u = &#39;a t
 let task () =
   let p = { state = Pending .. } in
@@ -69,17 +97,35 @@ let wakeup_exn p exc =
       p.state &lt;- Rejected exc;
       List.iter (fun f -&gt; f exc) when_rejects
   | _ -&gt; raise (Invalid_argument &quot;..&quot;)</code></pre>
-<p>The internals are a little bit more complicated than that, in particular with respect to error management. But the general idea is as above.</p>
+<p>The internals are a little bit more complicated than that, in
+particular with respect to error management. But the general idea is as
+above.</p>
 <h3 id="other-explicit-callbacks">Other explicit callbacks</h3>
-<p>There are variants of <code>on_any</code> that attach different callbacks. Their semantics can be inferred from their name and type signature, but we list them here anyway.</p>
+<p>There are variants of <code>on_any</code> that attach different
+callbacks. Their semantics can be inferred from their name and type
+signature, but we list them here anyway.</p>
 <p><code>Lwt.on_success: 'a t -&gt; ('a -&gt; unit) -&gt; unit</code><br />
-<code>on_success p h</code> calls <code>h</code> when <code>p</code> is fulfilled. If <code>p</code> is already fulfilled, it calls <code>h</code> immediately. Nothing happens if <code>p</code> is already rejected, is eventually rejected, or is never resolved.</p>
+<code>on_success p h</code> calls <code>h</code> when <code>p</code> is
+fulfilled. If <code>p</code> is already fulfilled, it calls
+<code>h</code> immediately. Nothing happens if <code>p</code> is already
+rejected, is eventually rejected, or is never resolved.</p>
 <p><code>Lwt.on_failure: 'a t -&gt; (exc -&gt; unit) -&gt; unit</code><br />
-<code>on_failure p h</code> calls <code>h</code> when <code>p</code> is rejected. If <code>p</code> is already rejected, it calls <code>h</code> immediately. Nothing happens if <code>p</code> is already fulfilled, is eventually fulfilled, or is never resolved.</p>
+<code>on_failure p h</code> calls <code>h</code> when <code>p</code> is
+rejected. If <code>p</code> is already rejected, it calls <code>h</code>
+immediately. Nothing happens if <code>p</code> is already fulfilled, is
+eventually fulfilled, or is never resolved.</p>
 <p><code>Lwt.on_termination: 'a t -&gt; (unit -&gt; unit) -&gt; unit</code><br />
-<code>on_termination p h</code> calls <code>h</code> when <code>p</code> is resolved. If <code>p</code> is already resolved, it calls <code>h</code> immediately. Nothing happens if <code>p</code> is never resolved.</p>
+<code>on_termination p h</code> calls <code>h</code> when <code>p</code>
+is resolved. If <code>p</code> is already resolved, it calls
+<code>h</code> immediately. Nothing happens if <code>p</code> is never
+resolved.</p>
 <h3 id="implicit-callbacks">Implicit callbacks</h3>
-<p>Lwt also uses callbacks to implement promise combinators such as <code>bind</code>. To give an idea of how, here is an implementation in the simplified model. The details are different, notably with respect to error management and some optimisations, but the gist is similar: return a pending promise that is resolved by callbacks attached to other promises.</p>
+<p>Lwt also uses callbacks to implement promise combinators such as
+<code>bind</code>. To give an idea of how, here is an implementation in
+the simplified model. The details are different, notably with respect to
+error management and some optimisations, but the gist is similar: return
+a pending promise that is resolved by callbacks attached to other
+promises.</p>
 <pre><code>let bind p f =
   (* create the final promise p&#39;&#39; *)
   let p&#39;&#39;, r = task () in
@@ -95,23 +141,49 @@ let wakeup_exn p exc =
     (fun exc -&gt; wakeup_exn r exc);
   (* return the final promise *)
   p&#39;&#39;</code></pre>
-<p>There are other uses of callbacks (in <code>join</code>, <code>choose</code>, etc.), but studying them does not provide more insight into the inner workings of Lwt. One of the things to take from this model, one of the things that this model is accurate enough to describe, is that Lwt does not maintain a full list of all the existing promises in a data-structure.</p>
-<p>For example, in the <code>bind</code> above, the final promise <code>p''</code> is created, then a reference to it is kept by the callbacks attached to <code>p</code>, and then it is returned. Lwt does not keep <code>p''</code> in a list/table/map of promises. There are some exceptions to this which we mention below.</p>
+<p>There are other uses of callbacks (in <code>join</code>,
+<code>choose</code>, etc.), but studying them does not provide more
+insight into the inner workings of Lwt. One of the things to take from
+this model, one of the things that this model is accurate enough to
+describe, is that Lwt does not maintain a full list of all the existing
+promises in a data-structure.</p>
+<p>For example, in the <code>bind</code> above, the final promise
+<code>p''</code> is created, then a reference to it is kept by the
+callbacks attached to <code>p</code>, and then it is returned. Lwt does
+not keep <code>p''</code> in a list/table/map of promises. There are
+some exceptions to this which we mention below.</p>
 <h2 id="cancellation">Cancellation</h2>
 <p><code>Lwt.Canceled: exn</code><br />
-The <code>Canceled</code> exception is used by Lwt to handle promise cancellation. The <code>Canceled</code> exception is treated differently than others in several of the Lwt primitives. For example, <code>wakeup</code> will fail if the associated promise is already resolved, except if it is rejected with <code>Canceled</code>. As a result, the following code does not raise an exception – but it would with a different exception:</p>
+The <code>Canceled</code> exception is used by Lwt to handle promise
+cancellation. The <code>Canceled</code> exception is treated differently
+than others in several of the Lwt primitives. For example,
+<code>wakeup</code> will fail if the associated promise is already
+resolved, except if it is rejected with <code>Canceled</code>. As a
+result, the following code does not raise an exception – but it would
+with a different exception:</p>
 <pre><code>let _, r = task () ;;
 wakeup_exn r Canceled ;;
 wakeup r 0 ;;</code></pre>
 <p><code>Lwt.cancel: 'a t -&gt; unit</code><br />
-<code>cancel p</code> causes <code>p</code> to be rejected with <code>Canceled</code>. Except that sometimes it does not do that, and sometimes it does much more than that.</p>
+<code>cancel p</code> causes <code>p</code> to be rejected with
+<code>Canceled</code>. Except that sometimes it does not do that, and
+sometimes it does much more than that.</p>
 <h3 id="cancelable-not-cancelable">Cancelable, not cancelable</h3>
-<p>Some promises are cancelable (calling <code>cancel</code> on them causes them to be rejected with <code>Canceled</code>) others are not (calling <code>cancel</code> on them is a no-op). For example, consider the difference between <code>task</code> and <code>wait</code>.</p>
+<p>Some promises are cancelable (calling <code>cancel</code> on them
+causes them to be rejected with <code>Canceled</code>) others are not
+(calling <code>cancel</code> on them is a no-op). For example, consider
+the difference between <code>task</code> and <code>wait</code>.</p>
 <p><code>Lwt.wait: unit -&gt; 'a t * 'a u</code><br />
-<code>wait ()</code> is similar to <code>task ()</code> except that the returned promise is not cancelable. Calling <code>cancel</code> on the promise created by <code>wait</code> has no effect.</p>
-<p>There is no way to test whether a promise is cancelable – besides actually canceling it and observing a change of state.</p>
-<h3 id="the-semantics-of-simple-cancellation">The semantics of simple cancellation</h3>
-<p>The specific semantics of cancellation (detailed below) are inherited from a way of thinking about threads rather than promises. Consider the following code with uninteresting details elided:</p>
+<code>wait ()</code> is similar to <code>task ()</code> except that the
+returned promise is not cancelable. Calling <code>cancel</code> on the
+promise created by <code>wait</code> has no effect.</p>
+<p>There is no way to test whether a promise is cancelable – besides
+actually canceling it and observing a change of state.</p>
+<h3 id="the-semantics-of-simple-cancellation">The semantics of simple
+cancellation</h3>
+<p>The specific semantics of cancellation (detailed below) are inherited
+from a way of thinking about threads rather than promises. Consider the
+following code with uninteresting details elided:</p>
 <pre><code>let p =
   let* .. = .. in
   let* .. = .. in
@@ -126,16 +198,33 @@ wakeup r 0 ;;</code></pre>
     let .. = .. in
     let* .. = .. in
     return ..</code></pre>
-<p>The control-flow within <code>p</code> is relatively simple: it mostly goes from line to line traversing bind operators and there is a single branching point. The control-flow is simple enough that it is easy to think about <code>p</code> as a “thread”: a series of instructions that execute in relative independence to the rest of the program. Or, slightly more but not entirely accurate, you can think of <code>p</code> as a promise and the expression that <code>p</code> is bound to as a thread which eventually resolves <code>p</code>. Either way, the <code>cancel</code> function works well on the “thread” <code>p</code>: it interrupts the thread at whatever point of its execution it currently is.</p>
-<p>The correct, thread-less, description is that <code>cancel p</code> finds whichever of the intermediate promise of <code>p</code> is currently pending and rejects it with <code>Canceled</code>.</p>
-<h3 id="set-up-for-cancellation-propagation">Set up for cancellation propagation</h3>
-<p>In order to find the pending intermediate promise of <code>p</code>, Lwt stores additional information in pending promises. Specifically, it stores a list of promises to propagate the cancellation to.</p>
+<p>The control-flow within <code>p</code> is relatively simple: it
+mostly goes from line to line traversing bind operators and there is a
+single branching point. The control-flow is simple enough that it is
+easy to think about <code>p</code> as a “thread”: a series of
+instructions that execute in relative independence to the rest of the
+program. Or, slightly more but not entirely accurate, you can think of
+<code>p</code> as a promise and the expression that <code>p</code> is
+bound to as a thread which eventually resolves <code>p</code>. Either
+way, the <code>cancel</code> function works well on the “thread”
+<code>p</code>: it interrupts the thread at whatever point of its
+execution it currently is.</p>
+<p>The correct, thread-less, description is that <code>cancel p</code>
+finds whichever of the intermediate promise of <code>p</code> is
+currently pending and rejects it with <code>Canceled</code>.</p>
+<h3 id="set-up-for-cancellation-propagation">Set up for cancellation
+propagation</h3>
+<p>In order to find the pending intermediate promise of <code>p</code>,
+Lwt stores additional information in pending promises. Specifically, it
+stores a list of promises to propagate the cancellation to.</p>
 <pre><code>type cancelation = Self | Others of &#39;a t list
 type pending = {
   ..
   cancelation: cancelation;
 }</code></pre>
-<p>The promise combinators simply set the <code>cancelation</code> field of <code>pending</code> when they create the promise. For example, <code>task</code> and <code>wait</code> work as follows.</p>
+<p>The promise combinators simply set the <code>cancelation</code> field
+of <code>pending</code> when they create the promise. For example,
+<code>task</code> and <code>wait</code> work as follows.</p>
 <pre><code>let task () =
   let p =
     { state =
@@ -154,7 +243,8 @@ let wait () =
     }
   in
   (p, p)</code></pre>
-<p>And <code>bind</code> actually performs more legwork than previously shown.</p>
+<p>And <code>bind</code> actually performs more legwork than previously
+shown.</p>
 <pre><code>let bind p f =
   match p.state with
   | Fulfilled v -&gt; f v
@@ -169,9 +259,12 @@ let wait () =
       in
       .. (* set up callbacks to resolve p&#39;&#39; *)
       p&#39;&#39;</code></pre>
-<p>And more complex combinators such as <code>choose</code> and <code>join</code> include multiple promises in their <code>Others</code> cancellation field.</p>
+<p>And more complex combinators such as <code>choose</code> and
+<code>join</code> include multiple promises in their <code>Others</code>
+cancellation field.</p>
 <h3 id="propagating-cancellation">Propagating cancellation</h3>
-<p>Using this additional information, Lwt can find the pending promises that a given promise depends on.</p>
+<p>Using this additional information, Lwt can find the pending promises
+that a given promise depends on.</p>
 <pre><code>let rec cancel p =
   match p.state with
   | Fulfilled _ -&gt; ()
@@ -180,17 +273,50 @@ let wait () =
       wakeup_exn p Canceled
   | Pending { cancelation = Others ps } -&gt;
       List.iter cancel ps</code></pre>
-<p>This is a mock implementation on the simplified model. In particular, the cancellation works in two separate phases: collect all promises that the cancellation affects, and then trigger all the cancellations. This is to avoid subtle bugs where some cancellation has side-effects that modify the state of some of the not yet traversed promises.</p>
-<h3 id="cancellation-focused-combinators">Cancellation-focused combinators</h3>
-<p>As mentioned, the semantics of <code>cancel</code> are easy to grasp for simple examples such as promises daisy-chained in a simple flow control. On the other hand, the semantics of <code>cancel</code> on complex constructions can be difficult to understand. In particular, cancelling a promise <code>p</code> may cancel other promises that share a common ancestor with <code>p</code>.</p>
-<p>In order to avoid unwanted side-effects, Lwt provides a few combinators to tweak the behaviour of the cancellation mechanism. Specifically, these combinators introduce new promises with carefully crafted <code>cancelation</code> fields that cause the propagation of cancellation to behave in the desired way.</p>
+<p>This is a mock implementation on the simplified model. In particular,
+the cancellation works in two separate phases: collect all promises that
+the cancellation affects, and then trigger all the cancellations. This
+is to avoid subtle bugs where some cancellation has side-effects that
+modify the state of some of the not yet traversed promises.</p>
+<h3 id="cancellation-focused-combinators">Cancellation-focused
+combinators</h3>
+<p>As mentioned, the semantics of <code>cancel</code> are easy to grasp
+for simple examples such as promises daisy-chained in a simple flow
+control. On the other hand, the semantics of <code>cancel</code> on
+complex constructions can be difficult to understand. In particular,
+cancelling a promise <code>p</code> may cancel other promises that share
+a common ancestor with <code>p</code>.</p>
+<p>In order to avoid unwanted side-effects, Lwt provides a few
+combinators to tweak the behaviour of the cancellation mechanism.
+Specifically, these combinators introduce new promises with carefully
+crafted <code>cancelation</code> fields that cause the propagation of
+cancellation to behave in the desired way.</p>
 <p><code>Lwt.protected: 'a t -&gt; 'a t</code><br />
-<code>protected p</code> is a promise <code>pp</code> that is similar to <code>p</code>: it has the same state and it resolves similarly. However, when the cancellation propagation described above reaches <code>pp</code>, then <code>pp</code> is rejected with <code>Canceled</code> but nothing happens to <code>p</code>. In our simplified model, this is achieved by setting <code>pp</code>’s <code>cancelation</code> field to <code>Self</code>.</p>
+<code>protected p</code> is a promise <code>pp</code> that is similar to
+<code>p</code>: it has the same state and it resolves similarly.
+However, when the cancellation propagation described above reaches
+<code>pp</code>, then <code>pp</code> is rejected with
+<code>Canceled</code> but nothing happens to <code>p</code>. In our
+simplified model, this is achieved by setting <code>pp</code>’s
+<code>cancelation</code> field to <code>Self</code>.</p>
 <p><code>Lwt.no_cancel: 'a t -&gt; 'a t</code><br />
-<code>no_cancel p</code> is a promise <code>pp</code> that is similar to <code>p</code>: it has the same state and it resolves similarly. However, when the cancellation propagation described above reaches <code>pp</code>, then nothing happens. In our simplified model, this is achieved by setting <code>pp</code>’s <code>cancelation</code> field to <code>Others []</code>.</p>
+<code>no_cancel p</code> is a promise <code>pp</code> that is similar to
+<code>p</code>: it has the same state and it resolves similarly.
+However, when the cancellation propagation described above reaches
+<code>pp</code>, then nothing happens. In our simplified model, this is
+achieved by setting <code>pp</code>’s <code>cancelation</code> field to
+<code>Others []</code>.</p>
 <h2 id="pausing-and-scheduling">Pausing and scheduling</h2>
-<p>As seen previously, Lwt’s scheduling is eager. Specifically, when given an already resolved promise and a function that returns an already resolved promise, <code>bind</code> returns and already resolved promise. As a result, the user must call <code>pause</code> (or <code>yield</code>) in order to force the Lwt scheduler to give opportunities to other promises to progress towards resolution.</p>
-<p>To achieve this, Lwt stores the pending promises created with <code>pause</code> into a global variable. By itself, this promise can make no progress. However, when the scheduler’s main-loop is running, it resolves paused promises at each iterations.</p>
+<p>As seen previously, Lwt’s scheduling is eager. Specifically, when
+given an already resolved promise and a function that returns an already
+resolved promise, <code>bind</code> returns and already resolved
+promise. As a result, the user must call <code>pause</code> (or
+<code>yield</code>) in order to force the Lwt scheduler to give
+opportunities to other promises to progress towards resolution.</p>
+<p>To achieve this, Lwt stores the pending promises created with
+<code>pause</code> into a global variable. By itself, this promise can
+make no progress. However, when the scheduler’s main-loop is running, it
+resolves paused promises at each iterations.</p>
 <pre><code>let paused_promises = ref []
 let pause () =
   let p = { state = Pending { .. } } in
@@ -205,17 +331,48 @@ let rec run p =
       paused_promises := [];
       List.iter (fun p -&gt; wakeup p ()) all_paused;
       run p</code></pre>
-<p>Note, however, that different environment have different ways to deal with paused promises. For example, in Unix the scheduler only kicks in when a call to <code>Lwt_main.run</code> is on-going. By contrast, in <code>js_of_ocaml</code> the scheduler is always running. For compatibility with other environment, you cannot rely on <code>pause</code> to hold your promises pending until you call <code>Lwt_main.run</code>.</p>
-<p>Also note that the mock scheduler above is only for building a mental model. The specifics differ, but the core idea is there.</p>
+<p>Note, however, that different environment have different ways to deal
+with paused promises. For example, in Unix the scheduler only kicks in
+when a call to <code>Lwt_main.run</code> is on-going. By contrast, in
+<code>js_of_ocaml</code> the scheduler is always running. For
+compatibility with other environment, you cannot rely on
+<code>pause</code> to hold your promises pending until you call
+<code>Lwt_main.run</code>.</p>
+<p>Also note that the mock scheduler above is only for building a mental
+model. The specifics differ, but the core idea is there.</p>
 <h2 id="os-interactions">OS interactions</h2>
-<p>The last part of Lwt that this tutorial covers is interaction with the operating system. Whilst it is possible to call functions from OCaml’s <code>Unix</code> module, such functions are oblivious to Lwt and may cause issues. Most notably, these functions may block the execution of the program.</p>
-<p>There are multiple ways to interact with the OS without blocking. For the most common OS interactions (e.g., creating files, reading from pipes, accepting incoming connections, etc.), Lwt comes with the sub-library <code>lwt.unix</code> which includes the module <code>Lwt_unix</code> which contains Lwt-aware wrappers for the <code>Unix</code> module.</p>
+<p>The last part of Lwt that this tutorial covers is interaction with
+the operating system. Whilst it is possible to call functions from
+OCaml’s <code>Unix</code> module, such functions are oblivious to Lwt
+and may cause issues. Most notably, these functions may block the
+execution of the program.</p>
+<p>There are multiple ways to interact with the OS without blocking. For
+the most common OS interactions (e.g., creating files, reading from
+pipes, accepting incoming connections, etc.), Lwt comes with the
+sub-library <code>lwt.unix</code> which includes the module
+<code>Lwt_unix</code> which contains Lwt-aware wrappers for the
+<code>Unix</code> module.</p>
 <p><code>Lwt_unix.sleep: float -&gt; unit t</code><br />
-The promise <code>sleep t</code> is a pending promise that becomes resolved after <code>t</code> seconds have elapsed. Note that the resolution of the promise only happens if the scheduler is running – i.e., if there is an ongoing call to <code>Lwt_main.run</code>. If the scheduler is not running when the timer expires, then the promise is only resolved the next time the scheduler is started.</p>
-<p>Another way to call blocking functions is to wrap them in <code>Lwt_preemptive.detach</code> (provided by <code>lwt.unix</code>) or, equivalently, in <code>Mwt.run</code> (provided by <code>mwt</code>). This solution relies on OCaml’s <code>Thread</code> module to isolate the blocking calls in a different execution context. It is mostly useful when making calls to a third-party library that does not provide Lwt-aware system primitives.</p>
-<p>Blocking system calls are maintained in their own global variable. The scheduler checks these calls at each iteration, causing the process to actually sleep if none of the calls are done and no paused promises can be found.</p>
+The promise <code>sleep t</code> is a pending promise that becomes
+resolved after <code>t</code> seconds have elapsed. Note that the
+resolution of the promise only happens if the scheduler is running –
+i.e., if there is an ongoing call to <code>Lwt_main.run</code>. If the
+scheduler is not running when the timer expires, then the promise is
+only resolved the next time the scheduler is started.</p>
+<p>Another way to call blocking functions is to wrap them in
+<code>Lwt_preemptive.detach</code> (provided by <code>lwt.unix</code>)
+or, equivalently, in <code>Mwt.run</code> (provided by
+<code>mwt</code>). This solution relies on OCaml’s <code>Thread</code>
+module to isolate the blocking calls in a different execution context.
+It is mostly useful when making calls to a third-party library that does
+not provide Lwt-aware system primitives.</p>
+<p>Blocking system calls are maintained in their own global variable.
+The scheduler checks these calls at each iteration, causing the process
+to actually sleep if none of the calls are done and no paused promises
+can be found.</p>
 <h2 id="part-3">Part 3</h2>
-<p>The third and final part of this 2-part introduction/tutorial collects some miscellaneous remarks of little practical use.</p>
+<p>The third and final part of this 2-part introduction/tutorial
+collects some miscellaneous remarks of little practical use.</p>
 <p><a href="/code/lwt-part-3.html">→ Onwards to part 3</a><br />
 <a href="/code/lwt-part-1.html">← Back to part 1</a></p>
 </div>

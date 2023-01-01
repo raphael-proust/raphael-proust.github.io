@@ -22,21 +22,59 @@
 <div id="header">
 <h1 class="title">Natural languages in programming languages</h1>
 </div>
-<p>Programming languages are constructed languages: they are <em>designed</em> for humans to communicate ideas, protocols, algorithms, etc. to computers. However, most programming languages include, in specific places, elements of natural languages. Comments are parts of a program that are ignored by a computer and used by programmers to explain their code to other programmers; they are reserved places for arbitrary content, often natural language, to be included. Keywords are elements of a programming language that use words from natural languages: “function”, “while”, “private”, “class”, “module”, etc.</p>
-<p>More interestingly, identifiers are often arbitrary strings of alphanumerical characters. It is considered good practice to use meaningful words or group of words as identifiers. This makes the code self-documenting in that it attaches meaning to elements of a program.</p>
+<p>Programming languages are constructed languages: they are
+<em>designed</em> for humans to communicate ideas, protocols,
+algorithms, etc. to computers. However, most programming languages
+include, in specific places, elements of natural languages. Comments are
+parts of a program that are ignored by a computer and used by
+programmers to explain their code to other programmers; they are
+reserved places for arbitrary content, often natural language, to be
+included. Keywords are elements of a programming language that use words
+from natural languages: “function”, “while”, “private”, “class”,
+“module”, etc.</p>
+<p>More interestingly, identifiers are often arbitrary strings of
+alphanumerical characters. It is considered good practice to use
+meaningful words or group of words as identifiers. This makes the code
+self-documenting in that it attaches meaning to elements of a
+program.</p>
 <h2 id="cases-and-position">Cases and position</h2>
-<p>Some natural languages write different grammatical cases differently. German, Russian, Latin and many other languages have this feature. English on the other hand relies mostly on position to distinguish between the role of different words. There are only a few cases left – e.g., the difference between “I”, “me”, and “my”.</p>
-<p>Additionally, English verbs and nouns are often identical: “fish”, “search”, “return”, “ride”, “plant”, “drive”, “act”, “tie”, etc. and can only be differentiated by context. On top of which, English verbs nouns and nouns verbs.</p>
+<p>Some natural languages write different grammatical cases differently.
+German, Russian, Latin and many other languages have this feature.
+English on the other hand relies mostly on position to distinguish
+between the role of different words. There are only a few cases left –
+e.g., the difference between “I”, “me”, and “my”.</p>
+<p>Additionally, English verbs and nouns are often identical: “fish”,
+“search”, “return”, “ride”, “plant”, “drive”, “act”, “tie”, etc. and can
+only be differentiated by context. On top of which, English verbs nouns
+and nouns verbs.</p>
 <h2 id="confusing-identifiers">Confusing identifiers</h2>
-<p>Cases and the ability to differentiate verbs from nouns is useful when using natural language words as identifiers in programs. Consider Python’s <code>sort</code> and <code>sorted</code>:</p>
+<p>Cases and the ability to differentiate verbs from nouns is useful
+when using natural language words as identifiers in programs. Consider
+Python’s <code>sort</code> and <code>sorted</code>:</p>
 <ul>
-<li><code>sort</code> is an action, it is an active form that acts upon its argument and modifies it. It has side-effect: it <em>sorts</em> its argument.</li>
-<li><code>sorted</code> is a state, it is the result of a process. It returns a fresh collection with the same elements but <em>sorted</em>.</li>
+<li><code>sort</code> is an action, it is an active form that acts upon
+its argument and modifies it. It has side-effect: it <em>sorts</em> its
+argument.</li>
+<li><code>sorted</code> is a state, it is the result of a process. It
+returns a fresh collection with the same elements but
+<em>sorted</em>.</li>
 </ul>
-<p>However, some other built-in functions have nouns as identifier: “bool”, “tuple”. For these, it is unclear whether they mutate their argument or not – does this function tuple (tuple-ise?) its argument or does it give back a tuple version of its argument?</p>
+<p>However, some other built-in functions have nouns as identifier:
+“bool”, “tuple”. For these, it is unclear whether they mutate their
+argument or not – does this function tuple (tuple-ise?) its argument or
+does it give back a tuple version of its argument?</p>
 <h2 id="programming-paradigms">Programming paradigms</h2>
-<p>In Object Oriented Programming, objects have methods (usually identified by verbs) and fields (usually identified by nouns). One of the way Java programmers make sure these are differentiated is to use explicit getters and setters for the fields. This way, the object only exposes methods/verbs. Additionally, they prefix getter and setter identifiers with <code>get</code> and <code>set</code> to make it unambiguous.</p>
-<p>In Functional programming, functions are values which blurs the line between what constitute a verb and what a noun. I don’t know of any guidelines to avoid confusion; I don’t know to what extent such guidelines would be effective.</p>
+<p>In Object Oriented Programming, objects have methods (usually
+identified by verbs) and fields (usually identified by nouns). One of
+the way Java programmers make sure these are differentiated is to use
+explicit getters and setters for the fields. This way, the object only
+exposes methods/verbs. Additionally, they prefix getter and setter
+identifiers with <code>get</code> and <code>set</code> to make it
+unambiguous.</p>
+<p>In Functional programming, functions are values which blurs the line
+between what constitute a verb and what a noun. I don’t know of any
+guidelines to avoid confusion; I don’t know to what extent such
+guidelines would be effective.</p>
 </div>
 </body>
 </html>

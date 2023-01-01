@@ -22,9 +22,20 @@
 <div id="header">
 <h1 class="title">Keyboard mapping</h1>
 </div>
-<p>I use <a href="http://www.vim.org/">Vim</a>. I started using Vim when I decided to study computer science at university. I borrowed a book from the University library (something about Unix) and there was this whole thing about <code>vi</code> and modes and the terminal. It was a gruelling experience. I only ever recommend Vim to people that spend hours a day coding or otherwise editing markup or plain-text.</p>
-<p>I also use Vimperator (Vim-like interface to Firefox) and many other programs that share some keybindings with Vim. The most commonly shared keys are the “arrows”: h, j, k, l.</p>
-<p>What with all this use of h, j, k, l, I started shifting the resting position of my hands on my keyboard. Specifically, I moved my right-hand one letter to the left; my home keys became asdf-hjkl. This was annoying though because important keys such as backslash and enter become less accessible.</p>
+<p>I use <a href="http://www.vim.org/">Vim</a>. I started using Vim when
+I decided to study computer science at university. I borrowed a book
+from the University library (something about Unix) and there was this
+whole thing about <code>vi</code> and modes and the terminal. It was a
+gruelling experience. I only ever recommend Vim to people that spend
+hours a day coding or otherwise editing markup or plain-text.</p>
+<p>I also use Vimperator (Vim-like interface to Firefox) and many other
+programs that share some keybindings with Vim. The most commonly shared
+keys are the “arrows”: h, j, k, l.</p>
+<p>What with all this use of h, j, k, l, I started shifting the resting
+position of my hands on my keyboard. Specifically, I moved my right-hand
+one letter to the left; my home keys became asdf-hjkl. This was annoying
+though because important keys such as backslash and enter become less
+accessible.</p>
 <p>So I decided to remap my keyboard:</p>
 <ul>
 <li>j becomes h,</li>
@@ -33,8 +44,13 @@
 <li>semicolon becomes l, and to close the loop</li>
 <li>h becomes semicolon</li>
 </ul>
-<p>With this, the home-keys (physical keys jkl-semicolon) are the same as the Vim movement keys (hjkl). One last tweak was to swap the shift behaviour of semicolon. So in fact: h becomes colon and shift+h becomes semicolon. This is only worth it because I generally use a programming language with few semicolons: <a href="http://ocaml.org/">Ocaml</a>.</p>
-<p>To implement this, I have a modified <code>xkb</code> file to include the following lines:</p>
+<p>With this, the home-keys (physical keys jkl-semicolon) are the same
+as the Vim movement keys (hjkl). One last tweak was to swap the shift
+behaviour of semicolon. So in fact: h becomes colon and shift+h becomes
+semicolon. This is only worth it because I generally use a programming
+language with few semicolons: <a href="http://ocaml.org/">Ocaml</a>.</p>
+<p>To implement this, I have a modified <code>xkb</code> file to include
+the following lines:</p>
 <pre><code>key &lt;AC05&gt; {
     type= &quot;ALPHABETIC&quot;,
     symbols[Group1]= [          g,         G ]
@@ -57,9 +73,17 @@ key &lt;AC10&gt; {
     symbols[Group1]= [          l,         L ]
 };
 key &lt;AC11&gt; {         [ apostrophe,  quotedbl ] };</code></pre>
-<p>and my <code>.xinitrc</code> executes <code>xkbcomp $HOME/.xkb.hjkl $DISPLAY</code>.</p>
-<p>In addition, to make it work outside of X11, I have a <code>/etc/vconsole.conf</code> which contains the line <code>KEYMAP="hjklus"</code>. This points to the file <code>/usr/share/kbd/keymaps/i386/qwerty/hjklus.map.gz</code> which is a modified version of <code>/usr/share/kbd/keymaps/i386/qwerty/us.map.gz</code>.</p>
-<p>You can find all the files in my <a href="https://github.com/raphael-proust/rcs">configuration repository</a>.</p>
+<p>and my <code>.xinitrc</code> executes
+<code>xkbcomp $HOME/.xkb.hjkl $DISPLAY</code>.</p>
+<p>In addition, to make it work outside of X11, I have a
+<code>/etc/vconsole.conf</code> which contains the line
+<code>KEYMAP="hjklus"</code>. This points to the file
+<code>/usr/share/kbd/keymaps/i386/qwerty/hjklus.map.gz</code> which is a
+modified version of
+<code>/usr/share/kbd/keymaps/i386/qwerty/us.map.gz</code>.</p>
+<p>You can find all the files in my <a
+href="https://github.com/raphael-proust/rcs">configuration
+repository</a>.</p>
 </div>
 </body>
 </html>
