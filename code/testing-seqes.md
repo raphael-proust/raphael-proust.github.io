@@ -29,7 +29,7 @@ let dump strings =
 The [Octez project](https://gitlab.com/tezos/tezos/) uses the [Lwt](https://github.com/ocsigen/lwt/) monad for IO, the [Result](https://v2.ocaml.org/api/Result.html) monad for error-management, and the combination of the two for error-managed IO.
 There is [a significant part of the source code](https://gitlab.com/tezos/tezos/-/tree/v15.1/src/lib_lwt_result_stdlib) providing monadic helpers for different data-structures of the Stdlib: [`List`](https://ocaml.org/p/tezos-lwt-result-stdlib/15.1/doc/Tezos_lwt_result_stdlib/Lwtreslib/Bare/List/index.html), [`Map`](https://ocaml.org/p/tezos-lwt-result-stdlib/15.1/doc/Tezos_lwt_result_stdlib/Lwtreslib/Bare/Map/index.html), [`Set`](https://ocaml.org/p/tezos-lwt-result-stdlib/15.1/doc/Tezos_lwt_result_stdlib/Lwtreslib/Bare/Set/index.html), [`Hashtbl`](https://ocaml.org/p/tezos-lwt-result-stdlib/15.1/doc/Tezos_lwt_result_stdlib/Lwtreslib/Bare/Hashtbl/index.html), etc.
 These modules provide the normal functionality from the Stdlib as well as monadic traversors.
-A generalisation of [`Lwt_list`](https://ocsigen.org/lwt/latest/api/Lwt_list).
+They can be seen as a generalisation of [`Lwt_list`](https://ocsigen.org/lwt/latest/api/Lwt_list).
 
 There is also a [`Seq`](https://ocaml.org/p/tezos-lwt-result-stdlib/15.1/doc/Tezos_lwt_result_stdlib/Lwtreslib/Bare/Seq/index.html) module.
 However, the Stdlib's `Seq` module exports types which cannot be mixed freely with monads.
