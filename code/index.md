@@ -30,3 +30,5 @@ Thoughts, articles, posts about code, programming languages, etc.
 [(2022-10-11) Mirage OS retreat](/code/mirage-retreat-2022-10.html)
 
 [(2022-12-16) Testing Seqes](/code/testing-seqes.html)
+
+[(2023-09-28) The Queen's head](/code/queenshead.html)
