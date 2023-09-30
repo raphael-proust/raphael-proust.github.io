@@ -6,7 +6,7 @@ title: The Queen's head
 
 I was in a car, driving from Brighton to Cambridge. Just before leaving, I saw a
 meme on my phone: an altered photo of a pub named *The Queen's head* but the
-picture of the regent had been swapped for on of Freddy Mercury.
+picture of the regent had been swapped for one of Freddy Mercury.
 
 All along the trip, I kept noticing pubs and their names. They fell into a few
 patterns. And they rely on a typical vocabulary.
