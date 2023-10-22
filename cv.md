@@ -22,6 +22,9 @@ I write, edit and review courses, tutorials, manuals and rulebooks in French and
                          [Nomadic Labs](https://nomadic-labs.com/) on the
                          [Tezos project](https://gitlab.com/tezos/tezos)
 
+ Oct 2022–Present        Co-maintainer of the
+                         [opam-repository](https://github.com/ocaml/opam-repository)
+
  Jul 2020–Present        Co-maintainer of the
                          [Lwt library](https://github.com/ocsigen/lwt/)
 
@@ -86,6 +89,11 @@ I am still working at Nomadic Labs, on Tezos and other related projects.
 Some of the items below are on-going.
 All items are written in past tense for consistency.
 
+- **Tooling show and tell**
+
+	I organised a series of internal talks to share information about developer tooling.
+	In each talk, one developer showed how they perform one specific task (e.g., rebasing), showcasing their tooling.
+
 - **Internal training**
 
 	I organised and ran several training sessions focused on the common libraries that are used within the Tezos project, most notably
@@ -138,7 +146,7 @@ All items are written in past tense for consistency.
 
 - **OCaml 5 readiness**
 
-	I led the effort into investigating the issues that prevented the Tezos project from upgrading to the newer major release of OCaml: OCaml 5.
+	I led the effort to investigate the blockers preventing the Tezos project from upgrading to the newer major release of OCaml: OCaml 5.
 	The main issues were related to API compatibility and packaging.
 
 	I also led the effort into the long-term planning of using the new features of OCaml 5 whilst accommodating our existing code-base.
@@ -239,4 +247,4 @@ I completed a PhD at the Computer Laboratory of the University of Cambridge.
 - Programming languages: OCaml (native), make (fluent), shell (intermediate), Javascript (rusty), Python (rusty), Scala (rusty), rust (beginner), Scheme (beginner), Haskell (beginner), C (beginner).
 - Markup languages: Markdown (native), HTML (fluent), LaTeX (rusty).
 - Environment: Archlinux, `vi`(`nvim`), `git`, `acme`, `make`, `mk`, `opam`, `dune`, `sh`/`zsh`, `rc`, `pandoc`, etc.
-- Other: driver's license, PADI Advanced Open Water Diver, fire warden training, skilled punter and skater.
+- Other: driver's license, PADI Advanced Open Water Diver, skilled punter and skater.

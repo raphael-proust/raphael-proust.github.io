@@ -49,5 +49,5 @@ I use [Archlinux](https://www.archlinux.org), [suckless tools](http://suckless.o
 
 I have [a Gitlab account](https://gitlab.com/raphael-proust),
 [a Github account](https://github.com/raphael-proust/),
-and [a mastodon account](https://types.pl/@raphaelp).
+and <a href="https://types.pl/@raphaelp" rel="me">a mastodon account</a>.
 I have homonyms – but no accounts – on Twitter, Facebook, Linkedin, and probably more such websites.
