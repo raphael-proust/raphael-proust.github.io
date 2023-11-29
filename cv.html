@@ -27,7 +27,7 @@
 href="/pgp--code-at-bnwr-dot-net">PGP key</a><br />
 <a href="https://gitlab.com/raphael-proust">Gitlab profile</a><br />
 <a href="https://github.com/raphael-proust">Github profile</a></p>
-<p>I am a software developer and a technical writer.</p>
+<p>I am a software engineer and a technical writer.</p>
 <p>I work primarily with OCaml but also in a variety of programming
 languages on various types of software.</p>
 <p>I write, edit and review courses, tutorials, manuals and rulebooks in
@@ -41,7 +41,7 @@ French and English.</p>
 <tbody>
 <tr class="odd">
 <td style="text-align: center;">Mar 2018–Present</td>
-<td style="text-align: left;">Software developer at <a
+<td style="text-align: left;">Software engineer at <a
 href="https://nomadic-labs.com/">Nomadic Labs</a> on the <a
 href="https://gitlab.com/tezos/tezos">Tezos project</a></td>
 </tr>
@@ -150,21 +150,14 @@ developer tooling. In each talk, one developer showed how they perform
 one specific task (e.g., rebasing), showcasing their tooling.</p></li>
 <li><p><strong>Internal training</strong></p>
 <p>I organised and ran several training sessions focused on the common
-libraries that are used within the Tezos project, most notably Lwt, the
-ocamldoc documentation markup language, our in-house error-management
-library, and our in-house data de/serialisation library.</p>
-<p>I produced slides and I organised and ran the training sessions. I
-also wrote tutorials for <a href="/code/lwt-part-1.html">Lwt</a>, <a
-href="http://tezos.gitlab.io/developer/error_monad.html">our
-<code>Error_monad</code> library</a>, and <a
-href="https://nomadic-labs.gitlab.io/data-encoding/data-encoding/tutorial.html">our
-<code>data-encoding</code> library</a>.</p></li>
+libraries that are used within the Tezos project, most notably Lwt (<a
+href="/code/lwt-part-1.html">tutorial</a>), the ocamldoc documentation
+markup language, our in-house error-management library (<a
+href="http://tezos.gitlab.io/developer/error_monad.html">tutorial</a>),
+and our in-house data de/serialisation library (<a
+href="https://nomadic-labs.gitlab.io/data-encoding/data-encoding/tutorial.html">tutorial</a>).</p></li>
 <li><p><strong>Code review</strong> and <strong>merging</strong></p>
-<p>I reviewed merge requests (MRs): inspecting changes to the code
-before giving a greenlight for merging, or requesting changes, or
-discussing specific points with the original developers.</p>
-<p>I rebased and merged MRs that had been greenlit by other
-reviewers.</p>
+<p>I reviewed, rebased, and merged merge requests (MRs).</p>
 <p>I participated and, for a time, ran weekly meetings to discuss and
 triage open MRs.</p></li>
 <li><p><strong>Overhauling the Tezos mempool</strong></p>
@@ -195,7 +188,7 @@ documentation, setting up their own repository (with continuous
 integration), setting up the packaging boilerplate, and modifying the
 code of Tezos to use the external libraries rather than the embedded
 version.</p></li>
-<li><p><strong>Modernising the Error Management library</strong></p>
+<li><p><strong>Modernising internal libraries</strong></p>
 <p>The in-house Error Monad library dates back to the very start of the
 Tezos project. Over the course of the project’s lifetime it had
 accumulated many helper functions for different uses.</p>
@@ -205,14 +198,18 @@ binding operators) and developing an error-related supplement to the
 OCaml Stdlib. This task involved some changes to the library itself as
 well as corresponding changes throughout the rest of the project.
 Because changes to the rest of the code were large, it also involved
-carefully preparing the git history of the merge requests.</p></li>
-<li><p><strong>OCaml 5 readiness</strong></p>
-<p>I led the effort to investigate the blockers preventing the Tezos
-project from upgrading to the newer major release of OCaml: OCaml 5. The
-main issues were related to API compatibility and packaging.</p>
-<p>I also led the effort into the long-term planning of using the new
-features of OCaml 5 whilst accommodating our existing
-code-base.</p></li>
+carefully preparing the git history of the merge requests.</p>
+<p>Similarly, I led the effort in improving the in-house
+de/serialisation library and releasing it into the larger OCaml
+ecosystem. This also involved writing precise API documentation and a
+user-oriented tutorial.</p></li>
+<li><p><strong>Long term technical planning</strong></p>
+<p>I led the OCaml 5 readiness effort: fixing the issues that prevented
+the Tezos project from upgrading to the newer major release of OCaml,
+investigating the uses of the release’s features and how they would
+integrate in our existing code-base.</p>
+<p>I led the roadmapping and part of the project management to shift the
+project to a monorepo.</p></li>
 <li><p><strong>Other miscellaneous</strong></p>
 <p>Work at Nomadic Labs also included developing various features,
 fixing some bugs, triaging issues, etc. I also developed some of the

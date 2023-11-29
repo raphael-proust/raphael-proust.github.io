@@ -8,7 +8,7 @@ Raphaël Proust
 [Github profile](https://github.com/raphael-proust)  
 
 
-I am a software developer and a technical writer.
+I am a software engineer and a technical writer.
 
 I work primarily with OCaml but also in a variety of programming languages on various types of software.
 
@@ -18,7 +18,7 @@ I write, edit and review courses, tutorials, manuals and rulebooks in French and
 ## Chronology
 
 ------------------------ ------------------------------------------------------
- Mar 2018–Present        Software developer at
+ Mar 2018–Present        Software engineer at
                          [Nomadic Labs](https://nomadic-labs.com/) on the
                          [Tezos project](https://gitlab.com/tezos/tezos)
 
@@ -97,22 +97,14 @@ All items are written in past tense for consistency.
 - **Internal training**
 
 	I organised and ran several training sessions focused on the common libraries that are used within the Tezos project, most notably
-	Lwt,
+	Lwt ([tutorial](/code/lwt-part-1.html)),
 	the ocamldoc documentation markup language,
-	our in-house error-management library, and
-	our in-house data de/serialisation library.
-
-	I produced slides and I organised and ran the training sessions.
-	I also wrote tutorials for
-	[Lwt](/code/lwt-part-1.html),
-	[our `Error_monad` library](http://tezos.gitlab.io/developer/error_monad.html), and
-	[our `data-encoding` library](https://nomadic-labs.gitlab.io/data-encoding/data-encoding/tutorial.html).
+	our in-house error-management library ([tutorial](http://tezos.gitlab.io/developer/error_monad.html)), and
+	our in-house data de/serialisation library ([tutorial](https://nomadic-labs.gitlab.io/data-encoding/data-encoding/tutorial.html)).
 
 - **Code review** and **merging**
 
-	I reviewed merge requests (MRs): inspecting changes to the code before giving a greenlight for merging, or requesting changes, or discussing specific points with the original developers.
-
-	I rebased and merged MRs that had been greenlit by other reviewers.
+	I reviewed, rebased, and merged merge requests (MRs).
 
 	I participated and, for a time, ran weekly meetings to discuss and triage open MRs.
 
@@ -135,7 +127,7 @@ All items are written in past tense for consistency.
 	I took the lead in releasing libraries.
 	This involved improving their documentation, setting up their own repository (with continuous integration), setting up the packaging boilerplate, and modifying the code of Tezos to use the external libraries rather than the embedded version.
 
-- **Modernising the Error Management library**
+- **Modernising internal libraries**
 
 	The in-house Error Monad library dates back to the very start of the Tezos project.
 	Over the course of the project's lifetime it had accumulated many helper functions for different uses.
@@ -144,12 +136,16 @@ All items are written in past tense for consistency.
 	This task involved some changes to the library itself as well as corresponding changes throughout the rest of the project.
 	Because changes to the rest of the code were large, it also involved carefully preparing the git history of the merge requests.
 
-- **OCaml 5 readiness**
+	Similarly, I led the effort in improving the in-house de/serialisation library and releasing it into the larger OCaml ecosystem.
+	This also involved writing precise API documentation and a user-oriented tutorial.
 
-	I led the effort to investigate the blockers preventing the Tezos project from upgrading to the newer major release of OCaml: OCaml 5.
-	The main issues were related to API compatibility and packaging.
+- **Long term technical planning**
 
-	I also led the effort into the long-term planning of using the new features of OCaml 5 whilst accommodating our existing code-base.
+	I led the OCaml 5 readiness effort:
+	fixing the issues that prevented the Tezos project from upgrading to the newer major release of OCaml,
+	investigating the uses of the release's features and how they would integrate in our existing code-base.
+
+    I led the roadmapping and part of the project management to shift the project to a monorepo.
 
 - **Other miscellaneous**
 
