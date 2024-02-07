@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Raphaël Proust" />
+  <title>Dromedary and a half - My First GADT</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+<header>
+<nav>
+	<a href="/code/index.html">On code</a> |
+	<a href="/games/index.html">On games</a> |
+	<a href="/misc/index.html">Miscellanées</a> |
+	<a href="/about.html">About</a>
+</nav>
+</header>
+<div id="content">
+<div id="header">
+<h1 class="title">My First GADT</h1>
+<h2 class="subtitle">GADT tutorial part 1 of 3</h2>
+</div>
+<p>GADTs in OCaml… You probably don’t need them, but –who knows– maybe
+one day you will. Also they can make for fun puzzles to figure out. So
+here’s a small tutorial to get you started.</p>
+<p>The primary use of GADTs is to delegate the maintenance of some
+invariants of your code to the OCaml compiler’s type checker. In other
+words, you can use GADTs to encode custom additional typing rules which
+relate to some aspect of your program’s logic (as opposed to the
+built-in typing rules which relate to the runtime safety of all
+programs).</p>
+<h2 id="prologue">Prologue</h2>
+<p>A few notes before we start.</p>
+<p><strong>You probably don’t need GADTs.</strong> That’s because you
+can use some other OCaml features to encode many of of the invariants
+that you might care about. For example, you can use a module with a
+small interface around an abstract or private type. You can also use
+runtime checks and return <code>option</code> or <code>Either.t</code>
+values.</p>
+<p><strong>What even are GADTs?</strong> “GADT” stands for Generalised
+Algebraic Data Type. I don’t know why it’s <em>Generalised</em>, but the
+<em>ADT</em> part is essentially your sum types and product types. Sums
+and products being the stuff of algebra, we have ADTs.</p>
+<p>There are two syntaxes for sum types in OCaml, only <a
+href="https://v2.ocaml.org/manual/gadts.html#s%3Agadts">the more recent
+one</a> can be used in GADTs. Here’s a comparison of the two syntaxes
+for the <code>option</code> type:</p>
+<pre><code>(* Classic, terse syntax *)
+type &#39;a option =
+   | None
+   | Some of &#39;a</code></pre>
+<pre><code>(* Modern, verbose, GADT-compatible syntax*)
+type _ option =
+   | None : &#39;a option
+   | Some : &#39;a -&gt; &#39;a option</code></pre>
+<p>There are two kinds of product types in OCaml: tuples and records.
+This tutorial uses a mix of them just like most of the code out
+there.</p>
+<p><strong>This tutorial has several parts.</strong> This first part
+starts with a simple GADT definition and shows how to manipulate values
+of that type. It doesn’t delve into anything too advanced.</p>
+<p>A second part focuses on different techniques to use when making
+GADTs. A third part focuses on real-world examples.</p>
+<p><strong>All the code is available to download and play with.</strong>
+Files are linked to at different points of the tutorial.</p>
+<h2 id="my-very-first-gadt">My Very First GADT</h2>
+<p>For your very first GADT, you will make a type which is analogous to
+<code>int list</code> but with a type parameter indicating whether the
+list is empty or not. In other words, you make a type where the possible
+emptiness of a list (of integers) can be tracked by the type system.</p>
+<p>First, declare some types which represent the property that you want
+to track.</p>
+<pre><code>type empty = Empty
+type nonempty = NonEmpty</code></pre>
+<p>Then, declare a type <code>int_list</code> with a single type
+parameter which is instantiated with the property types.</p>
+<pre><code>type _ int_list =
+   | Nil : empty int_list
+   | Cons : int * _ int_list -&gt; nonempty int_list</code></pre>
+<p>Note how each constructor (<code>Nil</code> and <code>Cons</code>)
+instantiates the type parameter differently:<br />
+<code>Nil : empty int_list</code><br />
+<code>Cons : … -&gt; nonempty int_list</code></p>
+<p>Based on this information, the type checker is able to assign
+different property types for the parameter of different values.</p>
+<pre><code>let nil : empty int_list = Nil
+let onetwo : nonempty int_list = Cons (1, Cons (2, Nil))
+(* you don&#39;t need the type annotations,
+   the compiler can infer them. *)</code></pre>
+<p>That’s it, your very first GADT.</p>
+<h2 id="using-the-gadt-a-specialised-function">Using the GADT: a
+specialised function</h2>
+<p>Because you can enforce emptiness/fullness, you can write exception
+free version of, say, <code>Stdlib.List.hd</code>:</p>
+<pre><code>let hd
+: nonempty int_list -&gt; int
+= fun (Cons (x, _)) -&gt; x</code></pre>
+<p>This function’s type restrict the input to only
+<code>nonempty int_list</code>. This has two effects: First, it prevents
+callers from passing an <code>empty int_list</code> value. In other
+words, you encoded an additional rule for the type system to track.
+Second, it allows you to only consider the <code>Cons</code> constructor
+within the body of the function.</p>
+<p>You can try to break a few things: call <code>hd Nil</code>, add a
+<code>Nil</code> case to the function definition, change the type
+declaration of the function. Try it!</p>
+<h2 id="using-the-gadt-a-generic-function">Using the GADT: a generic
+function</h2>
+<p>You can also write functions that are generic and accept both
+<code>empty</code> and <code>nonempty</code> parameters.</p>
+<pre><code>let is_empty
+: type e. e int_list -&gt; bool
+= function
+   | Nil -&gt; true
+   | Cons _ -&gt; false</code></pre>
+<p>Note the <code>type e.</code> prefix inside the type annotation of
+the function. This is needed because the type parameter <code>e</code>
+is different in different parts of the function. Without it the compiler
+gives an error. Try it!</p>
+<p>You can also write generic recursive functions. The type annotation
+uses the same prefix for the same reason.</p>
+<pre><code>let rec iter
+: type e. (int -&gt; unit) -&gt; e int_list -&gt; unit
+= fun f l -&gt;
+   match l with
+   | Nil -&gt; ()
+   | Cons (x, xs) -&gt; f x; iter f xs</code></pre>
+<p>Try to define a few useful functions for this type or check out the
+file <a
+href="/code/my-first-gadt/veryfirst.ml"><code>veryfirst.ml</code></a>.</p>
+<h2 id="using-the-gadt-existential-constructor">Using the GADT:
+existential constructor</h2>
+<p>You can write generic functions, but you cannot create a generic
+data-structure which hosts values of either property indiscriminately.
+If you try, you get an error message. Try the following value
+declaration:</p>
+<pre><code>(* broken code: type error *)
+let kvs = [
+   (&quot;a&quot;, Nil);
+   (&quot;b&quot;, Cons (0, Nil));
+   (&quot;c&quot;, Cons (1, Cons (4, Nil)));
+]</code></pre>
+<p>The error makes sense because the type of this value would be
+<code>(string * _ int_list) List.t</code> and what does that
+<code>_</code> even is in this context? Another way to think about the
+error is to think about the return type for the following
+function:<br />
+<code>let find_value key = List.assoc key kvs</code></p>
+<p>When you need to store values with different property parameters into
+a single data-structure, you need to introduce an existential
+constructor. It’s a new type with a new constructor which wraps the GADT
+so that the property type parameter disappears. By convention, it’s
+often call <code>Any</code> (because it wraps <em>any</em> of the GADT
+value) or <code>E</code> (for “exists”).</p>
+<pre><code>type any_int_list = Any : _ int_list -&gt; any_int_list</code></pre>
+<p>You can use it to host values with different property parameters into
+a single data-structure.</p>
+<pre><code>let kvs = [
+   (&quot;a&quot;, Any Nil);
+   (&quot;b&quot;, Any (Cons (0, Nil)));
+   (&quot;c&quot;, Any (Cons (1, Cons (4, Nil))));
+]</code></pre>
+<p>You can recover the wrapped/hidden type parameter locally by
+matching:</p>
+<pre><code>let iter_any f xs =
+   match xs with
+   | Any Nil -&gt; ()
+   | Any (Cons _ as xs) -&gt;
+      (* in this branch only, [xs] has type [nonempty int_list] *)
+      iter f xs</code></pre>
+<h2 id="kinda-useless">Kinda useless</h2>
+<p>This GADT is sort of useless. Sure you can write exception-less
+versions of <code>List.hd</code> and such, but it’s not practical.</p>
+<p>The main issue is that <code>int_list</code> is a new type: you
+cannot use functions from the <code>Stdlib</code> or any existing
+library. You have to rewrite everything you need yourself. (You could
+convert to <code>int Seq.t</code> but then you lose the type
+information.)</p>
+<p>Note that because of the didactic intent behind
+<code>int_list</code>, I cut some corners in making it. It can be made
+somewhat practical. But as is it is not.</p>
+<p>A better alternative is to use a private type alias. See <a
+href="/code/my-first-gadt/altveryfirst.ml"><code>altveryfirst.ml</code></a>
+for an example.</p>
+<h2 id="part-2">Part 2</h2>
+<p>Now that you know the basics of how to define and use a GADT, check
+out the next part of this tutorial:<br />
+<a href="/code/gadt-tips-and-tricks.html">GADT Tips and Tricks</a>.</p>
+</div>
+</body>
+</html>

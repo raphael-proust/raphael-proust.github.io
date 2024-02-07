@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Raphaël Proust" />
+  <title>Dromedary and a half - GADT Gallery</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+<header>
+<nav>
+	<a href="/code/index.html">On code</a> |
+	<a href="/games/index.html">On games</a> |
+	<a href="/misc/index.html">Miscellanées</a> |
+	<a href="/about.html">About</a>
+</nav>
+</header>
+<div id="content">
+<div id="header">
+<h1 class="title">GADT Gallery</h1>
+<h2 class="subtitle">GADT tutorial part 3—of—3</h2>
+</div>
+<p>This final part of the GADT tutorial shows examples of GADTs used in
+the wild. Check out <a href="/code/my-first-gadt.html">part 1 (My First
+GADT)</a> for a basic introduction to GADTs and <a
+href="/code/gadt-tips-and-tricks.html">part 2 (GADT Tips and Tricks)</a>
+for advanced techniques.</p>
+<h2 id="crowbar">Crowbar</h2>
+<p><a href="https://ocaml.org/p/crowbar/latest">Crowbar</a> is a
+fuzzing/property-based testing library.</p>
+<p>When you use crowbar to test a function you provide generators for
+each of the function’s parameter. Then crowbar uses to generators to
+feed a large and varied set of inputs to the function.</p>
+<p>The library revolves around the notion of generators. It provides an
+abstract type for them:</p>
+<pre><code>type &#39;a gen
+(** [&#39;a gen] knows how to generate [&#39;a] for use in Crowbar tests. *)</code></pre>
+<p>It also provides built-in generators:</p>
+<pre><code>val uint8 : int gen
+(** [uint8] generates an unsigned byte, ranging from 0 to 255 inclusive. *)
+
+val int8 : int gen
+(** [int8] generates a signed byte, ranging from -128 to 127 inclusive. *)
+
+(* etc. *)</code></pre>
+<p>Interestingly, it also provides a way to combine multiple generator
+by means of a GADT.</p>
+<pre><code>type (&#39;k, &#39;res) gens =
+  | [] : (&#39;res, &#39;res) gens
+  | (::) : &#39;a gen * (&#39;k, &#39;res) gens -&gt; (&#39;a -&gt; &#39;k, &#39;res) gens
+(** multiple generators are passed to functions using a listlike syntax.
+    for example, [map [int; int] (fun a b -&gt; a + b)] *)
+
+val map : (&#39;f, &#39;a) gens -&gt; &#39;f -&gt; &#39;a gen
+(** [map gens map_fn] provides a means for creating generators using other
+    generators&#39; output.  For example, one might generate a Char.t from a
+    {!uint8}:
+    {[
+      open Crowbar
+      let char_gen : Char.t gen = map [uint8] Char.chr
+    ]}
+*)</code></pre>
+<p><a
+href="https://github.com/stedolan/crowbar/blob/v0.2.1/src/crowbar.mli#L6">source</a></p>
+<p>The GADT allows you to pass an arbitrary assortment of generators to
+be mapped. For example, the documentation included in the excerpts above
+shows both one- and two-generators mapping:<br />
+<code>map [uint8] Char.chr</code><br />
+<code>map [int; int] (fun a b -&gt; a + b)</code></p>
+<p>Unsurprisingly, the type for generators is <a
+href="https://github.com/stedolan/crowbar/blob/v0.2.1/src/crowbar.ml#L12">also
+a GADT</a>, although it is not exposed to users.</p>
+<h2 id="seqes-and-lwtreslib">Seqes and Lwtreslib</h2>
+<p><a href="https://ocaml.org/p/seqes/latest">Seqes</a> is a library for
+combining the <a
+href="https://v2.ocaml.org/api/Seq.html"><code>Stdlib.Seq</code></a>
+module with your choice of monad. Interestingly, the library’s tests are
+based on a formal description of the <code>Seq</code> API. This API
+description is written out using a GADT which keeps track of both
+vanilla (Stdlib) and monadic types.</p>
+<pre><code>type (_, _) ty =
+  | Int : (int, int) ty
+  | Bool : (bool, bool) ty
+  | Tup2 : (&#39;va, &#39;ma) ty * (&#39;vb, &#39;mb) ty -&gt;
+      ((&#39;va * &#39;vb), (&#39;ma * &#39;mb)) ty
+  | Option : (&#39;v, &#39;m) ty -&gt; (&#39;v option, &#39;m option) ty
+  (* etc. *)</code></pre>
+<p><a
+href="https://gitlab.com/nomadic-labs/seqes/-/blob/0.2/test/pbt/helpers.ml?ref_type=tags#L85">source</a></p>
+<p>I’ve already written a blog post about <a
+href="/code/testing-seqes.html">testing Seqes</a> which has a lot of
+details.</p>
+<h2 id="michelson">Michelson</h2>
+<p><a href="https://www.michelson.org/">Michelson</a> is the programming
+language for the smart contracts on the Tezos blockchain. It is a
+stack-based programming language with a cleverly optimised interpreter
+written in OCaml.</p>
+<p>Interestingly, one of its intermediate representation has a type
+system which enforces stack discipline.</p>
+<p>The stack discipline is enforced with GADT type parameters which
+represent the contents of the stack. A stack is represented as two
+parameters: one for the top of the stack and one (an accumulator of
+tuple types) for the rest. E.g.,
+<code>(int, (int * (float * unit)))</code> is for a stack with two
+integers and a float; the first <code>int</code> is the parameter for
+the top of the stack, and the
+<code>int</code>-<code>float</code>-<code>unit</code> nested tuple is
+for the rest of the stack.</p>
+<p>A sequence of instructions has parameters for the stack prior to
+execution and parameters for the stack after the execution. It makes
+four parameters in total: top before, rest before, top after, rest
+after.</p>
+<p>Sequences of instructions are expressed as chained instruction
+constructors: each instruction carries the next instruction in the
+sequence as its payload. So in pseudo-code (omitting some details) a
+small program fragment for <code>1+2</code> might look like:<br />
+<code>Push (1, Push (2, Add …))</code></p>
+<p>Here’s an excerpt for the GADT definition:</p>
+<pre><code>type (&#39;before_top, &#39;before, &#39;result_top, &#39;result) kinstr =
+  | IAdd_int :
+      (z num, &#39;S, &#39;r, &#39;F) kinstr
+      -&gt; (&#39;a num, &#39;b num * &#39;S, &#39;r, &#39;F) kinstr
+  | IIf : {
+      branch_if_true : (&#39;a, &#39;S, &#39;b, &#39;T) kinstr;
+      branch_if_false : (&#39;a, &#39;S, &#39;b, &#39;T) kinstr;
+      k : (&#39;b, &#39;T, &#39;r, &#39;F) kinstr;
+    }
+      -&gt; (bool, &#39;a * &#39;S, &#39;r, &#39;F) kinstr
+  | ISwap :
+      (&#39;b, &#39;a * (&#39;c * &#39;S), &#39;r, &#39;F) kinstr
+      -&gt; (&#39;a, &#39;b * (&#39;c * &#39;S), &#39;r, &#39;F) kinstr
+  (* etc. *)</code></pre>
+<p><a
+href="https://gitlab.com/tezos/tezos/-/blob/v19.1/src/proto_018_Proxford/lib_protocol/script_typed_ir.mli?ref_type=tags#L332">source</a></p>
+<h2 id="ocamls-format-internals">OCaml’s Format internals</h2>
+<p>The OCaml’s <a
+href="https://v2.ocaml.org/api/Format.html"><code>Stdlib</code>
+formatting module</a> allows programmers to easily define custom
+printers:
+<code>Format.printf "%s:%d: %s" file_name line_number error_message</code></p>
+<p>On the outside, the typing rules for format strings seem like magic
+built directly into the compiler. This was the case until 10 years ago
+when most parts of the magic was rewritten into some GADTs.</p>
+<p>At the core of it is the <code>fmt</code> type which has a
+constructor for each of the formatting string special sequence. The
+constructors in this type carry the next constructor as a payload,
+forming a chain. The chain of constructor accumulates some types as
+parameters of a function.</p>
+<pre><code>and (&#39;a, &#39;b, &#39;c, &#39;d, &#39;e, &#39;f) fmt =
+  | Char :                                                   (* %c *)
+      (&#39;a, &#39;b, &#39;c, &#39;d, &#39;e, &#39;f) fmt -&gt;
+        (char -&gt; &#39;a, &#39;b, &#39;c, &#39;d, &#39;e, &#39;f) fmt
+  | String :                                                 (* %s *)
+      (&#39;x, string -&gt; &#39;a) padding * (&#39;a, &#39;b, &#39;c, &#39;d, &#39;e, &#39;f) fmt -&gt;
+        (&#39;x, &#39;b, &#39;c, &#39;d, &#39;e, &#39;f) fmt
+  (* etc. *)</code></pre>
+<p><a
+href="https://github.com/ocaml/ocaml/blob/trunk/stdlib/camlinternalFormatBasics.ml#L365">source</a></p>
+<p>It is far beyond the scope of this gallery to explain the multiple
+type parameters of this GADT and to explore the many types that work
+together with <code>fmt</code> to provide the formatting feature.
+Nonetheless, you can have a look at the source if you want to learn
+more:<br />
+<a
+href="https://github.com/ocaml/ocaml/blob/trunk/stdlib/camlinternalFormatBasics.ml"><code>camlinternalFormatBasics</code></a><br />
+<a
+href="https://github.com/ocaml/ocaml/blob/trunk/stdlib/camlinternalFormat.ml"><code>camlinternalFormat</code></a></p>
+<h2 id="call-for-suggestions">Call for suggestions</h2>
+<p>If you know of some interesting examples of GADTs in OCaml libraries,
+let me know and I might include them.</p>
+</div>
+</body>
+</html>
