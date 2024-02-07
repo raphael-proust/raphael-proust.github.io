@@ -35,11 +35,11 @@ parametrised over a monad, returning monad-friendly
   let return x = …
   let bind x f = …
 end
-module SeqWithIO = Seqes.Standard.Make1(IO)
+module SeqIO = Seqes.Standard.Make1(IO)
 let dump strings =
   lines
   |&gt; Seq.filter (fun string -&gt; string &lt;&gt; &quot;&quot;)
-  |&gt; SeqWithIO.iter
+  |&gt; SeqIO.iter
       (fun line -&gt;
         IO.bind
           (write_string line)

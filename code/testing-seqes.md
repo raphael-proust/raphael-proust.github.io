@@ -13,11 +13,11 @@ module IO = struct
   let return x = …
   let bind x f = …
 end
-module SeqWithIO = Seqes.Standard.Make1(IO)
+module SeqIO = Seqes.Standard.Make1(IO)
 let dump strings =
   lines
   |> Seq.filter (fun string -> string <> "")
-  |> SeqWithIO.iter
+  |> SeqIO.iter
       (fun line ->
         IO.bind
           (write_string line)
