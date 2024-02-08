@@ -33,6 +33,6 @@ Thoughts, articles, posts about code, programming languages, etc.
 
 [(2023-09-28) The Queen's head](/code/queenshead.html)
 
-[(TODO) My Very First GADT](/code/my-first-gadt.html)  
-[(TODO) GADT Tips and Tricks](/code/gadt-tips-and-tricks.html)  
-[(TODO) GADT Gallery](/code/gadt-gallery.html)
+[(2024-02-07) My Very First GADT](/code/my-first-gadt.html)  
+[(2024-02-07) GADT Tips and Tricks](/code/gadt-tips-and-tricks.html)  
+[(2024-02-07) GADT Gallery](/code/gadt-gallery.html)
