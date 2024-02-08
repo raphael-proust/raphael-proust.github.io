@@ -1,6 +1,6 @@
 ---
 title: GADT Gallery
-subtitle: GADT tutorial part 3—of—3
+subtitle: GADT tutorial part 3 of 3
 ...
 
 This final part of the GADT tutorial shows examples of GADTs used in the wild.
