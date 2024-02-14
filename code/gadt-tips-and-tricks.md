@@ -79,7 +79,7 @@ which forces the type checker to assume that the GADTs with different property t
 
 Basically you make the type checker forget about the distinctness of the different parts of your sum.
 
-Also note that there are legitimate uses for public constructors in your property types.
+Note that there are legitimate uses for public constructors in your property types.
 If you are in one of those cases don't use `private`.
 
 

@@ -152,6 +152,34 @@ Nonetheless, you can have a look at the source if you want to learn more:
 [`camlinternalFormat`](https://github.com/ocaml/ocaml/blob/trunk/stdlib/camlinternalFormat.ml)
 
 
+## miragevpn configuration
+
+EDIT NOTICE 2024-02-14: This section was added (after a reader's suggestion).
+
+[`miragevpn`](https://github.com/robur-coop/miragevpn/) is a VPN implementation using the [mirage stack](https://mirage.io/).
+VPNs can have quite complex configurations: which cyphers are enabled, with what options, using which keys; what addresses to connect to, with what protocol and options, etc.
+
+The `miragevpn` project describe each configuration option as the constructor of a GADT.
+
+```
+  type 'a k =
+    | Auth : Mirage_crypto.Hash.hash k
+    | Auth_nocache : flag k
+    | Auth_retry : [ `Interact | `Nointeract | `None ] k
+    | Cipher
+        : [ `AES_256_CBC | `AES_128_GCM | `AES_256_GCM | `CHACHA20_POLY1305 ] k
+    (* etc. *)
+```
+
+[source](https://github.com/robur-coop/miragevpn/blob/c85f85999682593a0dd853103321a8c03ba9e94f/src/config.ml#L154)
+
+This GADT is then used to instantiate a heterogeneous map provided by the [gmap library](https://github.com/hannesm/gmap).
+(“Heterogeneous” here has the same meaning as in the “heterogeneous list” shown in [part 2](/code/gadt-tips-and-tricks.html#accumulator-of-types-tuples): it contains elements of different types.)
+
+Parsing the configuration file returns a map.
+And checking the value of a configurable option is just a lookup in the map.
+
+
 ## Call for suggestions
 
 If you know of some interesting examples of GADTs in OCaml libraries, let me know and I might include them.
