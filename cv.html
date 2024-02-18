@@ -23,8 +23,7 @@
 <h1 class="title">Curriculum Vitæ</h1>
 </div>
 <p>Raphaël Proust<br />
-<a href="mailto:code@bnwr.net" class="email">code@bnwr.net</a> — <a
-href="/pgp--code-at-bnwr-dot-net">PGP key</a><br />
+<a href="mailto:code@bnwr.net" class="email">code@bnwr.net</a><br />
 <a href="https://gitlab.com/raphael-proust">Gitlab profile</a><br />
 <a href="https://github.com/raphael-proust">Github profile</a></p>
 <p>I am a software engineer and a technical writer.</p>
@@ -150,16 +149,17 @@ developer tooling. In each talk, one developer showed how they perform
 one specific task (e.g., rebasing), showcasing their tooling.</p></li>
 <li><p><strong>Internal training</strong></p>
 <p>I organised and ran several training sessions focused on the common
-libraries that are used within the Tezos project, most notably Lwt (<a
-href="/code/lwt-part-1.html">tutorial</a>), the ocamldoc documentation
-markup language, our in-house error-management library (<a
+libraries that are used within the Tezos project, and I wrote
+accompanying tutorials: Lwt (<a
+href="/code/lwt-part-1.html">tutorial</a>), our in-house
+error-management library (<a
 href="http://tezos.gitlab.io/developer/error_monad.html">tutorial</a>),
 and our in-house data de/serialisation library (<a
 href="https://nomadic-labs.gitlab.io/data-encoding/data-encoding/tutorial.html">tutorial</a>).</p></li>
 <li><p><strong>Code review</strong> and <strong>merging</strong></p>
 <p>I reviewed, rebased, and merged merge requests (MRs).</p>
-<p>I participated and, for a time, ran weekly meetings to discuss and
-triage open MRs.</p></li>
+<p>I participated —and for a time also ran— weekly meetings to discuss
+and triage open MRs.</p></li>
 <li><p><strong>Overhauling the Tezos mempool</strong></p>
 <p>The mempool is a component of the Tezos project responsible for
 receiving information from the P2P gossip, folding the received
@@ -189,20 +189,20 @@ integration), setting up the packaging boilerplate, and modifying the
 code of Tezos to use the external libraries rather than the embedded
 version.</p></li>
 <li><p><strong>Modernising internal libraries</strong></p>
-<p>The in-house Error Monad library dates back to the very start of the
-Tezos project. Over the course of the project’s lifetime it had
-accumulated many helper functions for different uses.</p>
-<p>I led the effort of cleaning up the interface, organising the code
-into separate components, bringing in a newer syntax (based on OCaml’s
-binding operators) and developing an error-related supplement to the
-OCaml Stdlib. This task involved some changes to the library itself as
-well as corresponding changes throughout the rest of the project.
-Because changes to the rest of the code were large, it also involved
-carefully preparing the git history of the merge requests.</p>
-<p>Similarly, I led the effort in improving the in-house
-de/serialisation library and releasing it into the larger OCaml
-ecosystem. This also involved writing precise API documentation and a
-user-oriented tutorial.</p></li>
+<p>Several libraries (most notably the in-house Error Monad library and
+the in-house de/serialisation library) date back to the very start of
+the Tezos project. Over the course of the project’s lifetime they had
+accumulated undocumented features and they were using dated interface
+conventions.</p>
+<p>I led the effort of cleaning up the libraries: organising the code
+into separate components, replacing infix functions with binding
+operators, introducing functors where appropriate, matching the newer
+developments of the OCaml Stdlib (e.g., the newer <code>Seq.t</code>
+type), and writing extensive documentation. This task involved some
+changes to the libraries themselves as well as corresponding changes
+throughout the rest of the project. Because changes to the rest of the
+code were large, it also involved carefully preparing the git history of
+the merge requests.</p></li>
 <li><p><strong>Long term technical planning</strong></p>
 <p>I led the OCaml 5 readiness effort: fixing the issues that prevented
 the Tezos project from upgrading to the newer major release of OCaml,
@@ -221,12 +221,12 @@ at Cambridge Coding Academy and Cambridge Spark</h2>
 <p>Cambridge Coding Academy (<a
 href="http://web.archive.org/web/20200921170235/https://cambridgecoding.com/">via
 wayback machine</a>) and <a href="https://cambridgespark.com/">Cambridge
-Spark</a> are twin companies that provide teaching and training in
-programming, data analysis, machine learning, etc. The former organises
-courses for teenagers; the latter for professionals.</p>
-<p>I started working for the companies as they were set up. When I
-finished my PhD, I started full time employment for these companies and
-worked on the projects listed below.</p>
+Spark</a> were twin companies that provided teaching and training in
+programming, data analysis, machine learning, etc. The former organised
+courses for high-schoolers; the latter for professionals.</p>
+<p>I started working for the companies as they were set up. Later, when
+I finished my PhD, I started full time employment for these companies
+and worked on the projects listed below.</p>
 <ul>
 <li><p><strong>Student evaluation system</strong></p>
 <p>I participated in the creation, maintenance and improvement of a
@@ -314,7 +314,7 @@ and organised committee elections.</p></li>
 (intermediate), Chinese (beginner), Toki Pona (beginner).</li>
 <li>Programming languages: OCaml (native), make (fluent), shell
 (intermediate), Javascript (rusty), Python (rusty), Scala (rusty), rust
-(beginner), Scheme (beginner), Haskell (beginner), C (beginner).</li>
+(beginner), Haskell (beginner), C (beginner).</li>
 <li>Markup languages: Markdown (native), HTML (fluent), LaTeX
 (rusty).</li>
 <li>Environment: Archlinux, <code>vi</code>(<code>nvim</code>),

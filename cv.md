@@ -3,7 +3,7 @@ title: Curriculum Vitæ
 ...
 
 Raphaël Proust  
-<code@bnwr.net> — [PGP key](/pgp--code-at-bnwr-dot-net)  
+<code@bnwr.net>  
 [Gitlab profile](https://gitlab.com/raphael-proust)  
 [Github profile](https://github.com/raphael-proust)  
 
@@ -96,9 +96,8 @@ All items are written in past tense for consistency.
 
 - **Internal training**
 
-	I organised and ran several training sessions focused on the common libraries that are used within the Tezos project, most notably
+	I organised and ran several training sessions focused on the common libraries that are used within the Tezos project, and I wrote accompanying tutorials:
 	Lwt ([tutorial](/code/lwt-part-1.html)),
-	the ocamldoc documentation markup language,
 	our in-house error-management library ([tutorial](http://tezos.gitlab.io/developer/error_monad.html)), and
 	our in-house data de/serialisation library ([tutorial](https://nomadic-labs.gitlab.io/data-encoding/data-encoding/tutorial.html)).
 
@@ -106,7 +105,7 @@ All items are written in past tense for consistency.
 
 	I reviewed, rebased, and merged merge requests (MRs).
 
-	I participated and, for a time, ran weekly meetings to discuss and triage open MRs.
+	I participated —and for a time also ran— weekly meetings to discuss and triage open MRs.
 
 - **Overhauling the Tezos mempool**
 
@@ -129,15 +128,12 @@ All items are written in past tense for consistency.
 
 - **Modernising internal libraries**
 
-	The in-house Error Monad library dates back to the very start of the Tezos project.
-	Over the course of the project's lifetime it had accumulated many helper functions for different uses.
+	Several libraries (most notably the in-house Error Monad library and the in-house de/serialisation library) date back to the very start of the Tezos project.
+	Over the course of the project's lifetime they had accumulated undocumented features and they were using dated interface conventions.
 
-	I led the effort of cleaning up the interface, organising the code into separate components, bringing in a newer syntax (based on OCaml's binding operators) and developing an error-related supplement to the OCaml Stdlib.
-	This task involved some changes to the library itself as well as corresponding changes throughout the rest of the project.
+	I led the effort of cleaning up the libraries: organising the code into separate components, replacing infix functions with binding operators, introducing functors where appropriate, matching the newer developments of the OCaml Stdlib (e.g., the newer `Seq.t` type), and writing extensive documentation.
+	This task involved some changes to the libraries themselves as well as corresponding changes throughout the rest of the project.
 	Because changes to the rest of the code were large, it also involved carefully preparing the git history of the merge requests.
-
-	Similarly, I led the effort in improving the in-house de/serialisation library and releasing it into the larger OCaml ecosystem.
-	This also involved writing precise API documentation and a user-oriented tutorial.
 
 - **Long term technical planning**
 
@@ -145,7 +141,7 @@ All items are written in past tense for consistency.
 	fixing the issues that prevented the Tezos project from upgrading to the newer major release of OCaml,
 	investigating the uses of the release's features and how they would integrate in our existing code-base.
 
-    I led the roadmapping and part of the project management to shift the project to a monorepo.
+	I led the roadmapping and part of the project management to shift the project to a monorepo.
 
 - **Other miscellaneous**
 
@@ -155,11 +151,11 @@ All items are written in past tense for consistency.
 
 ## Projects at Cambridge Coding Academy and Cambridge Spark
 
-Cambridge Coding Academy ([via wayback machine](http://web.archive.org/web/20200921170235/https://cambridgecoding.com/)) and [Cambridge Spark](https://cambridgespark.com/) are twin companies that provide teaching and training in programming, data analysis, machine learning, etc.
-The former organises courses for teenagers; the latter for professionals.
+Cambridge Coding Academy ([via wayback machine](http://web.archive.org/web/20200921170235/https://cambridgecoding.com/)) and [Cambridge Spark](https://cambridgespark.com/) were twin companies that provided teaching and training in programming, data analysis, machine learning, etc.
+The former organised courses for high-schoolers; the latter for professionals.
 
 I started working for the companies as they were set up.
-When I finished my PhD, I started full time employment for these companies and worked on the projects listed below.
+Later, when I finished my PhD, I started full time employment for these companies and worked on the projects listed below.
 
 - **Student evaluation system**
 
@@ -240,7 +236,7 @@ I completed a PhD at the Computer Laboratory of the University of Cambridge.
 ## Miscellaneous
 
 - Natural languages: French (native), English (fluent), Spanish (intermediate), Chinese (beginner), Toki Pona (beginner).
-- Programming languages: OCaml (native), make (fluent), shell (intermediate), Javascript (rusty), Python (rusty), Scala (rusty), rust (beginner), Scheme (beginner), Haskell (beginner), C (beginner).
+- Programming languages: OCaml (native), make (fluent), shell (intermediate), Javascript (rusty), Python (rusty), Scala (rusty), rust (beginner), Haskell (beginner), C (beginner).
 - Markup languages: Markdown (native), HTML (fluent), LaTeX (rusty).
 - Environment: Archlinux, `vi`(`nvim`), `git`, `acme`, `make`, `mk`, `opam`, `dune`, `sh`/`zsh`, `rc`, `pandoc`, etc.
 - Other: driver's license, PADI Advanced Open Water Diver, skilled punter and skater.
