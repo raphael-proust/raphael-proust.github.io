@@ -2,8 +2,11 @@
 title: Acme colour scheme for vim
 ...
 
+EDIT 2024-06-13: I have rewritten vacme in lua.
+
 I recently found out about [vacme](https://github.com/olivertaylor/vacme): an acme-inspired colour scheme for vim.
 I adapted it to [my setup](https://github.com/raphael-proust/rcs).
+I've since [rewritten it in lua](https://github.com/raphael-proust/vacme/blob/master/colors/vacme.lua).
 
 Here's an overview.
 
