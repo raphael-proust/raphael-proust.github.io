@@ -22,8 +22,8 @@ I started learning Chinese and Toki Pona although I am not proficient in either.
 
 ### Present
 
-I work on the [Tezos](https://gitlab.com/tezos/tezos) project.
 I am a co-maintainer of the [Lwt library](https://github.com/ocsigen/lwt/).
+I am a co-maintainer of the [opam-repository](https://github.com/ocaml/opam-repository/).
 Checkout [my CV](/cv.html) for more information.
 
 I irregularly publish homebrew content on the [Dungeon Masters Guild](https://www.dmsguild.com/browse.php?author=Rapha%C3%ABl%20Proust).
@@ -31,21 +31,16 @@ I irregularly publish homebrew content on the [Dungeon Masters Guild](https://ww
 
 ### Past
 
-I worked as a freelance software developer and technical writer.
-
-I worked for [Cambridge Spark](https://cambridgespark.com) and Cambridge Coding Academy([wayback machine link](http://web.archive.org/web/20200921170235/https://cambridgecoding.com/)) as a software developer and a course developer.
-I wrote software to write, review, edit, publish, and deliver courses; I wrote, reviewed, edited, published, and delivered courses about software.
+I worked as a software developer, technical writer, and educator.
 
 I was a Ph.D. student at the [Computer Laboratory](http://www.cl.cam.ac.uk/) of the [University of Cambridge](http://www.cam.ac.uk/) under supervision of [Alan Mycroft](http://www.cl.cam.ac.uk/~am21/).
 [My thesis](http://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-908.html) explored the use of compile-time memory management in the context of system programming: replacing garbage collectors by a compilation pass in order to be friendly to system programmers.
-
-I was a student of [Magdalene College](http://www.magd.cam.ac.uk/) and was involved in the MCR committee (first as Social officer, then as Secretary, then as President).
 
 ------------------------------------------------------------------------
 
 ## Misc
 
-I use [Archlinux](https://www.archlinux.org), [suckless tools](http://suckless.org), [neovim](http://neovim.io), [acme](http://acme.cat-v.org), and other things.
+I use [Archlinux](https://www.archlinux.org), [neovim](http://neovim.io), [acme](http://acme.cat-v.org), [git](https://git-scm.com/), [zsh](https://www.zsh.org/), [wezterm](https://wezfurlong.org/wezterm/index.html), and other things.
 
 I have [a Gitlab account](https://gitlab.com/raphael-proust),
 [a Github account](https://github.com/raphael-proust/),

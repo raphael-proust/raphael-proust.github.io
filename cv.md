@@ -18,7 +18,7 @@ I write, edit and review courses, tutorials, manuals and rulebooks in French and
 ## Chronology
 
 ------------------------ ------------------------------------------------------
- Mar 2018–Present        Software engineer at
+ Mar 2018–July 2024      Software engineer at
                          [Nomadic Labs](https://nomadic-labs.com/) on the
                          [Tezos project](https://gitlab.com/tezos/tezos)
 
@@ -31,22 +31,22 @@ I write, edit and review courses, tutorials, manuals and rulebooks in French and
  Aug 2017–Mar 2018       Freelance, remote software developer and technical
                          writer
 
- Sep 2016–Aug 2017       Software developer and technical writer at
+ Sep 2016–Aug 2017       Software developer, technical writer, and educator at
                          Cambridge Coding Academy
                          ([via wayback machine](http://web.archive.org/web/20200921170235/https://cambridgecoding.com/))
                          and [Cambridge Spark](https://cambridgespark.com/).
 
  Sep 2012–Jul 2016       PhD student at the
+                         [Computer Laboratory](http://www.cl.cam.ac.uk/) of the
                          [University of Cambridge](http://www.cam.ac.uk/)
-                         [Computer Laboratory](http://www.cl.cam.ac.uk/)
 
  Apr 2012–Aug 2012       Intern at
                          [INRIA's Gallium team](http://gallium.inria.fr/)
                          on “functional intermediate representations”
 
  Aug 2011–Feb 2012       Intern at the
+                         [Computer Laboratory](http://www.cl.cam.ac.uk/) of the
                          [University of Cambridge](http://www.cam.ac.uk/)
-                         [Computer Laboratory](http://www.cl.cam.ac.uk/)
                          on “programming language support for the
                          Mirage operating system”
 
@@ -85,9 +85,6 @@ I write, edit and review courses, tutorials, manuals and rulebooks in French and
 [Nomadic Labs](https://nomadic-labs.com/) is a company that provides research and development in formal verification, distributed systems and programming languages.
 
 I joined Nomadic Labs in March 2018 as the company was expanding to handle the development requirements of the [Tezos](https://tezos.com/) project.
-I am still working at Nomadic Labs, on Tezos and other related projects.
-Some of the items below are on-going.
-All items are written in past tense for consistency.
 
 - **Tooling show and tell**
 
@@ -100,22 +97,6 @@ All items are written in past tense for consistency.
 	Lwt ([tutorial](/code/lwt-part-1.html)),
 	our in-house error-management library ([tutorial](http://tezos.gitlab.io/developer/error_monad.html)), and
 	our in-house data de/serialisation library ([tutorial](https://nomadic-labs.gitlab.io/data-encoding/data-encoding/tutorial.html)).
-
-- **Code review** and **merging**
-
-	I reviewed, rebased, and merged merge requests (MRs).
-
-	I participated —and for a time also ran— weekly meetings to discuss and triage open MRs.
-
-- **Overhauling the Tezos mempool**
-
-	The mempool is a component of the Tezos project responsible for receiving information from the P2P gossip, folding the received information into the local state, and, based on state changes, handing over some more information to the P2P layer to be gossiped.
-	A few colleagues and myself rewrote a new mempool from scratch to fix some issues and improve performance.
-
-	This software component involves concurrency and more specifically defensive scheduling: it must be resilient against potential denial of service attacks.
-	It also involves a high level of abstraction because the nature of the state and the way information is folded into it depends on another software component (the economic protocol) that can change dynamically.
-
-	The development of this new mempool led to the release of [`lwt-pipeline`](https://gitlab.com/nomadic-labs/lwt_pipeline) and the extension of [`ringo`](https://gitlab.com/nomadic-labs/ringo).
 
 - **Releasing internal libraries** and **upstreaming changes to vendored libraries**
 
@@ -143,10 +124,20 @@ All items are written in past tense for consistency.
 
 	I led the roadmapping and part of the project management to shift the project to a monorepo.
 
+- **Overhauling the Tezos mempool**
+
+	The mempool is a component of the Tezos project responsible for receiving information from the P2P gossip, folding the received information into the local state, and, based on state changes, handing over some more information to the P2P layer to be gossiped.
+	A few colleagues and myself rewrote a new mempool from scratch to fix some issues and improve performance.
+
+	This software component involves concurrency and more specifically defensive scheduling: it must be resilient against potential denial of service attacks.
+	It also involves a high level of abstraction because the nature of the state and the way information is folded into it depends on another software component (the economic protocol) that can change dynamically.
+
+	The development of this new mempool led to the release of [`lwt-pipeline`](https://gitlab.com/nomadic-labs/lwt_pipeline) and the extension of [`ringo`](https://gitlab.com/nomadic-labs/ringo).
+
 - **Other miscellaneous**
 
-	Work at Nomadic Labs also included developing various features, fixing some bugs, triaging issues, etc.
-	I also developed some of the tooling used for linting and testing.
+	In addition to the regular work (developing features, reviewing merge requests, fixing bugs, triaging issues, etc.) I took on some extra tasks:
+	I developed some of the tooling used for linting and testing, I ran the meeting for triaging merge request and issues, I supervised an intern.
 
 
 ## Projects at Cambridge Coding Academy and Cambridge Spark
@@ -220,7 +211,7 @@ I completed a PhD at the Computer Laboratory of the University of Cambridge.
 - **Computer Science Laboratory** (additional work)
 
 	I supervised undergraduate students, both in tutoring sessions and for longer projects.
-	I organised [a series of talks](http://talks.cam.ac.uk/user/show/25917) for my research team.
+	I organised some talks for my research team.
 	I contributed to the early setup of the [Computer Science Admission Test](https://www.cl.cam.ac.uk/admissions/undergraduate/admissions-test/) which is used to evaluate candidates to the University of Cambridge Computer Science undergraduate program.
 
 	I was awarded the [Wiseman Award](https://www.cl.cam.ac.uk/local/wiseman.html) for these contributions to the Computer Science Laboratory.
