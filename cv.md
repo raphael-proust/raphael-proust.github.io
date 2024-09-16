@@ -18,15 +18,17 @@ I write, edit and review courses, tutorials, manuals and rulebooks in French and
 ## Chronology
 
 ------------------------ ------------------------------------------------------
- Mar 2018–July 2024      Software engineer at
-                         [Nomadic Labs](https://nomadic-labs.com/) on the
-                         [Tezos project](https://gitlab.com/tezos/tezos)
+ Sep 2024–Present        Software engineer at [ahrefs](https://ahrefs.com/)
 
  Oct 2022–Present        Co-maintainer of the
                          [opam-repository](https://github.com/ocaml/opam-repository)
 
  Jul 2020–Present        Co-maintainer of the
                          [Lwt library](https://github.com/ocsigen/lwt/)
+
+ Mar 2018–July 2024      Software engineer at
+                         [Nomadic Labs](https://nomadic-labs.com/) on the
+                         [Tezos project](https://gitlab.com/tezos/tezos)
 
  Aug 2017–Mar 2018       Freelance, remote software developer and technical
                          writer

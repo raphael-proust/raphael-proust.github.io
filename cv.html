@@ -39,10 +39,9 @@ French and English.</p>
 </colgroup>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;">Mar 2018–July 2024</td>
+<td style="text-align: center;">Sep 2024–Present</td>
 <td style="text-align: left;">Software engineer at <a
-href="https://nomadic-labs.com/">Nomadic Labs</a> on the <a
-href="https://gitlab.com/tezos/tezos">Tezos project</a></td>
+href="https://ahrefs.com/">ahrefs</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">Oct 2022–Present</td>
@@ -55,11 +54,17 @@ href="https://github.com/ocaml/opam-repository">opam-repository</a></td>
 href="https://github.com/ocsigen/lwt/">Lwt library</a></td>
 </tr>
 <tr class="even">
+<td style="text-align: center;">Mar 2018–July 2024</td>
+<td style="text-align: left;">Software engineer at <a
+href="https://nomadic-labs.com/">Nomadic Labs</a> on the <a
+href="https://gitlab.com/tezos/tezos">Tezos project</a></td>
+</tr>
+<tr class="odd">
 <td style="text-align: center;">Aug 2017–Mar 2018</td>
 <td style="text-align: left;">Freelance, remote software developer and
 technical writer</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: center;">Sep 2016–Aug 2017</td>
 <td style="text-align: left;">Software developer, technical writer, and
 educator at Cambridge Coding Academy (<a
@@ -67,26 +72,26 @@ href="http://web.archive.org/web/20200921170235/https://cambridgecoding.com/">vi
 wayback machine</a>) and <a href="https://cambridgespark.com/">Cambridge
 Spark</a>.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: center;">Sep 2012–Jul 2016</td>
 <td style="text-align: left;">PhD student at the <a
 href="http://www.cl.cam.ac.uk/">Computer Laboratory</a> of the <a
 href="http://www.cam.ac.uk/">University of Cambridge</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: center;">Apr 2012–Aug 2012</td>
 <td style="text-align: left;">Intern at <a
 href="http://gallium.inria.fr/">INRIA’s Gallium team</a> on “functional
 intermediate representations”</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: center;">Aug 2011–Feb 2012</td>
 <td style="text-align: left;">Intern at the <a
 href="http://www.cl.cam.ac.uk/">Computer Laboratory</a> of the <a
 href="http://www.cam.ac.uk/">University of Cambridge</a> on “programming
 language support for the Mirage operating system”</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: center;">Sep 2010–Jul 2011</td>
 <td style="text-align: left;">Masters degree in Computer Science at <a
 href="http://www.ens-cachan.fr/">ÉNS Cachan, antenne de Bretagne</a>,
@@ -94,39 +99,39 @@ including internship at <a href="https://www.irisa.fr/en">IRISA</a>’s <a
 href="https://team.inria.fr/myriads/">MYRIADS</a> research team on
 “distributed implementation of a chemical abstract machine”</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: center;">Summer 2010</td>
 <td style="text-align: left;">Research engineer in CNRS’s <a
 href="http://ocsigen.org/">Ocsigen Team</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: center;">Sep 2009–Jul 2010</td>
 <td style="text-align: left;">Masters (1<sup>st</sup> year) in Computer
 Science at <a href="https://www.univ-paris-diderot.fr/">Université Paris
 7 Denis Diderot</a></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: center;">Summer 2009</td>
 <td style="text-align: left;">Research engineer in CNRS’s <a
 href="http://ocsigen.org/">Ocsigen Team</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: center;">Sep 2008–Jul 2009</td>
 <td style="text-align: left;">‘Licence’ (Bachelor) in Computer Science
 and Masters (1<sup>st</sup> year) in Mathematics, both at Université
 Paris 7 Denis Diderot</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: center;">Sep 2007–Jul 2008</td>
 <td style="text-align: left;">‘Licence’ in Mathematics at Université
 Paris 7 Denis Diderot</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: center;">Sep 2005–Jul 2007</td>
 <td style="text-align: left;">‘Classes préparatoires’ (pre-engineering
 school)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: center;">2005</td>
 <td style="text-align: left;">‘Baccalauréat’ in Science</td>
 </tr>
@@ -153,23 +158,6 @@ error-management library (<a
 href="http://tezos.gitlab.io/developer/error_monad.html">tutorial</a>),
 and our in-house data de/serialisation library (<a
 href="https://nomadic-labs.gitlab.io/data-encoding/data-encoding/tutorial.html">tutorial</a>).</p></li>
-<li><p><strong>Overhauling the Tezos mempool</strong></p>
-<p>The mempool is a component of the Tezos project responsible for
-receiving information from the P2P gossip, folding the received
-information into the local state, and, based on state changes, handing
-over some more information to the P2P layer to be gossiped. A few
-colleagues and myself rewrote a new mempool from scratch to fix some
-issues and improve performance.</p>
-<p>This software component involves concurrency and more specifically
-defensive scheduling: it must be resilient against potential denial of
-service attacks. It also involves a high level of abstraction because
-the nature of the state and the way information is folded into it
-depends on another software component (the economic protocol) that can
-change dynamically.</p>
-<p>The development of this new mempool led to the release of <a
-href="https://gitlab.com/nomadic-labs/lwt_pipeline"><code>lwt-pipeline</code></a>
-and the extension of <a
-href="https://gitlab.com/nomadic-labs/ringo"><code>ringo</code></a>.</p></li>
 <li><p><strong>Releasing internal libraries</strong> and
 <strong>upstreaming changes to vendored libraries</strong></p>
 <p>The Tezos project was originally built as a set of libraries and
@@ -203,6 +191,23 @@ investigating the uses of the release’s features and how they would
 integrate in our existing code-base.</p>
 <p>I led the roadmapping and part of the project management to shift the
 project to a monorepo.</p></li>
+<li><p><strong>Overhauling the Tezos mempool</strong></p>
+<p>The mempool is a component of the Tezos project responsible for
+receiving information from the P2P gossip, folding the received
+information into the local state, and, based on state changes, handing
+over some more information to the P2P layer to be gossiped. A few
+colleagues and myself rewrote a new mempool from scratch to fix some
+issues and improve performance.</p>
+<p>This software component involves concurrency and more specifically
+defensive scheduling: it must be resilient against potential denial of
+service attacks. It also involves a high level of abstraction because
+the nature of the state and the way information is folded into it
+depends on another software component (the economic protocol) that can
+change dynamically.</p>
+<p>The development of this new mempool led to the release of <a
+href="https://gitlab.com/nomadic-labs/lwt_pipeline"><code>lwt-pipeline</code></a>
+and the extension of <a
+href="https://gitlab.com/nomadic-labs/ringo"><code>ringo</code></a>.</p></li>
 <li><p><strong>Other miscellaneous</strong></p>
 <p>In addition to the regular work (developing features, reviewing merge
 requests, fixing bugs, triaging issues, etc.) I took on some extra
@@ -286,9 +291,8 @@ source files with Git.</p></li>
 <li><p><strong>Computer Science Laboratory</strong> (additional
 work)</p>
 <p>I supervised undergraduate students, both in tutoring sessions and
-for longer projects. I organised <a
-href="http://talks.cam.ac.uk/user/show/25917">a series of talks</a> for
-my research team. I contributed to the early setup of the <a
+for longer projects. I organised some talks for my research team. I
+contributed to the early setup of the <a
 href="https://www.cl.cam.ac.uk/admissions/undergraduate/admissions-test/">Computer
 Science Admission Test</a> which is used to evaluate candidates to the
 University of Cambridge Computer Science undergraduate program.</p>
