@@ -12,6 +12,7 @@ We also collect addenda:
 - [2020-07](#addendum-non-obvious-evaluation-order): a walkthrough of the execution of a small example program to demonstrate a potential source of bugs.
 - [2020-11](#addendum-other-promise-systems): a comparison with some other promise systems.
 - [2022-04](#addendum-global-promises-and-memory-leaks): a specific code pattern to look out for in your program.
+- [2024-11](#addendum-tiny-async-lib): a tiny educational Lwt-like library
 
 
 ## Historical baggage
@@ -495,3 +496,8 @@ And on the application side you should comment the use of global promises so tha
 
 In some cases, you can replace one single global promise with a function that returns fresh promises.
 This happens [in the Tezos project, specifically to provide never-ending promises](https://gitlab.com/tezos/tezos/-/commit/ce926e575aef7d965895e4443abbf9c13918ebc4).
+
+## Addendum: tiny async lib
+
+[`tiny-async-lib`](https://github.com/dx3mod/tiny-async-lib) is a small library written by dx3mod which didactically re-implements the core part of Lwt.
+You should read it if you want to build a good mental model of what promises are and how the resolution mechanism propagates information.

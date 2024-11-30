@@ -36,6 +36,8 @@ potential source of bugs.</li>
 with some other promise systems.</li>
 <li><a href="#addendum-global-promises-and-memory-leaks">2022-04</a>: a
 specific code pattern to look out for in your program.</li>
+<li><a href="#addendum-tiny-async-lib">2024-11</a>: a tiny educational
+Lwt-like library</li>
 </ul>
 <h2 id="historical-baggage">Historical baggage</h2>
 <p>The documentation of Lwt has evolved to consistently use a sound
@@ -583,6 +585,13 @@ function that returns fresh promises. This happens <a
 href="https://gitlab.com/tezos/tezos/-/commit/ce926e575aef7d965895e4443abbf9c13918ebc4">in
 the Tezos project, specifically to provide never-ending
 promises</a>.</p>
+<h2 id="addendum-tiny-async-lib">Addendum: tiny async lib</h2>
+<p><a
+href="https://github.com/dx3mod/tiny-async-lib"><code>tiny-async-lib</code></a>
+is a small library written by dx3mod which didactically re-implements
+the core part of Lwt. You should read it if you want to build a good
+mental model of what promises are and how the resolution mechanism
+propagates information.</p>
 </div>
 </body>
 </html>
