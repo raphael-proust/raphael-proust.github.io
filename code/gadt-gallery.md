@@ -180,6 +180,29 @@ Parsing the configuration file returns a map.
 And checking the value of a configurable option is just a lookup in the map.
 
 
+## Nightmare's services
+
+EDIT NOTICE 2025-01-10: This section was added (after a reader's suggestion).
+
+[Nightmare](https://github.com/funkywork/nightmare/) is a library for supplementing the [Dream](https://aantron.github.io/dream/) framework.
+One of the features it provides is a notion of service: a way to handle a request (serve a page or reply to an API call).
+In order to enforce that the services match the handler to an appropriate endpoint (e.g., that the path includes needed parameters), the library defines a set of related GADTs.
+
+1. A definition of paths (think URLs) with an arrow type accumulator: [`Path.t`](https://github.com/funkywork/nightmare/blob/3ac271377f651426f40b9f239138310461b0888b/lib/service/path.ml).
+2. A variety of simpler types:
+    [`Method.t`](https://github.com/funkywork/nightmare/blob/3ac271377f651426f40b9f239138310461b0888b/lib/service/method.ml#L23),
+    [`Endpoint.t`](https://github.com/funkywork/nightmare/blob/3ac271377f651426f40b9f239138310461b0888b/lib/service/endpoint.ml#L23),
+    [`Handler`](https://github.com/funkywork/nightmare/blob/3ac271377f651426f40b9f239138310461b0888b/lib/service/handler.ml#L23),
+    [`Middleware.t`](https://github.com/funkywork/nightmare/blob/3ac271377f651426f40b9f239138310461b0888b/lib/service/middleware.ml#L23).
+3. A definition of services with constraints to ensure all the types above fit together: [`Service.t`](https://github.com/funkywork/nightmare/blob/3ac271377f651426f40b9f239138310461b0888b/lib/service/service.ml#L1)
+
+The documentation for the types themselves is sparse.
+But you can check the documentation of the constructor functions in the mli to learn more.
+
+Other webservice-oriented libraries also use GADTs to keep track of similar invariants.
+E.g., [eliom](https://github.com/ocsigen/eliom), [resto](https://gitlab.com/nomadic-labs/resto).
+
+
 ## Call for suggestions
 
 If you know of some interesting examples of GADTs in OCaml libraries, let me know and I might include them.

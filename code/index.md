@@ -36,6 +36,7 @@ Thoughts, articles, posts about code, programming languages, etc.
 
 [(2024-02-07) My Very First GADT](/code/my-first-gadt.html)  
 [(2024-02-07) GADT Tips and Tricks](/code/gadt-tips-and-tricks.html)  
-[(2024-02-07) GADT Gallery](/code/gadt-gallery.html)
+[(2024-02-07) GADT Gallery](/code/gadt-gallery.html)  
+(Updated 2025-01-10)  
 
 [(2024-11-28) Areas and Adversaries](/code/areas-and-adversaries.html)

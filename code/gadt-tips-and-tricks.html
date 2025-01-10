@@ -349,6 +349,45 @@ val read_unknowable : int -&gt; (&#39;a, unknowable) codec -&gt; char Seq.t -&gt
 href="https://opam.ocaml.org/packages/data-encoding/"><code>data-encoding</code>
 library</a> in which some invariant maintenance is shifted to the type
 system.</p>
+<h2 id="a-type-variable-cannot-be-deduced">A type variable cannot be
+deduced</h2>
+<p>EDIT NOTICE (2025-01-10): This section was added.</p>
+<p>The compiler might reject some GADT definitions if it doesn’t have
+enough information about the instantiated types. For example, the
+following definition</p>
+<pre><code>module Mk
+   (P:sig type &#39;a t end)
+= struct
+   type _ t = Wrap : &#39;a -&gt; &#39;a P.t t
+end</code></pre>
+<p>is rejected with the following error message</p>
+<pre><code>Error: In the GADT constructor
+         Wrap : &#39;a t -&gt; &#39;a P.t t
+       the type variable &#39;a cannot be deduced from the type parameters.</code></pre>
+<p>The issue is that you can call the functor <code>Mk</code> with a
+parameter <code>P</code> where the type could be anything, including
+some problematic type definitions.</p>
+<p>If this happens, you can circumvent the limitation in one of two
+ways. You can enforce the type constructor <code>P.t</code> is
+injective:</p>
+<pre><code>module Mk
+   (P:sig type !&#39;a t end) (* Note the ! character *)
+= struct
+   type _ t = Wrap : &#39;a -&gt; &#39;a P.t t
+end</code></pre>
+<p>Alternatively, you can add a type paramter to the definition of the
+GADT to track the type parameter separately.</p>
+<pre><code>module Mk
+   (P:sig type &#39;a t end)
+= struct
+   type (_, _) t = (* Note the second parameter *)
+      | Wrap : &#39;a -&gt;
+         (* allow the compiler to track &#39;a, separately from &#39;a P.t *)
+         (&#39;a P.t, &#39;a) t
+end</code></pre>
+<p>This is used in the testing library of Seqes, were a GADT describes
+the signature of the output of a functor: <a
+href="https://gitlab.com/raphael-proust/seqes/-/blob/036e035d040d2619c57e5670c85e8e3b7e654c83/test/pbt/testHelpers.ml#L100"><code>SUPPORT1.ty</code></a>.</p>
 <h2 id="next-part-the-gallery">Next part: the gallery</h2>
 <p>The next part of the tutorial is a gallery of interesting GADTs in
 different public open-source OCaml packages:<br />

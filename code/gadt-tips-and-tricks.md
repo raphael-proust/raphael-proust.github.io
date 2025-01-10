@@ -27,7 +27,6 @@ type _ int_list =
 
 Or occasionally other GADTs as needed.
 
-
 ## Multiple parameters
 
 You can use multiple type parameters.
@@ -385,6 +384,59 @@ val read_unknowable : int -> ('a, unknowable) codec -> char Seq.t -> 'a
 ```
 
 This example is taken from an unreleased branch of the [`data-encoding` library](https://opam.ocaml.org/packages/data-encoding/) in which some invariant maintenance is shifted to the type system.
+
+
+## A type variable cannot be deduced
+
+EDIT NOTICE (2025-01-10): This section was added.
+
+
+The compiler might reject some GADT definitions if it doesn't have enough information about the instantiated types.
+For example, the following definition
+
+```
+module Mk
+   (P:sig type 'a t end)
+= struct
+   type _ t = Wrap : 'a -> 'a P.t t
+end
+```
+
+is rejected with the following error message
+
+```
+Error: In the GADT constructor
+         Wrap : 'a t -> 'a P.t t
+       the type variable 'a cannot be deduced from the type parameters.
+```
+
+The issue is that you can call the functor `Mk` with a parameter `P` where the type could be anything, including some problematic type definitions.
+
+If this happens, you can circumvent the limitation in one of two ways.
+You can enforce the type constructor `P.t` is injective:
+
+```
+module Mk
+   (P:sig type !'a t end) (* Note the ! character *)
+= struct
+   type _ t = Wrap : 'a -> 'a P.t t
+end
+```
+
+Alternatively, you can add a type paramter to the definition of the GADT to track the type parameter separately.
+
+```
+module Mk
+   (P:sig type 'a t end)
+= struct
+   type (_, _) t = (* Note the second parameter *)
+      | Wrap : 'a ->
+         (* allow the compiler to track 'a, separately from 'a P.t *)
+         ('a P.t, 'a) t
+end
+```
+
+This is used in the testing library of Seqes, were a GADT describes the signature of the output of a functor: [`SUPPORT1.ty`](https://gitlab.com/raphael-proust/seqes/-/blob/036e035d040d2619c57e5670c85e8e3b7e654c83/test/pbt/testHelpers.ml#L100).
 
 
 ## Next part: the gallery
