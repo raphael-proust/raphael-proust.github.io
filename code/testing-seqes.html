@@ -23,8 +23,8 @@
 <h1 class="title">Testing Seqes</h1>
 </div>
 <h2 id="seqes">Seqes</h2>
-<p>The <a href="https://gitlab.com/nomadic-labs/seqes">Seqes library</a>
-provides monadic traversors for the <a
+<p>The <a href="https://gitlab.com/raphael-proust/seqes">Seqes
+library</a> provides monadic traversors for the <a
 href="https://v2.ocaml.org/api/Seq.html"><code>Seq</code></a> module of
 the OCaml Stdlib. Specifically, the Seqes library provides functors
 parametrised over a monad, returning monad-friendly
@@ -359,11 +359,11 @@ sequences.</p>
   (* … more type constructors *)</code></pre>
 <p>For the sequence, the function generates a list of values and then
 converts it to a pair of the different sequence types — <a
-href="https://gitlab.com/nomadic-labs/seqes/-/blob/daa277e2f7bdcec5af48bef962acc8a6c876e7d5/test/pbt/helpers.ml#L54">see
+href="https://gitlab.com/raphael-proust/seqes/-/blob/daa277e2f7bdcec5af48bef962acc8a6c876e7d5/test/pbt/helpers.ml#L54">see
 code</a>. For the lambdas, the function generates a single vanilla
 function, and then patches it by monadifying the parameters and return
 value — <a
-href="https://gitlab.com/nomadic-labs/seqes/-/blob/daa277e2f7bdcec5af48bef962acc8a6c876e7d5/test/pbt/helpers.ml#L324">see
+href="https://gitlab.com/raphaelk-proust/seqes/-/blob/daa277e2f7bdcec5af48bef962acc8a6c876e7d5/test/pbt/helpers.ml#L324">see
 code</a>. This part is fiddly and it took several attempt to get right.
 It’s also complicated to generalise based on the arity of the functions.
 As a result, this part of the test helpers is somewhat verbose and it is

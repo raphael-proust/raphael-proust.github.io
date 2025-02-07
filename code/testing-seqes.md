@@ -4,7 +4,7 @@ title: Testing Seqes
 
 ## Seqes
 
-The [Seqes library](https://gitlab.com/nomadic-labs/seqes) provides monadic traversors for the [`Seq`](https://v2.ocaml.org/api/Seq.html) module of the OCaml Stdlib.
+The [Seqes library](https://gitlab.com/raphael-proust/seqes) provides monadic traversors for the [`Seq`](https://v2.ocaml.org/api/Seq.html) module of the OCaml Stdlib.
 Specifically, the Seqes library provides functors parametrised over a monad, returning monad-friendly `Seq`-like modules and monad-friendly `Seq`-compatible modules.
 
 ```
@@ -318,8 +318,8 @@ let gen_of_ty =
   (* … more type constructors *)
 ```
 
-For the sequence, the function generates a list of values and then converts it to a pair of the different sequence types — [see code](https://gitlab.com/nomadic-labs/seqes/-/blob/daa277e2f7bdcec5af48bef962acc8a6c876e7d5/test/pbt/helpers.ml#L54).
-For the lambdas, the function generates a single vanilla function, and then patches it by monadifying the parameters and return value — [see code](https://gitlab.com/nomadic-labs/seqes/-/blob/daa277e2f7bdcec5af48bef962acc8a6c876e7d5/test/pbt/helpers.ml#L324).
+For the sequence, the function generates a list of values and then converts it to a pair of the different sequence types — [see code](https://gitlab.com/raphael-proust/seqes/-/blob/daa277e2f7bdcec5af48bef962acc8a6c876e7d5/test/pbt/helpers.ml#L54).
+For the lambdas, the function generates a single vanilla function, and then patches it by monadifying the parameters and return value — [see code](https://gitlab.com/raphaelk-proust/seqes/-/blob/daa277e2f7bdcec5af48bef962acc8a6c876e7d5/test/pbt/helpers.ml#L324).
 This part is fiddly and it took several attempt to get right.
 It's also complicated to generalise based on the arity of the functions.
 As a result, this part of the test helpers is somewhat verbose and it is hard-coded to support only the arities actually used in the `Seq` interface.

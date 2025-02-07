@@ -78,7 +78,7 @@ type (_, _) ty =
   | Option : ('v, 'm) ty -> ('v option, 'm option) ty
   (* etc. *)
 ```
-[source](https://gitlab.com/nomadic-labs/seqes/-/blob/0.2/test/pbt/helpers.ml?ref_type=tags#L85)
+[source](https://gitlab.com/raphael-proust/seqes/-/blob/0.3/test/pbt/testHelpers.ml?ref_type=tags#L121)
 
 I've already written a blog post about [testing Seqes](/code/testing-seqes.html) which has a lot of details.
 
