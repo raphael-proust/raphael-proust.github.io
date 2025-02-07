@@ -230,6 +230,24 @@ more.</p>
 similar invariants. E.g., <a
 href="https://github.com/ocsigen/eliom">eliom</a>, <a
 href="https://gitlab.com/nomadic-labs/resto">resto</a>.</p>
+<h2 id="justified-containers">Justified containers</h2>
+<p>EDIT NOTICE 2025-02-07: This section was added (after a reader’s
+suggestion).</p>
+<p>Taking inspiration from <a
+href="https://github.com/matt-noonan/justified-containers"><code>justified-containers</code></a>,
+the <a
+href="https://github.com/ninjaaron/justifying-ocaml/blob/7dfa5423095e62eddb5fb2c3f792ef70fd0f7f14/justified.ml"><code>justifying-ocaml</code></a>
+uses GADTs to provide infallible lookup operations in a lookup
+table.</p>
+<p>The infallible lookup uses a two step process: 1. the
+<code>mem</code> function returns not a boolean but a phantom-key (or
+<code>None</code> if there is no such value), 2. the <code>find</code>
+function takes a phantom-key and returns the associated value.</p>
+<p>It is impossible to <code>find</code> a value without first proving
+that it exists. This allows to call <code>mem</code> and deal with
+potentially missing entries a single time, followed by multiple finds
+(without having to deal with option/error) in multiple branches of the
+code.</p>
 <h2 id="call-for-suggestions">Call for suggestions</h2>
 <p>If you know of some interesting examples of GADTs in OCaml libraries,
 let me know and I might include them.</p>

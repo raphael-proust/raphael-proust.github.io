@@ -203,6 +203,20 @@ Other webservice-oriented libraries also use GADTs to keep track of similar inva
 E.g., [eliom](https://github.com/ocsigen/eliom), [resto](https://gitlab.com/nomadic-labs/resto).
 
 
+## Justified containers
+
+EDIT NOTICE 2025-02-07: This section was added (after a reader's suggestion).
+
+Taking inspiration from [`justified-containers`](https://github.com/matt-noonan/justified-containers), the [`justifying-ocaml`](https://github.com/ninjaaron/justifying-ocaml/blob/7dfa5423095e62eddb5fb2c3f792ef70fd0f7f14/justified.ml) uses GADTs to provide infallible lookup operations in a lookup table.
+
+The infallible lookup uses a two step process:
+1. the `mem` function returns not a boolean but a phantom-key (or `None` if there is no such value),
+2. the `find` function takes a phantom-key and returns the associated value.
+
+It is impossible to `find` a value without first proving that it exists.
+This allows to call `mem` and deal with potentially missing entries a single time, followed by multiple finds (without having to deal with option/error) in multiple branches of the code.
+
+
 ## Call for suggestions
 
 If you know of some interesting examples of GADTs in OCaml libraries, let me know and I might include them.
