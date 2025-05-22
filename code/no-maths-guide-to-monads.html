@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Raphaël Proust" />
+  <title>Dromedary and a half - A no-maths guide to monads</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+<header>
+<nav>
+	<a href="/code/index.html">On code</a> |
+	<a href="/games/index.html">On games</a> |
+	<a href="/misc/index.html">Miscellanées</a> |
+	<a href="/about.html">About</a>
+</nav>
+</header>
+<div id="content">
+<div id="header">
+<h1 class="title">A no-maths guide to monads</h1>
+</div>
+<p>You can effectivelly use monads, even if you don’t know “categories”,
+“monoids”, “morphisms” or all the other funny words sprinkled around the
+Haskell documentation. This guide is intended for developers (thereafter
+“you”) who</p>
+<ul>
+<li>need to use monads, or are unsure if they need monads</li>
+<li>don’t have the theoretical background mentioned in many
+tutorials</li>
+</ul>
+<p>This guide assumes you know programming, and specifically some
+functional programming. The examples in this guide are written in OCaml,
+a language with good support for (but no core dependency on) monads.</p>
+<h2 id="bindings">Bindings</h2>
+<p>One of the main abstractions of programming is binding:<br />
+naming a value.</p>
+<pre><code>(* binds the result of the multiplication to the variable name *)
+let number_of_seconds_in_a_day = 60 * 60 * 24 ;;</code></pre>
+<p>Once a value has a name, the name can be used in place of the
+value.</p>
+<pre><code>let duration_in_seconds days = days * number_of_seconds_in_a_day ;;</code></pre>
+<p>It’s such a basic feature that we don’t often think about it. It’s
+such a basic feature but it’s also such a core feature of programming.
+Even more so in functional programming languages with immutable
+values.</p>
+<h2 id="not-quite-values">Not-quite values</h2>
+<p>Occasionally, we have something similar to a value, but, like, not
+exactly, like, ish, like, there is some abstraction wrapped around the
+value, like, it’s boxed in some container, or like, it’s not available
+just immediately but only through some boilerplate-y layer of some kind.
+When you want to bind the honest salt-of-the-earth plain normal value
+underneath it all, you have to jump through a few hoops of syntax or
+safety or somesuch.</p>
+<p>As a simple example, let’s start with optional values. You want a
+value, the programming language says it’s maybe a value but maybe
+nothing or none or null or whatever your programming language calls it.
+In this case you need to do a bit of legwork around the binding
+sites.</p>
+<p>You end up writing code like the following.</p>
+<pre><code>let starting value =
+   match Sys.getenv_opt &quot;SEED&quot; with
+   | None -&gt; None
+   | Some seed_str -&gt;
+   match int_of_string_opt seed_str with
+   | None -&gt; None
+   | Some seed -&gt; Random.init seed; Some (Random.int 4096)
+;;</code></pre>
+<p>You have to work around the <code>option</code> type’s
+<code>None</code> constructor, but what you really want is to get the
+value under the <code>Some</code> constructor. Also, you want to name
+the underlying value for later use.</p>
+<h2 id="abstracting-the-bindings">Abstracting the bindings</h2>
+<p>When you are writing repeating binding-related boilerplate, you can
+likely use a monad instead. In the case of <code>option</code> above,
+you have the repeating general form</p>
+<pre><code>match &lt;expression&gt; with
+| None -&gt; None
+| Some &lt;variable name&gt; -&gt; &lt;expression using the variable&gt;</code></pre>
+<p>So you define</p>
+<pre><code>let bind x f =
+    match x with
+    | None -&gt; None
+    | Some x -&gt; f x
+;;</code></pre>
+<p>And now you can write</p>
+<pre><code>let starting value =
+    bind (Sys.getenv_opt &quot;SEED&quot;) (fun seed_str -&gt;
+    bind (int_of_string_opt seed_str) (fun seed -&gt;
+      Random.init seed; Some (Random.int 4096)))
+;;</code></pre>
+<p>And that’s it. A monad. Pretty-much.</p>
+<h2 id="syntax">Syntax</h2>
+<p>Ok so you want your new abstraction to be usable? It needs a bit of
+syntax.</p>
+<p>In OCaml, you can use binding operators to provide a nice
+experience.</p>
+<pre><code>let ( let* ) = bind ;;</code></pre>
+<p>And then you get</p>
+<pre><code>let starting value =
+    let* seed_str = Sys.getenv_opt &quot;SEED&quot; in
+    let* seed = int_of_string_opt seed_str in
+    Random.init seed; Some (Random.int 4096)
+;;</code></pre>
+<p>In Rust you get to use the <code>let … ;?</code> bindings as built-in
+for Result and Option (but you don’t get to define your own). In Haskell
+you get to use <code>&lt;-</code> bindings in <code>do</code> blocks. In
+Racket you get to use <code>&lt;-</code> bindings and
+<code>monad-do</code> blocks.</p>
+<h2 id="some-generalisation">Some generalisation</h2>
+<p>Still no maths… but let’s take a slightly higher-level view for a
+bit.</p>
+<p>Essentially, the monad has three parts:</p>
+<p>First, the type. In the example above it’s <code>'a option</code>. It
+indicates what kind of “not-quite-a value” you are handling, what kind
+of wrapper you have to reckon with.</p>
+<p>Second, the <code>bind</code> function. It takes two parameters:</p>
+<ul>
+<li>a “not-quite-a value”</li>
+<li>a function that operates on the normal plain honest underlying
+value.</li>
+</ul>
+<p>The bind function can be given some additional syntax niceties
+depending on the language.</p>
+<p>Third, the <code>return</code> function. This wraps a normal value
+into a “not-quite-a value”. In the example above, we used the
+<code>Some</code> constructor directly. If the monad is on a concrete
+type you can use a constructor directly, otherwise you might have to go
+through a function instead.</p>
+<p>As a general form you can write the following interface to a
+monad:</p>
+<pre><code>module type MONAD = sig
+    type &#39;a t
+    val ( let* ) : &#39;a t -&gt; (&#39;a -&gt; &#39;b t) -&gt; &#39;b t
+    val return : &#39;a -&gt; &#39;a t
+end ;;</code></pre>
+<p>And you can use it for the <code>option</code> type.</p>
+<pre><code>module OptionMonad
+: MONAD with type &#39;a t = &#39;a option
+= struct
+    type &#39;a t = &#39;a option
+    let ( let* ) x f = match x with None -&gt; None | Some x -&gt; f x
+    let return x = Some x
+end ;;</code></pre>
+<p>Depending on the monad, there might be a fourth part:
+<code>run</code>.</p>
+<p>The <code>run</code> function “executes” the monad block. You don’t
+need it when the monad is based on a concrete type that you can inspect
+by hand. For example you don’t need a <code>run</code> function for the
+option monad because you can just check whether you get a
+<code>None</code> or a <code>Some</code>. But if the monad is based on
+an abstract type, you need a way to recover the underlying result.</p>
+<h2 id="what-a-monad-does">What a monad “does”</h2>
+<p>There are monads for other not-quite-a-value abstractions. More
+importantaly, the monads do different things, they acheive different
+goals.</p>
+<p>The option monad above is a straightforward control-flow monad which
+interrupts a computation if a value is missing.</p>
+<pre><code>let* seed_str = Sys.getenv_opt &quot;SEED&quot; in
+(* only if the environment variable is set
+   does the computation reach this point *)
+let* seed = int_of_string_opt seed_str in
+(* only if the conversion to int succeeds
+   does the computation reach this point *)
+Random.init seed; Some (Random.int 4096)</code></pre>
+<p><strong>Result</strong><br />
+The result monad is similar to the option monad in that it does the same
+thing. The only difference is that failures carry information.</p>
+<pre><code>let ( let* ) x f = match x with
+  | Error e -&gt; Error e (* e is error information *)
+  | Ok v -&gt; f v (* carry on if x is successful *)</code></pre>
+<p><strong>List</strong><br />
+If you want to apply your code to many possible values, you end up with
+some repeating patterns where you successively bind different values to
+the same variable. You can abstract this with a monad.</p>
+<pre><code>let ( let* ) x f =
+  List.map f x (* apply f to each value in the list x *)
+  |&gt; List.concat (* combine all the results *)
+;;</code></pre>
+<p>Or more succintly</p>
+<pre><code>let ( let* ) x f = List.concat_map f x ;;</code></pre>
+<p>You can then write code which applies to all the listed input
+values:</p>
+<pre><code>let treasure_map =
+   let* colour = [ &quot;red&quot;; &quot;green&quot;; &quot;blue&quot; ] in
+   let* item = [ &quot;key&quot;; &quot;lock&quot; ] in
+   let random_coordinates =
+      (* generate fresh coordinates for each different
+         combination of colour and item *)
+      gen_coordinates () in
+   [ (random_coordinates, colour, item) ]
+;;</code></pre>
+<p>This monad doesn’t really do control-flow. It’s more of a data-flow
+abstraction where multiple values are passed to the same function and
+the results are collected together.</p>
+<p>The distinction between control-flow and data-flow monad is not
+necessarily relevant. Monads can be somewhere in between. For
+example,</p>
+<p><strong>Backtracking</strong><br />
+If you write a simple exploration algorithm using backtracking, you end
+up with some repeating patterns of code where you bind candidates to
+variable names. (This example uses the <code>Seq</code> module to
+represent multiple possibilities.)</p>
+<pre><code>let ( let* ) x f = Seq.concat_map f x ;;</code></pre>
+<p>which you can then use to find a solution by exhaustively checking
+each candidate. For example, finding pairs of numbers which have the
+same sum and product:</p>
+<pre><code>let* a = Seq.ints 0 in
+let* b = Seq.ints 0 in
+if a + b = a * b then Seq.return (a, b) else Seq.empty</code></pre>
+<p>For this simple backtracking monad you can define a <code>run</code>
+function:</p>
+<pre><code>let run b = match b () with
+  | Seq.Nil -&gt; None
+  | Seq.Cons (v, _) -&gt; Some v</code></pre>
+<p>The list monad and the backtracking monad are very similar. In fact,
+the main difference is laziness in the evaluation: the list monad
+traverses all the input, the backtracking monad explores enough of the
+input to find a solution. You could even define the list monad as the
+backtracking monad with a different <code>run</code> function.</p>
+<p>Ultimately it’s not very important. You can define your own dedicated
+monad even if there’s a common monad available in your programming
+language or its ecosystem.</p>
+<p>Keep an eye for repeating binding-related boilerplate in your (your!)
+code.<br />
+Try to understand what this boilerplate does.<br />
+See if a monad is a good fit for abstracting it away.<br />
+Hopefully your code will be more readable for it.</p>
+</div>
+</body>
+</html>

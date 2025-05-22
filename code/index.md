@@ -40,3 +40,5 @@ Thoughts, articles, posts about code, programming languages, etc.
 (Updated 2025-01-10)  
 
 [(2024-11-28) Areas and Adversaries](/code/areas-and-adversaries.html)
+
+[(2025-05-22) A no-maths guide to monads](/code/no-maths-guide-to-monads.html)
