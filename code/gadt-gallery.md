@@ -217,6 +217,26 @@ It is impossible to `find` a value without first proving that it exists.
 This allows to call `mem` and deal with potentially missing entries a single time, followed by multiple finds (without having to deal with option/error) in multiple branches of the code.
 
 
+## Packed fields
+
+EDIT NOTICE 2025-10-12: This section was added (after a reader's suggestion).
+
+[`packed_fields_gadt`](https://gist.github.com/chambart/a0382fb4d908a3e45744) uses GADT to safely store multiple values in a single OCaml integer. The GADT describes which bits of the integer are used for which of the values.
+
+You can use this technique to define a "record" of small integers and booleans in a much more compact way.
+
+
+## EzSudoku
+
+EDIT NOTICE 2025-10-12: This section was added (after a reader's suggestion).
+
+[EzSudoku](https://ocamlpro.com/blog/2017_04_01_ezsudoku/) is a quirky April's fool toy program where GADTs are used to encode the sudoku constraints. (Using 4×4 grids to avoid keep the example short.)
+
+The compiler can then check the validity of a grid. If you attempt to declare a grid that is not a valid solution. You get a very hard to read typing error message if you have try to declare an invalid solution.
+
+The compiler can also be made to solve partially filled-in grids. This is done by using the refutation case (`<pattern> -> .`) you can challenge the compiler to find a counter example where a pattern is actually possible. The compiler endeavours to find valid symbols for the wild-cards you have left in the partial grid.
+
+
 ## Call for suggestions
 
 If you know of some interesting examples of GADTs in OCaml libraries, let me know and I might include them.
