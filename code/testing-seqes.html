@@ -81,13 +81,13 @@ directly into the type. For example:</p>
 <col style="width: 51%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th><code>Stdlib.Seq</code>:</th>
 <th><code>Seq_s</code>:</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><pre><code>type &#39;a t = unit -&gt; &#39;a node
 and &#39;a node =
   | Nil
@@ -503,6 +503,66 @@ property-based testing: that of having found a very useful and practical
 tool that can change my programming habits significantly and for the
 better. I fully intend to use mutaml in more and more projects.</p>
 <p>I would recommend you give it a try.</p>
+<h2 id="testing-beyond-the-identity-monad">Testing beyond the Identity
+Monad</h2>
+<p>EDIT NOTICE 2025-10-13: This section was added to mention some
+not-so-recent changes in the testing framework.</p>
+<p>In order to make the tests more realistic, some of the simplifying
+assumptions made during the first release of Seqes as described
+above.</p>
+<p><strong>First generalisation</strong>: it is now possible to test
+Seqes against any monad as long as you can provide a function to extract
+the value out. E.g., for <code>Option</code> you must provide
+<code>val break: 'a option -&gt; 'a</code> (you can raise and exception
+for <code>None</code>).</p>
+<p>To make such a generalisation, you need to update the type of type
+GADT <code>ty</code> mentioned above. Specifically, the
+<code>Monad</code> constructor needs to have the monad type for its
+second parameter:</p>
+<pre><code>| Monad : (&#39;va, &#39;ma) ty -&gt; (&#39;va, &#39;ma Mon.t) ty</code></pre>
+<p>The <code>Mon</code> module is a parameter to the testing
+functor.</p>
+<p>This approach doesn’t work as is. The type checker complains that it
+cannot keep track of <code>'ma</code>. I’m unclear on the type theory
+limits which make this impossible, but the gist of it is that
+<code>Mon.t</code> is unknown and it could very well be something which
+doesn’t depend on its type parameter (e.g.,
+<code>type 'a t = unit</code>) in which case a value could hold two
+distinct types (say <code>unit Mon.t</code> and
+<code>float array Mon.t</code>) which would allow users to break some
+stuff. (See <a
+href="https://raphael-proust.gitlab.io/code/gadt-tips-and-tricks.html#a-type-variable-cannot-be-deduced">“A
+type variable cannot be deduced”</a> from the GADT Tips and Tricks
+post.)</p>
+<p>The solution to this problem is to introduce a third type parameter
+which is a witness for <code>'ma</code>.</p>
+<pre><code>| Monad : (&#39;va, &#39;ma, _) ty -&gt; (&#39;va, &#39;ma Mon.t, &#39;ma) ty</code></pre>
+<p>This third parameter needs to be used everywhere in <code>ty</code>
+as well as in the accompanying type <code>params</code> describing
+parameters for lambdas.</p>
+<p>Seqes is tested against the identity, opaque-identity (same but the
+type equality is not exposed), option, and result monads</p>
+<p><strong>Second generalisation</strong>: it is now possible to test
+Seqes with a different monad for the sequence and the traversal. E.g.,
+it is possible to test the equality of two option-monad-enabled sequence
+with either a direct equality function or an option-monad-enabled
+equality function:</p>
+<pre><code>module SeqOpt = Seqes.Monadic.Make1(Option)
+val SeqOpt.equal : (&#39;a -&gt; &#39;b -&gt; bool) -&gt; &#39;a t -&gt; &#39;b t -&gt; bool option
+val SeqOpt.M.equal : (&#39;a -&gt; &#39;b -&gt; bool option) -&gt; &#39;a t -&gt; &#39;b t -&gt; bool option</code></pre>
+<p>See online documentation for <a
+href="https://ocaml.org/p/seqes/latest/doc/seqes/Seqes/Monadic/Make1/index.html#val-equal"><code>Make1.equal</code></a>
+and <a
+href="https://ocaml.org/p/seqes/latest/doc/seqes/Seqes/Monadic/Make1/M/index.html#val-equal"><code>Make1.M.equal</code></a>.</p>
+<p>Internally both functions execute the same code, they simply call
+different <code>bind</code> functions provided by different functor
+parameter. Still, a bug could lurk in the interaction of the two
+distinct bind functions. And so the test framework now supports the
+testing of both. This is done by providing two distinct constructors in
+the type of type GADT <code>ty</code>:</p>
+<pre><code>| CallerMonad : (&#39;va, &#39;ma, _) ty -&gt; (&#39;va, &#39;ma CallerMon.t, &#39;ma) ty
+| Monad : (&#39;va, &#39;ma, _) ty -&gt; (&#39;va, &#39;ma Mon.t, &#39;ma) ty</code></pre>
+<p>Seqes is tested against some combinations of monads.</p>
 </div>
 </body>
 </html>

@@ -472,3 +472,50 @@ Using mutaml, I had a similar feeling as when I first started using property-bas
 I fully intend to use mutaml in more and more projects.
 
 I would recommend you give it a try.
+
+## Testing beyond the Identity Monad
+
+EDIT NOTICE 2025-10-13: This section was added to mention some not-so-recent changes in the testing framework.
+
+In order to make the tests more realistic, some of the simplifying assumptions made during the first release of Seqes as described above.
+
+**First generalisation**: it is now possible to test Seqes against any monad as long as you can provide a function to extract the value out. E.g., for `Option` you must provide `val break: 'a option -> 'a` (you can raise and exception for `None`).
+
+To make such a generalisation, you need to update the type of type GADT `ty` mentioned above. Specifically, the `Monad` constructor needs to have the monad type for its second parameter:
+
+```
+| Monad : ('va, 'ma) ty -> ('va, 'ma Mon.t) ty
+```
+
+The `Mon` module is a parameter to the testing functor.
+
+This approach doesn't work as is. The type checker complains that it cannot keep track of `'ma`. I'm unclear on the type theory limits which make this impossible, but the gist of it is that `Mon.t` is unknown and it could very well be something which doesn't depend on its type parameter (e.g., `type 'a t = unit`) in which case a value could hold two distinct types (say `unit Mon.t` and `float array Mon.t`) which would allow users to break some stuff. (See ["A type variable cannot be deduced"](https://raphael-proust.gitlab.io/code/gadt-tips-and-tricks.html#a-type-variable-cannot-be-deduced) from the GADT Tips and Tricks post.)
+
+The solution to this problem is to introduce a third type parameter which is a witness for `'ma`.
+
+```
+| Monad : ('va, 'ma, _) ty -> ('va, 'ma Mon.t, 'ma) ty
+```
+
+This third parameter needs to be used everywhere in `ty` as well as in the accompanying type `params` describing parameters for lambdas.
+
+Seqes is tested against the identity, opaque-identity (same but the type equality is not exposed), option, and result monads
+
+**Second generalisation**: it is now possible to test Seqes with a different monad for the sequence and the traversal. E.g., it is possible to test the equality of two option-monad-enabled sequence with either a direct equality function or an option-monad-enabled equality function:
+
+```
+module SeqOpt = Seqes.Monadic.Make1(Option)
+val SeqOpt.equal : ('a -> 'b -> bool) -> 'a t -> 'b t -> bool option
+val SeqOpt.M.equal : ('a -> 'b -> bool option) -> 'a t -> 'b t -> bool option
+```
+
+See online documentation for [`Make1.equal`](https://ocaml.org/p/seqes/latest/doc/seqes/Seqes/Monadic/Make1/index.html#val-equal) and [`Make1.M.equal`](https://ocaml.org/p/seqes/latest/doc/seqes/Seqes/Monadic/Make1/M/index.html#val-equal).
+
+Internally both functions execute the same code, they simply call different `bind` functions provided by different functor parameter. Still, a bug could lurk in the interaction of the two distinct bind functions. And so the test framework now supports the testing of both. This is done by providing two distinct constructors in the type of type GADT `ty`:
+
+```
+| CallerMonad : ('va, 'ma, _) ty -> ('va, 'ma CallerMon.t, 'ma) ty
+| Monad : ('va, 'ma, _) ty -> ('va, 'ma Mon.t, 'ma) ty
+```
+
+Seqes is tested against some combinations of monads.
