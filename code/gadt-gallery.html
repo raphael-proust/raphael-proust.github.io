@@ -274,6 +274,34 @@ This is done by using the refutation case
 find a counter example where a pattern is actually possible. The
 compiler endeavours to find valid symbols for the wild-cards you have
 left in the partial grid.</p>
+<h2 id="roguetype">Roguetype</h2>
+<p>EDIT NOTICE 2025-10-13: This section was added.</p>
+<p><a href="https://github.com/Octachron/roguetype">Roguetype</a> is a
+quirky April’s fool toy program where GADTs are used to play a
+rogue-like game. As the player, you build OCaml terms, the types of
+which indicate whether you won the game or not.</p>
+<p>The bulk of the rules is encoded in <a
+href="https://github.com/Octachron/roguetype/blob/master/lib/rules.ml">a
+monstrous GADT</a> where each constructor is one move the player can
+take, and the type of the constructor indicates how the state of the
+game changed. For example, the move to pick an object from the floor
+is</p>
+<pre><code>  | P: (
+&lt;
+  lvl:&#39;lvl; init:&#39;init;
+  player: &lt; health: &#39;h; inventory:&#39;pi &gt;;
+  world: &lt; up:&#39;up; m:&lt;l:&#39;l; m: &#39;item Case.floor; r:&#39;r &gt;; dw:&#39;d &gt;
+&gt; -&gt;
+&lt;
+  lvl:&#39;lvl; init:&#39;init;
+  player: &lt; health: &#39;h; inventory:&#39;item &gt;;
+  world: &lt; up:&#39;up; m:&lt;l:&#39;l; m: &#39;pi Case.floor; r:&#39;r &gt;; dw:&#39;d &gt;
+&gt;
+) move</code></pre>
+<p>which indicates that this move swaps the content of the player’s
+inventory with whatever item is on the floor at the location of the
+player occupies. The type variables <code>'pi</code> and
+<code>'item</code> swap places in the type.</p>
 <h2 id="call-for-suggestions">Call for suggestions</h2>
 <p>If you know of some interesting examples of GADTs in OCaml libraries,
 let me know and I might include them.</p>

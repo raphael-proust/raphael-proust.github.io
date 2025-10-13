@@ -236,6 +236,31 @@ The compiler can then check the validity of a grid. If you attempt to declare a 
 
 The compiler can also be made to solve partially filled-in grids. This is done by using the refutation case (`<pattern> -> .`) you can challenge the compiler to find a counter example where a pattern is actually possible. The compiler endeavours to find valid symbols for the wild-cards you have left in the partial grid.
 
+## Roguetype
+
+EDIT NOTICE 2025-10-13: This section was added.
+
+[Roguetype](https://github.com/Octachron/roguetype) is a quirky April's fool toy program where GADTs are used to play a rogue-like game. As the player, you build OCaml terms, the types of which indicate whether you won the game or not.
+
+The bulk of the rules is encoded in [a monstrous GADT](https://github.com/Octachron/roguetype/blob/master/lib/rules.ml) where each constructor is one move the player can take, and the type of the constructor indicates how the state of the game changed. For example, the move to pick an object from the floor is
+
+```
+  | P: (
+<
+  lvl:'lvl; init:'init;
+  player: < health: 'h; inventory:'pi >;
+  world: < up:'up; m:<l:'l; m: 'item Case.floor; r:'r >; dw:'d >
+> ->
+<
+  lvl:'lvl; init:'init;
+  player: < health: 'h; inventory:'item >;
+  world: < up:'up; m:<l:'l; m: 'pi Case.floor; r:'r >; dw:'d >
+>
+) move
+```
+
+which indicates that this move swaps the content of the player's inventory with whatever item is on the floor at the location of the player occupies. The type variables `'pi` and `'item` swap places in the type.
+
 
 ## Call for suggestions
 
