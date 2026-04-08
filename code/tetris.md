@@ -3,8 +3,8 @@ title: Tetris
 ...
 
 [Play](../misc/tetris.html)  
-- use `h`, `j`, `k`, `l` to control the game (I made it with the movement control scheme I'm the most familiar with)
-- zoom in as needed
+use `h`, `j`, `k`, `l` to control the game (I made it with the movement control scheme I'm the most familiar with)  
+zoom in as needed
 
 Some time ago I heard about [Fifteenel](https://drj11.itch.io/fifteenel-font) by [Cubic Type](https://about.cubictype.com/).
 I didn't know what to do with it but I thought it was cool.
