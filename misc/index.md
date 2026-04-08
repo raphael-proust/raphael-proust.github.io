@@ -10,3 +10,5 @@ Unsorted thoughts, articles, posts.
 [(2020-07-19) \[maths, probability\] Monty Hall](/misc/monty-hall.html)
 
 [(2021-01-16) \[manufacturing, typology\] Folding as manufacturing](/misc/folding-as-manufacturing.html)
+
+[(2026-04-08) \[game, toy, silly\] Tetris](/misc/tetris.html)

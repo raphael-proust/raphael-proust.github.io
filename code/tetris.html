@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Raphaël Proust" />
+  <title>Dromedary and a half - Tetris</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+<header>
+<nav>
+	<a href="/code/index.html">On code</a> |
+	<a href="/games/index.html">On games</a> |
+	<a href="/misc/index.html">Miscellanées</a> |
+	<a href="/about.html">About</a>
+</nav>
+</header>
+<div id="content">
+<div id="header">
+<h1 class="title">Tetris</h1>
+</div>
+<p><a href="../misc/tetris.html">Play</a> (hint: zoom in)</p>
+<p>Some time ago I heard about <a
+href="https://drj11.itch.io/fifteenel-font">Fifteenel</a> by <a
+href="https://about.cubictype.com/">Cubic Type</a>. I didn’t know what
+to do with it but I thought it was cool.</p>
+<p>Fast forward to now and I made a tetris implementation in OCaml which
+compiles to Javascript so you can play in your browser. This tetris
+implementation is played within the core of the text of a webpage,
+inside a span.</p>
+<p>The implementation is hosted at
+https://codeberg.org/raphael-proust/spantris although little effort has
+been made so far to make the code friendly to contribution. It’s a mess
+which I might or might not end up cleaning.</p>
+<p>Game logic: <a
+href="%60core.ml%60">https://codeberg.org/raphael-proust/spantris/src/branch/main/games/tetris/core.ml</a><br />
+Game UI: <a
+href="%60tetris.ml%60">https://codeberg.org/raphael-proust/spantris/src/branch/main/games/tetris/tetris.ml</a>,
+uses <code>Brr</code><br />
+Fifteenel glyph renderer: <a
+href="%60fifteenel.ml%60">https://codeberg.org/raphael-proust/spantris/src/branch/main/fifteenel/fifteenel.ml</a><br />
+Fifteenel “graphical” backend: <a
+href="%60punchcard.ml%60">https://codeberg.org/raphael-proust/spantris/src/branch/main/punchcard/punchcard.ml</a></p>
+<p>I have some more ideas of things to do with Fifteenel in general and
+with my silly graphics backend in particular. I might get to them, or I
+might not. But in the mean time here’s a thing.</p>
+<p><a href="../misc/tetris.html">tetris</a></p>
+</div>
+</body>
+</html>
