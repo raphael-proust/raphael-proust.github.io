@@ -423,7 +423,7 @@ module Mk
 end
 ```
 
-Alternatively, you can add a type paramter to the definition of the GADT to track the type parameter separately.
+Alternatively, you can add a type parameter to the definition of the GADT to track the type parameter separately.
 
 ```
 module Mk

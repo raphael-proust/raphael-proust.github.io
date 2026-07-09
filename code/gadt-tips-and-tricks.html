@@ -375,7 +375,7 @@ injective:</p>
 = struct
    type _ t = Wrap : &#39;a -&gt; &#39;a P.t t
 end</code></pre>
-<p>Alternatively, you can add a type paramter to the definition of the
+<p>Alternatively, you can add a type parameter to the definition of the
 GADT to track the type parameter separately.</p>
 <pre><code>module Mk
    (P:sig type &#39;a t end)
