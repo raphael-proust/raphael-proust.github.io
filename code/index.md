@@ -44,3 +44,5 @@ Thoughts, articles, posts about code, programming languages, etc.
 [(2025-05-22) A no-maths guide to monads](/code/no-maths-guide-to-monads.html)
 
 [(2026-04-08) Tetris](/code/tetris.html)
+
+[(2026-07-28) The little type that could too much](/code/the-little-type-that-could-too-much.html)

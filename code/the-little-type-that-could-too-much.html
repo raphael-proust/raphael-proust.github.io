@@ -1,0 +1,339 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Raphaël Proust" />
+  <title>Dromedary and a half - The little type that could too much</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+<header>
+<nav>
+	<a href="/code/index.html">On code</a> |
+	<a href="/games/index.html">On games</a> |
+	<a href="/misc/index.html">Miscellanées</a> |
+	<a href="/about.html">About</a>
+</nav>
+</header>
+<div id="content">
+<div id="header">
+<h1 class="title">The little type that could too much</h1>
+</div>
+<h2 id="part-1-hashtbl-mashtbl-smashtbl-slashtbl-clashtbl-crashtbl">Part
+1: Hashtbl, Mashtbl, Smashtbl, Slashtbl, Clashtbl, Crashtbl</h2>
+<p>The <code>Hashtbl</code> module of the OCaml’s <code>Stdlib</code>
+exposes a parametric type <code>('a, 'b) t</code>. As <a
+href="https://ocaml.org/manual/5.5/api/Hashtbl.html">the
+documentation</a> explains, they are used as mutable key-value stores in
+imperative code.</p>
+<p>However, the module doesn’t expose just a “hashed association table”.
+Instead, the module exposes a data-structure and functions meant to
+model the notion of “environments” in the programming-language and
+compiler domains. Specifically: it’s a one-to-ordered-list association
+table with some helpers to work on the head of the ordered list. This
+only becomes clearer further down in the documentation:</p>
+<ul>
+<li>The <a
+href="https://ocaml.org/manual/5.5/api/Hashtbl.html#VALadd"><code>add</code>
+function</a> contains a warning: adding a binding doesn’t remove the
+previous bindings, it just shadows them.</li>
+<li>The <a
+href="https://ocaml.org/manual/5.5/api/Hashtbl.html#VALremove"><code>remove</code>
+function</a> “restores the previous binding”.</li>
+<li>The <a
+href="https://ocaml.org/manual/5.5/api/Hashtbl.html#VALfind_all"><code>find_all</code>
+function</a> returns “the list of all data associated with [the
+key]”.</li>
+<li>etc.</li>
+</ul>
+<p>(The same behaviour exists for specialised hash tables obtained via
+<code>Hashtbl.Make</code>. I’ll only discuss the <code>Hashtbl</code>
+module for brevity.)</p>
+<p>This behaviour is somewhat surprising because the semantics differs
+from other languages’ stdlibs: <a
+href="https://docs.python.org/3/library/stdtypes.html#dict">Python’s
+<code>dict</code></a>, <a
+href="https://doc.rust-lang.org/std/collections/struct.HashMap.html">Rust’s
+<code>HashMap</code></a>. This behaviour is also arguably less intuitive
+and more complex: the state of the Hashtbl after you call
+<code>remove</code> is not known.</p>
+<p>It is possible to use the Hashtbl in a way that corresponds to the
+other languages’ semantics: just use <code>replace</code> instead of
+<code>add</code>. You can find such uses in the <del>wild</del> publicly
+released packages of opam repository. For example, <a
+href="https://github.com/camlworks/dream/blob/master/src/graphql/graphql.ml#L213">dream’s
+graphql’s subscriptions</a> and <a
+href="https://gitlab.com/nomadic-labs/ringo/-/blob/master/src/aches/rache/functors.ml?ref_type=heads#L62">ringo’s
+resource cache tables</a>.</p>
+<p>The issue is that you have to do it consistently. Mixing and matching
+is a possible source of bugs or memory leak. There are no guardrails.
+All you get is a <code>Hashtbl.t</code> and you are left to determine
+whether you should call <code>add</code> or <code>replace</code>,
+whether <code>find_all</code> is relevant or not.</p>
+<p>At <a href="https://ahrefs.com/">Ahrefs</a>, we’ve taken to linting
+out the use of <code>Hashtbl.add</code> and enforcing the arguably
+simpler <code>Hashtbl.replace</code> semantic. That’s our guardrail.
+Just a linter. In the rare cases that we do want to maintain bindings to
+a growable list of values, we have a dedicated module implementing just
+this. And it seems we’re not the only ones: <a
+href="https://github.com/mirage/ocaml-uri/blob/main/config/gen_services.ml#L21">ocaml-uri’s
+config</a> exposes a <code>hashtbl_add_list</code> function to
+accumulate values into a list explicitly.</p>
+<p>Ideally, the multiple uses of a <code>Hashtbl</code> would be exposed
+as different modules. One module to manage environments exposing
+<code>add</code> a <code>find_opt</code> and <code>find_all</code>; one
+module to manage one-to-one association tables exposing
+<code>replace</code> and <code>find_opt</code>.</p>
+<pre><code>module HashEnvTbl : sig
+  type (&#39;a, &#39;b) t
+
+  (* equivalent to Hashtbl.add *)
+  val push : (&#39;a, &#39;b) t -&gt; &#39;a -&gt; &#39;b -&gt; unit
+
+  (* equivalent to Hashtbl.find_opt *)
+  val peek: (&#39;a, &#39;b) t -&gt; &#39;a -&gt; &#39;b option
+
+  (* equivalent to Hashtbl.find_and_remove *)
+  val pop: (&#39;a, &#39;b) t -&gt; &#39;a -&gt; &#39;b option
+
+  [… some other functions …]
+
+end
+
+module Hash1to1Tbl : sig
+  type (&#39;a, &#39;b) t
+
+  (* set the value bound to the given key *)
+  val set : (&#39;a, &#39;b) t -&gt; &#39;a -&gt; &#39;b -&gt; unit
+
+  (* equivalent to Hashtbl.find_opt *)
+  val get: (&#39;a, &#39;b) t -&gt; &#39;a -&gt; &#39;b option
+
+  (* remove the binding for the given key *)
+  val unset: (&#39;a, &#39;b) t -&gt; &#39;a -&gt; &#39;b option
+
+  [… some other functions …]
+
+end</code></pre>
+<p>I don’t know that it is worth changing the Stdlib. It would open a
+can of worm of design with backwards compatibility considerations. And
+it would place the burden of maintenance on a team which already handles
+a lot of work. (Maybe I’ll make a patch to the documentation, mentioning
+the quirk earlier on.) But I think it’s an important consideration for
+altlibs.</p>
+<p>More importantly, this Hashtbl quirk is small and interesting example
+for the rest of this post.</p>
+<h2 id="part-2-lwt_stream-one-type-to-rule-them-all">Part 2: Lwt_stream,
+one type to rule them all</h2>
+<p>The <code>Lwt_stream</code> module of the Lwt library exposes a
+parametric type <code>'a t</code>. The documentation doesn’t state any
+intended uses. It simply states somewhat tautologically that a
+<code>'a Lwt_stream.t</code> is “a stream holding values of type
+<code>'a</code>”.</p>
+<p>In practice, a <code>Lwt_stream</code> is a sequence of values which
+become available at different times in the life of the program. The only
+guarantee of the data-structure is that the ordered is preserved inside
+the stream: values added in a given ordered are processed in the same
+order.</p>
+<h3 id="part-2a-推-拉-and-so-much-more">Part 2a: 推, 拉 and so much
+more</h3>
+<p>There aren’t really many guarantees about the data-structure because
+it supports many different uses with many different requirements. Common
+uses include:</p>
+<p><strong>Lwt stream for push-based pipelines.</strong> You can use Lwt
+streams to hold and transport values which are added as they become
+available (e.g., read from a pipe). Each addition triggers a cascade of
+computations. The rhythm of the processing pipeline is dictated by the
+uses of the <code>push</code> function.</p>
+<pre><code>(* reimplementing `Lwt_io.read_lines` for the sake of example *)
+let lines_of_ic ic =
+  let s, push = Lwt_stream.create () in
+  let rec feed () =
+    match Lwt_io.read_line_opt ic with
+    | None -&gt; push None; Lwt.return ()
+    | Some l -&gt; push Some l; feed ()
+  in
+  Lwt.async feed;
+  s
+;;
+
+let () = Lwt_main.run (
+  (* values drip through from stdin and are processed as they become available *)
+  lines_of_ic Lwt_io.stdin
+  |&gt; Lwt_stream.map String.uppercase_ascii
+  |&gt; Lwt_stream.iter_s (Lwt_io.write_line Lwt_io.stdout)
+) ;;</code></pre>
+<p><strong>Lwt stream for pull-based pipelines.</strong> You can use Lwt
+streams to hold and transport values which are lazily computed when they
+become needed. The rhythm of the processing pipeline is dictated by the
+uses of the calls to the <code>get</code> function.</p>
+<pre><code>let r = ref (-1);;
+let ints = Lwt_stream.from_direct (fun () -&gt; incr r; !r);;
+
+let rec f () =
+  let* _ : string = Lwt_io.read_line Lwt_io.stdin in
+  let* i =
+    (* request an int: computed here on demand *)
+    Lwt_stream.get ints
+  in
+  let i = Option.get i in
+  let* () = Lwt_io.write_line (string_of_int i) in
+  f ()
+;;</code></pre>
+<p><strong>Lwt stream for buffering.</strong> You can use Lwt stream to
+keep a hold of values if you expect to receive the data in batches.</p>
+<pre><code>let () = Lwt_main.run (
+  Lwt_io.read_lines Lwt_io.stdin
+  |&gt; Lwt_stream.map_list (fun line -&gt; List.of_seq (String.to_seq line))
+  (* the line is split by char, the stream has batches of data fed in *)
+  |&gt; Lwt_stream.iter_s (fun c -&gt; [… idk, something that takes a bit of time …])
+) ;;</code></pre>
+<p><strong>Lwt stream for back-pressure.</strong> You can use Lwt stream
+to hold and transport data in a processing pipeline where processing
+might take more time than the data becoming available. The stream can
+apply back-pressure to the pushing side in order to limit the number of
+values held by the stream. The rhythm of the data-acquisition process is
+dictated by the speed of the processing.</p>
+<pre><code>let lines_of_ic ic =
+  let s, push = Lwt_stream.create_bounded 1 in
+  let rec feed () =
+    match Lwt_io.read_line_opt ic with
+    | None -&gt; push#close; Lwt.return ()
+    | Some l -&gt;
+        (* because the stream is bounded, this operation will block until the space is free *)
+        push#push l
+  in
+  Lwt.async feed;
+  s
+;;
+
+let rec wmap s f =
+  let* v = Lwt_stream.get s in
+  match v with
+  | None -&gt; Lwt.return ()
+  | Some v -&gt;
+      let* v = f v (* this can take a lot of time *) in
+      let* () = Lwt_io.write_line v Lwt_io.stdout in
+      wmap s f
+;;
+
+let () = Lwt_main.run (
+  let s = lines_of_ic Lwt_io.stdin in
+  wmap s (fun line -&gt; [… idk, something that takes a lot of time …])
+) ;;</code></pre>
+<p><strong>Lwt stream as a generic wrapper for other
+collections.</strong> You can use a stream as a generic data-structure
+for ordered collections (lists, arrays, strings, seqs). This is useful
+because Lwt provides a bounded-concurrency iterator for streams.</p>
+<pre><code>let list_iter_n ?max_concurrency f xs =
+  Lwt_stream.iter_n ?max_concurrency f (Lwt_stream.of_list xs)
+;;
+let array_iter_n ?max_concurrency f xs =
+  Lwt_stream.iter_n ?max_concurrency f (Lwt_stream.of_array xs)
+;;</code></pre>
+<p>Each of these uses is valid. But beware of mixing and matching uses.
+If a library provides you with a stream, you better hope they document
+the intended use very well, or you will end up with bugs, memory leaks,
+and raised exceptions.</p>
+<p>For example, it’s fine to share a push function amongst multiple
+writers in the case of an unbounded stream. But doing so for a bounded
+stream will likely result in an exception. That is because back-pressure
+streams are intended for single-writer only.</p>
+<h3 id="part-2b-what-to-do">Part 2b: What to do?</h3>
+<p>The <code>Lwt_stream</code> module is a sore point of the Lwt API. I
+often personally recommend against it. But then people ask me what they
+should use instead and I rarely have a good answer.</p>
+<p>There’s <code>Lwt_seq</code> and <code>seqes</code>, there’s
+<code>lwt-pipeline</code>, there’s <code>lwt-watcher</code>, there’s
+<code>lwt-pipe</code>, there’s a myriad other little helpers. Maybe one
+of them fits your use-case?</p>
+<p>I’ll be working on providing separate modules for the different uses,
+possibly aggregating some of the community’s helpers. I’ll focus on on
+providing one abstraction/intended-use for each helper (even if I end up
+sharing some implementation details). In the meantime, let me know if
+you’ve ever needed to wrestle the Lwt_stream API to get something out of
+it. I might be able to make room for your use-case.</p>
+<h2 id="part-3-lwt-a-well-behaved-core-type-with-too-many-helpers">Part
+3: Lwt, a well-behaved core type with too many helpers</h2>
+<p>The <code>Lwt</code> module itself, the very core of the Lwt library,
+has a similar problem as Hashtbl and Lwt_stream. Not exactly the same
+problem: the <code>'a t</code> type does serve the one single purpose of
+promises for concurrency. But a related problem: the many functions
+handling the promises correspond to widely different levels of
+abstraction and are often intended for different audiences.</p>
+<h3 id="part-3a-mixing-levels-of-abstraction">Part 3a: mixing levels of
+abstraction</h3>
+<p>As a basic example, using an explicit promise (<code>task</code> or
+<code>wait</code>) and resolver (<code>wakeup</code>) should really only
+be used for providing new abstractions on top of the promises (such as
+for writing <code>Lwt_list</code>, <code>Lwt_seq</code>,
+<code>ringo</code>, <code>lwt-exit</code>, etc.). It shouldn’t be used
+for application code when you are just writing service handlers for your
+web server.</p>
+<p>The issue is all the functions (from <code>bind</code> (and the
+friendlier <code>let*</code>) to <code>task</code>) are presented
+together in the same namespace. This encourages users to dip to a lower
+level of abstraction when they only rely on the high-level composition.
+The code becomes harder to understand and relies on complex behaviour of
+Lwt primitives.</p>
+<p>To give more of an idea of what I think is wrong with the
+<code>Lwt</code> API, here’s a list of what functions that application
+code should be using:</p>
+<ul>
+<li><code>return</code> (and `return_* pre-allocated variants),</li>
+<li><code>bind</code> (but actually as <code>let*</code> or
+<code>let%lwt</code>),</li>
+<li><code>catch</code> (and <code>finalize</code> and
+<code>try_bind</code> or <code>try%lwt</code>),</li>
+<li><code>pause</code>,</li>
+<li><code>join</code> (as well as <code>all</code> and
+<code>both</code>),</li>
+<li><code>pick</code> (and <code>choose</code> and n-variations),</li>
+<li><code>cancel</code> (but see below for a short discussion of
+cancellation).</li>
+</ul>
+<p>These functions (and these functions only) should be in the module
+named <code>Lwt</code> which is often opened globally. The rest should
+be in separate namespaces for the different audiences (library writers,
+test writers, bug chasers).</p>
+<p>There are surely a few exceptions for specific cases of application
+code. But in general, every time you stray from the list above, it’s a
+good time to ask whether you should provide a new abstractions in a new
+library for you application code.<br />
+Using <code>dont_wait</code> or <code>async</code>? You should make a
+background task pool so that you can check the unfinished tasks when you
+exit.<br />
+Using <code>protected</code>, <code>no_cancel</code>, or
+<code>wrap_in_cancelable</code>? You should make a wrapper which
+register the uncancellable task in a global or local data-structure that
+exit can be delayed for those not-to-be-cancelled actions to
+finish.<br />
+Etc.</p>
+<h3 id="part-3b-lwt-modern">Part 3b: lwt-modern</h3>
+<p>What to do about all that? Well it’s not very satisfying to have a
+list of dos and donts on this here webpage. I’ve been thinking of
+providing a <code>lwt-modern</code> package (or <code>lite-wait</code>?
+or <code>prom</code>?) that’s essentially <code>Lwt</code> but rewritten
+to eschew all the historical baggage.</p>
+<p>First, it would separate the core part intended for end-users from
+the low-level part intended for writing new synchronisation
+abstractions.</p>
+<p>Second, it would have new cancellation-related primitives. I, a
+maintainer of Lwt of several years and user of Lwt for even longer,
+cannot remember which of <code>task</code> and <code>wait</code> is the
+cancellable one, which of <code>pick</code> and <code>choose</code> does
+the cancellation, and what do <code>no_cancel</code> and
+<code>protected</code> actually do. The whole cancellation feature needs
+better semantics with better names.</p>
+<p>Third, it would expose a bigger zoo of smaller synchronisation
+utilities. In the same vein as splitting <code>Lwt_stream</code> into
+smaller, more focused pieces, there needs to be some basic building
+blocks of synchronisation. This would probably take time. And it might
+also involve curating a list of third-party libraries.</p>
+<p>Any other ideas? Let me know!</p>
+</div>
+</body>
+</html>
