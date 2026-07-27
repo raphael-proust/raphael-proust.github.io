@@ -136,7 +136,7 @@ let lines_of_ic ic =
     | None -> push#close; Lwt.return ()
     | Some l ->
         (* because the stream is bounded, this operation will block until the space is free *)
-        push#push l
+        push#push l; feed ()
   in
   Lwt.async feed;
   s
