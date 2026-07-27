@@ -181,7 +181,7 @@ The `Lwt_stream` module is a sore point of the Lwt API. I often personally recom
 
 There's `Lwt_seq` and `seqes`, there's `lwt-pipeline`, there's `lwt-watcher`, there's `lwt-pipe`, there's a myriad other little helpers. Maybe one of them fits your use-case?
 
-I'll be working on providing separate modules for the different uses, possibly aggregating some of the community's helpers. I'll focus on on providing one abstraction/intended-use for each helper (even if I end up sharing some implementation details). In the meantime, let me know if you've ever needed to wrestle the Lwt_stream API to get something out of it. I might be able to make room for your use-case.
+I'll be working on providing separate modules for the different uses, possibly aggregating some of the community's helpers. I'll focus on providing one abstraction/intended-use for each helper (even if I end up sharing some implementation details). In the meantime, let me know if you've ever needed to wrestle the Lwt_stream API to get something out of it. I might be able to make room for your use-case.
 
 ## Part 3: Lwt, a well-behaved core type with too many helpers
 
