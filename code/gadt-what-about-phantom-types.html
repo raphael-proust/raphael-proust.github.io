@@ -171,8 +171,8 @@ val char: char -&gt; [`Char] v
 val bool: bool -&gt; [`Bool] v
 type shallow = [ `Int | `Char | `Bool ]
 val array: [&lt; shallow] v array -&gt; [ `Array ] v
-type u8 = [ `Char | `Bool ]
-val array8: [&lt; u8 ] v array -&gt; [ `Array ] v</code></pre>
+type narrow = [ `Char | `Bool ]
+val array8: [&lt; narrow ] v array -&gt; [ `Array ] v</code></pre>
 </div>
 </body>
 </html>

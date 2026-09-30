@@ -169,6 +169,6 @@ val char: char -> [`Char] v
 val bool: bool -> [`Bool] v
 type shallow = [ `Int | `Char | `Bool ]
 val array: [< shallow] v array -> [ `Array ] v
-type u8 = [ `Char | `Bool ]
-val array8: [< u8 ] v array -> [ `Array ] v
+type narrow = [ `Char | `Bool ]
+val array8: [< narrow ] v array -> [ `Array ] v
 ```
