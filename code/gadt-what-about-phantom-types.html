@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <link rel="icon" type="image/png" href="/assets/favicon.png"/>
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Raphaël Proust" />
+  <title>Dromedary and a half - GADT: what about phantom types</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+<header>
+<nav>
+	<a href="/code/index.html">On code</a> |
+	<a href="/games/index.html">On games</a> |
+	<a href="/misc/index.html">Miscellanées</a> |
+	<a href="/about.html">About</a>
+</nav>
+</header>
+<div id="content">
+<div id="header">
+<h1 class="title">GADT: what about phantom types</h1>
+<h2 class="subtitle">a supplement for the GADT tutorial</h2>
+</div>
+<p>I recently discussed some domain-modelling techniques with a
+colleague.</p>
+<p>Domain modelling is the creation and maintenance of abstractions that
+map onto your specific problem. You are writing <a
+href="./dixmille.html">a dice game</a>: your domain is dice and rolls
+and scores and turns. You are writing financial software: your domain is
+monies and accounts and transactions and balances. Etc.</p>
+<p>Providing abstractions which cover all the domain is important. But
+so is providing abstractions which forbid leaving the domain.</p>
+<p>For example, for a dice game, you could represent the result of a
+dice roll as an <code>int</code>, but then <a
+href="https://yugipedia.com/wiki/Dice_game">you might roll a 7</a>.</p>
+<p>Depending on your language you may do this in different ways. In
+OCaml you tend to either use types or modules (or a combination of
+both).</p>
+<h2 id="constructors">Constructors</h2>
+<p>A <em>constructor</em> can mean several things in the linguo of
+programming languages. In the case of ADTs and GADTs, constructors are
+the names of the variants.</p>
+<p>For examples, in</p>
+<pre><code>type v =
+  | Int of int
+  | Char of char
+  | Bool of bool
+  | List of v list
+  | Array of v array</code></pre>
+<p>the constructors are <code>Int</code>, <code>Char</code>,
+<code>Bool</code>, <code>List</code>, and <code>Array</code>.</p>
+<p>In the case of interfaces around abstract types, constructors are the
+functions returning values of this type.</p>
+<pre><code>type v
+val int: int -&gt; v
+val char: char -&gt; v
+val bool: bool -&gt; v
+val list: v list -&gt; v
+val array: v array -&gt; v</code></pre>
+<p>In OCaml you can chose to export a concrete type with the variant
+constructors available to the rest of the code. Or you can chose to hide
+them and you need to expose constructor functions to the rest of the
+code.</p>
+<p>(There are intermediate approaches with private types or with a
+concrete type you inject into the abstract type, but this is beyond the
+scope of this post.)</p>
+<h2 id="enforcing-invariants">Enforcing invariants</h2>
+<p>Let’s say you need to enforce a simple invariant on the type
+<code>v</code> of the example above: lists and arrays can only contain
+ints, chars, or bools (but never lists nor arrays).</p>
+<p>You can enforce the invariant at the level of types. To this end you
+transform your regular ADT into a GADT.</p>
+<pre><code>type shallow = Shallow
+type deep = Deep
+type _ v =
+  | Int : int -&gt; shallow v
+  | Char : char -&gt; shallow v
+  | Bool : bool -&gt; shallow v
+  | List : shallow v list -&gt; deep v
+  | Array : shallow v array -&gt; deep v</code></pre>
+<p>Checkout <a href="./my-first-gadt.html">the tutorial on GADTs</a> if
+any of this is unclear.</p>
+<p>You can also enforce the invariant at the level of modules. To this
+end you expose a private type with phantom types parameters. Phantom
+types are types which appear during the compilation but they are never
+actuallised during execution.</p>
+<p>In OCaml it is common (though not compulsory) to use polymorphic
+variants for phantom types.</p>
+<pre><code>type &#39;depth v
+val int: int -&gt; [`Shallow] v
+val char: char -&gt; [`Shallow] v
+val bool: bool -&gt; [`Shallow] v
+val list: [`Shallow] v list -&gt; [`Deep ] v
+val array: [`Shallow] v array -&gt; [`Deep ] v</code></pre>
+<p>As you can observe, the two approaches are quite similar. It kinda
+looks like an alternative syntax or like a translation to a scala-ish
+language.</p>
+<h2 id="gadts-vs.-phantom-types">GADTs vs. Phantom types</h2>
+<p>There are actual differences between GADTs and Phantom types, beyond
+syntax. Here’s some important considerations.</p>
+<h3 id="concrete-vs.-abstract-types">Concrete vs. abstract types</h3>
+<p>The two approaches put you on different paths regarding types being
+concrete/abstract. As a result, you inherit the pros and cons of each of
+those.</p>
+<p>Abstract types force you to write destructor functions (à la
+<code>Either.fold</code>, <code>Either.map</code>,
+<code>Either.iter</code>) for the values. That’s because the user can’t
+destruct the values directly.</p>
+<p>Concrete types cause more backwards compatibility issues.</p>
+<p>Constructor functions can provide more checks than those enforced by
+phantom types. E.g., you can check that lists and arrays are non-empty,
+that ints are positive, etc. Basically any dynamic check you can add
+along with the static phantom type check.</p>
+<h3 id="scope-of-enforcement">Scope of enforcement</h3>
+<p>GADTs enforce the invariant at the level of the type definition. This
+means that the invariant is enforced within the scope of the type
+definition. Conversely, phantom types enforce the invariant at the level
+of the interface (or function types). This means that the invariant can
+be broken within the scope of the type definition (typically, within the
+<code>.ml</code> or <code>struct</code>)</p>
+<p>Sometimes this difference makes you go for GADTs (you get stronger
+guarantees inside your implementation), sometimes it makes you go for
+phantom types (you get to break the guarantees locally as an
+intermediate step of computation inside your implementation).</p>
+<h3 id="compatibility-with-polymorphic-variants">Compatibility with
+polymorphic variants</h3>
+<p>GADTs should not be used with polymorphic variant types as type
+parameters. This is not actually written in the OCaml manual (is it? I
+can’t find it) but it is advised against.</p>
+<p>Polymorphic variants are useful for a lot of domain modelling work
+because they can have sub-typing relationships. For example, the <a
+href="https://github.com/ocsigen/tyxml/blob/5.0.0/lib/html_types.mli"><code>Tyxml</code></a>
+library uses polymorphic variant phantom type parameters to enforce the
+well-formedness of the constructed HTML.</p>
+<p>If you need polymorphic variants with their sub-typing, you must use
+phantom types.</p>
+<h2 id="tips-and-tricks">Tips and tricks</h2>
+<p>You can narrow the scope in which phantom type constraints are
+unenforced with a simple
+<code>include</code>/<code>struct</code>/<code>sig</code>
+construction.</p>
+<pre><code>include (struct
+  type t =
+    | Int of int
+    | Char of char
+    | Bool of bool
+    | List of t list
+    | Array of t array
+  type _ v = t
+  let int i = Int i
+  let char c = Char c
+  let bool b = Bool b
+  let list l = List l
+  let array a = Array a
+end : sig
+  type &#39;depth v
+  val int: int -&gt; [`Shallow] v
+  val char: char -&gt; [`Shallow] v
+  val bool: bool -&gt; [`Shallow] v
+  val list: [`Shallow] v list -&gt; [`Deep ] v
+  val array: [`Shallow] v array -&gt; [`Deep ] v
+end)</code></pre>
+<p>You can add <code>&gt;</code> and <code>&lt;</code> markers in your
+polymorphic variant phantom types if they capture a more nuanced
+invariant with some sub-typing.</p>
+<pre><code>type &#39;r v
+val int: int -&gt; [`Int] v
+val char: char -&gt; [`Char] v
+val bool: bool -&gt; [`Bool] v
+type shallow = [ `Int | `Char | `Bool ]
+val array: [&lt; shallow] v array -&gt; [ `Array ] v
+type u8 = [ `Char | `Bool ]
+val array8: [&lt; u8 ] v array -&gt; [ `Array ] v</code></pre>
+</div>
+</body>
+</html>
