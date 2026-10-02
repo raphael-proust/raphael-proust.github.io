@@ -138,6 +138,20 @@ library uses polymorphic variant phantom type parameters to enforce the
 well-formedness of the constructed HTML.</p>
 <p>If you need polymorphic variants with their sub-typing, you must use
 phantom types.</p>
+<h3 id="new-type-or-alias">New type or alias</h3>
+<p>[EDIT NOTICE 2026-10-02: subsection added based on a reader’s
+suggestion]</p>
+<p>GADTs invariants are expressed per-constructor. They are only
+available if you introduce new constructors.</p>
+<p>Phantom types can be used on aliases. They can be used for existing
+types.</p>
+<p>For example, in <a
+href="https://github.com/Octachron/typed-musings/blob/master/units/axiomatic.ml">units</a>
+the <code>float</code> type is aliased to keep track of the physical
+unit (meter, second, etc.) of the quantity the float represents. Doing
+the same with GADT requires the introduction of a constructor which
+complicates the definition of simple operations like addition and
+multiplication.</p>
 <h2 id="tips-and-tricks">Tips and tricks</h2>
 <p>You can narrow the scope in which phantom type constraints are
 unenforced with a simple

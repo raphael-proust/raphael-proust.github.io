@@ -132,6 +132,19 @@ For example, the [`Tyxml`](https://github.com/ocsigen/tyxml/blob/5.0.0/lib/html_
 
 If you need polymorphic variants with their sub-typing, you must use phantom types.
 
+### New type or alias
+
+[EDIT NOTICE 2026-10-02: subsection added based on a reader's suggestion]
+
+GADTs invariants are expressed per-constructor.
+They are only available if you introduce new constructors.
+
+Phantom types can be used on aliases.
+They can be used for existing types.
+
+For example, in [units](https://github.com/Octachron/typed-musings/blob/master/units/axiomatic.ml) the `float` type is aliased to keep track of the physical unit (meter, second, etc.) of the quantity the float represents.
+Doing the same with GADT requires the introduction of a constructor which complicates the definition of simple operations like addition and multiplication.
+
 
 ## Tips and tricks
 
