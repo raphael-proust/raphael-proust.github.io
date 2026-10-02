@@ -84,8 +84,8 @@ type _ v =
 any of this is unclear.</p>
 <p>You can also enforce the invariant at the level of modules. To this
 end you expose a private type with phantom types parameters. Phantom
-types are types which appear during the compilation but they are never
-actuallised during execution.</p>
+types are types which appear during the compilation but they become
+insubstantial and immaterial (like ghosts) during execution.</p>
 <p>In OCaml it is common (though not compulsory) to use polymorphic
 variants for phantom types.</p>
 <pre><code>type &#39;depth v
@@ -98,7 +98,7 @@ val array: [`Shallow] v array -&gt; [`Deep ] v</code></pre>
 looks like an alternative syntax or like a translation to a scala-ish
 language.</p>
 <h2 id="gadts-vs.-phantom-types">GADTs vs. Phantom types</h2>
-<p>There are actual differences between GADTs and Phantom types, beyond
+<p>There are actual differences between GADTs and phantom types, beyond
 syntax. Here’s some important considerations.</p>
 <h3 id="concrete-vs.-abstract-types">Concrete vs. abstract types</h3>
 <p>The two approaches put you on different paths regarding types being
@@ -114,16 +114,18 @@ phantom types. E.g., you can check that lists and arrays are non-empty,
 that ints are positive, etc. Basically any dynamic check you can add
 along with the static phantom type check.</p>
 <h3 id="scope-of-enforcement">Scope of enforcement</h3>
-<p>GADTs enforce the invariant at the level of the type definition. This
-means that the invariant is enforced within the scope of the type
-definition. Conversely, phantom types enforce the invariant at the level
-of the interface (or function types). This means that the invariant can
-be broken within the scope of the type definition (typically, within the
-<code>.ml</code> or <code>struct</code>)</p>
+<p>GADTs enforce the invariant at the level of (and thus within the
+scope of) the type definition. Conversely, phantom types enforce the
+invariant at the level of the interface (or function types). This means
+that phantom types invariants can be broken within the scope of the type
+definition (typically, within the <code>.ml</code> or
+<code>struct</code>)</p>
 <p>Sometimes this difference makes you go for GADTs (you get stronger
 guarantees inside your implementation), sometimes it makes you go for
 phantom types (you get to break the guarantees locally as an
 intermediate step of computation inside your implementation).</p>
+<p>Also, see the tips and tricks section below to tweak the scope of
+phantom types to enforce their invariants more broadly.</p>
 <h3 id="compatibility-with-polymorphic-variants">Compatibility with
 polymorphic variants</h3>
 <p>GADTs should not be used with polymorphic variant types as type
@@ -149,6 +151,8 @@ construction.</p>
     | List of t list
     | Array of t array
   type _ v = t
+  (* invariants are not enforced here,
+     better get those constructor functions correct *)
   let int i = Int i
   let char c = Char c
   let bool b = Bool b
@@ -161,7 +165,8 @@ end : sig
   val bool: bool -&gt; [`Shallow] v
   val list: [`Shallow] v list -&gt; [`Deep ] v
   val array: [`Shallow] v array -&gt; [`Deep ] v
-end)</code></pre>
+end)
+(* invariants are enforced here because the sig exposes only constructor functions *)</code></pre>
 <p>You can add <code>&gt;</code> and <code>&lt;</code> markers in your
 polymorphic variant phantom types if they capture a more nuanced
 invariant with some sub-typing.</p>
@@ -170,8 +175,10 @@ val int: int -&gt; [`Int] v
 val char: char -&gt; [`Char] v
 val bool: bool -&gt; [`Bool] v
 type shallow = [ `Int | `Char | `Bool ]
+(* array accepts arrays of ints, chars, bools, or subsets thereof *)
 val array: [&lt; shallow] v array -&gt; [ `Array ] v
 type narrow = [ `Char | `Bool ]
+(* array8 accepts arrays of chars, bools, or subsets thereof *)
 val array8: [&lt; narrow ] v array -&gt; [ `Array ] v</code></pre>
 </div>
 </body>

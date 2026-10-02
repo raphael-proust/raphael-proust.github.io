@@ -76,7 +76,7 @@ Checkout [the tutorial on GADTs](./my-first-gadt.html) if any of this is unclear
 
 You can also enforce the invariant at the level of modules.
 To this end you expose a private type with phantom types parameters.
-Phantom types are types which appear during the compilation but they are never actuallised during execution.
+Phantom types are types which appear during the compilation but they become insubstantial and immaterial (like ghosts) during execution.
 
 In OCaml it is common (though not compulsory) to use polymorphic variants for phantom types.
 
@@ -95,7 +95,7 @@ It kinda looks like an alternative syntax or like a translation to a scala-ish l
 
 ## GADTs vs. Phantom types
 
-There are actual differences between GADTs and Phantom types, beyond syntax.
+There are actual differences between GADTs and phantom types, beyond syntax.
 Here's some important considerations.
 
 ### Concrete vs. abstract types
@@ -114,12 +114,13 @@ Basically any dynamic check you can add along with the static phantom type check
 
 ### Scope of enforcement
 
-GADTs enforce the invariant at the level of the type definition.
-This means that the invariant is enforced within the scope of the type definition.
+GADTs enforce the invariant at the level of (and thus within the scope of) the type definition.
 Conversely, phantom types enforce the invariant at the level of the interface (or function types).
-This means that the invariant can be broken within the scope of the type definition (typically, within the `.ml` or `struct`)
+This means that phantom types invariants can be broken within the scope of the type definition (typically, within the `.ml` or `struct`)
 
 Sometimes this difference makes you go for GADTs (you get stronger guarantees inside your implementation), sometimes it makes you go for phantom types (you get to break the guarantees locally as an intermediate step of computation inside your implementation).
+
+Also, see the tips and tricks section below to tweak the scope of phantom types to enforce their invariants more broadly.
 
 ### Compatibility with polymorphic variants
 
@@ -145,6 +146,8 @@ include (struct
     | List of t list
     | Array of t array
   type _ v = t
+  (* invariants are not enforced here,
+     better get those constructor functions correct *)
   let int i = Int i
   let char c = Char c
   let bool b = Bool b
@@ -158,6 +161,7 @@ end : sig
   val list: [`Shallow] v list -> [`Deep ] v
   val array: [`Shallow] v array -> [`Deep ] v
 end)
+(* invariants are enforced here because the sig exposes only constructor functions *)
 ```
 
 You can add `>` and `<` markers in your polymorphic variant phantom types if they capture a more nuanced invariant with some sub-typing.
@@ -168,7 +172,9 @@ val int: int -> [`Int] v
 val char: char -> [`Char] v
 val bool: bool -> [`Bool] v
 type shallow = [ `Int | `Char | `Bool ]
+(* array accepts arrays of ints, chars, bools, or subsets thereof *)
 val array: [< shallow] v array -> [ `Array ] v
 type narrow = [ `Char | `Bool ]
+(* array8 accepts arrays of chars, bools, or subsets thereof *)
 val array8: [< narrow ] v array -> [ `Array ] v
 ```
