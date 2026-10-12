@@ -12,3 +12,5 @@ Unsorted thoughts, articles, posts.
 [(2021-01-16) \[manufacturing, typology\] Folding as manufacturing](/misc/folding-as-manufacturing.html)
 
 [(2026-04-08) \[game, toy, silly\] Tetris](/misc/tetris.html)
+
+[(2026-10-12) \[toki pona\] kalama musi pi jan lili](/misc/kalama-musi-pi-jan-lili.html)
