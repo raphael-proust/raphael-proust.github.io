@@ -278,3 +278,41 @@ Keep an eye for repeating binding-related boilerplate in your (your!) code.
 Try to understand what this boilerplate does.  
 See if a monad is a good fit for abstracting it away.  
 Hopefully your code will be more readable for it.
+
+------------------------------------
+
+## Adendum: what's with Haskell's lazyness?
+
+There's a snarky remark that OCamlers point at Haskellers:
+
+> OCaml has monads but you don't need them to tie up your shoes.
+
+This remark gets to the fact that you can't do (`do`?) anything in Haskell without using a monad.
+The fundamental reason is that Haskell is a lazy and pure language and you eventually need to break away from these features/restrictions.
+The way in which you break away is baked into the language as monads.
+
+The one that I've seen puzzle people more is the lazyness and the IO monad.
+Well lazyness is an abstraction which wraps the real salt-of-the-earth values into a box.
+The box is a memoised computation: you get to the real value by running the computation or reading off the memoised result of the run.
+
+Like you don't have an integer, you have the formula to compute it.
+Or like maybe you already have an integer if it's already been computed, you don't know.
+
+Like you haven't written bytes to a file, you have the sequence of instructions to compute it.
+(Or maybe you've already written the bytes if the instructions have already been executed.)
+
+The IO monad is a way to organise the lazy computations and instructions.
+Values wrapped in this way are eventually forced or ignored.
+
+You can have the same monad in OCaml.
+It's not particularly useful unless you write a lot of (explicitly) lazy code.
+
+```
+module LazyMonad
+: MONAD with type 'a t = 'a Lazy.t
+= struct
+    type 'a t = 'a Lazy.t
+    let ( let* ) x f = f (Lazy.force x)
+    let return x = lazy x
+end ;;
+```
