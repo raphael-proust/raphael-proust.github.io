@@ -79,3 +79,15 @@ ona li pakala e luka wan ona.
 mama ona li toki e ni:  
 o pilin pona.
 mi mute li jo e luka ala a.
+
+
+## 🐸
+
+sewi li pana e telo.
+telo li unta tan sewi.
+akesi laso li pilin pona.
+
+sewi li jo e suno.
+suno li kama li wawa.
+ja lili li pilin pona.
+
